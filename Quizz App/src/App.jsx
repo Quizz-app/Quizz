@@ -28,7 +28,7 @@ const App = () => {
           }
         })
     }
-  }, [user]);
+  }, [user,loading, error]);
 
   return (
     <BrowserRouter>
