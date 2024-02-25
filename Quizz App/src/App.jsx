@@ -18,7 +18,7 @@ const App = () => {
   });
 
   const [user, loading, error] = useAuthState(auth);
-
+  const [theme, setTheme] = useState('default');
   useEffect(() => {
     if (user) {
       getUserData(user.uid)
@@ -28,13 +28,19 @@ const App = () => {
           }
         })
     }
-  }, [user,loading, error]);
+  }, [user, loading, error]);
+
+  
+
+  const handleThemeChange = (event) => {
+    setTheme(event.target.checked ? 'synthwave' : '1');
+  };
 
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
-        <Header />
-        <div className="min-h-screen flex-nowrap">
+        <Header theme={theme} onThemeChange={handleThemeChange}/>
+        <div className={`min-h-screen flex-nowrap theme-${theme}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
