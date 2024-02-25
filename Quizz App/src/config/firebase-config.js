@@ -1,26 +1,21 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
-// import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getStorage } from "firebase/storage";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAvdFBQ0ZQeVXAobkGlVRQneMuoU2YbGGw",
-    authDomain: "quiz-app-9bae0.firebaseapp.com",
-    projectId: "quiz-app-9bae0",
-    storageBucket: "quiz-app-9bae0.appspot.com",
-    messagingSenderId: "207466857050",
-    appId: "1:207466857050:web:169e004aad7b76c6b34e63"
-  };
+  apiKey: "AIzaSyCdiEtErqLYDZYMg5OxW4NLPYzxgYrLxYA",
+  authDomain: "quizz-app-1a3aa.firebaseapp.com",
+  databaseURL:
+    "https://quizz-app-1a3aa-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "quizz-app-1a3aa",
+  storageBucket: "quizz-app-1a3aa.appspot.com",
+  messagingSenderId: "908054121345",
+  appId: "1:908054121345:web:c64046bd1a1de12bd27680",
+};
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-
+const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-
 export const db = getDatabase(app);
-
-
+export const storage = getStorage(app);
