@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { auth } from "./config/firebase-config";
 import { getUserData } from "./services/users-service";
 import Home from "./views/Home";
+import Login from "./views/Login";
 
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </AppContext.Provider>
     </BrowserRouter>
