@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import { AppContext } from "./context/AppContext";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Register from "./views/Register";
@@ -33,11 +32,13 @@ const App = () => {
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
+        <div className="min-h-screen flex-nowrap">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
       </AppContext.Provider>
     </BrowserRouter>
   );
