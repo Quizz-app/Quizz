@@ -5,27 +5,31 @@ import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const Header = () => {
-    const { setContext } = useContext(AppContext);
+  const { user, setContext } = useContext(AppContext);
 
-    const navigate = useNavigate();
-    
-    const logOut = async () => {
-        await logoutUser();
-        setContext({ user: null, userData: null });
-        navigate('/');
-    }
+  const navigate = useNavigate();
+
+  const logOut = async () => {
+    await logoutUser();
+    setContext({ user: null, userData: null });
+    navigate('/');
+  }
 
 
-    return (
-        <div className="navbar bg-base-100">
-        <div className="flex-1">
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+  return (
+    <div className="navbar bg-base-100">
+      <div className="flex-1">
+        <a className="btn btn-ghost text-xl">daisyUI</a>
+      </div>
+      <div className="flex-none gap-2">
+        <div className="form-control">
+          <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
         </div>
-        <div className="flex-none gap-2">
-          <div className="form-control">
-            <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
-          </div>
-          <div className="dropdown dropdown-end">
+
+        {!user ?
+          (<button onClick={() => navigate('/login')} className="btn btn-outline btn-info">Login</button>)
+          :
+          (<div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
                 <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
@@ -39,12 +43,14 @@ const Header = () => {
                 </a>
               </li>
               <li><a>Settings</a></li>
-              <li onClick={logOut} role='button'><NavLink to='/'>Logout</NavLink></li>
+              {user && <li onClick={logOut} role='button'><NavLink to='/'>Logout</NavLink></li>}
             </ul>
-          </div>
-        </div>
+          </div>)
+        }
+
       </div>
-    )
+    </div>
+  )
 }
 
 export default Header;
