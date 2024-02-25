@@ -7,6 +7,7 @@ import { auth } from "./config/firebase-config";
 import { getUserData } from "./services/users-service";
 import Home from "./views/Home";
 import Login from "./views/Login";
+import Header from "./components/Header";
 
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
+        <Header />
         <div className="min-h-screen flex-nowrap">
           <Routes>
             <Route path="/" element={<Home />} />
