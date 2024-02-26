@@ -8,6 +8,7 @@ import { getUserData } from "./services/users-service";
 import Home from "./views/Home";
 import Login from "./views/Login";
 import Header from "./components/Header";
+import CreateQuiz from "./views/CreateQuiz";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -43,6 +44,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/create-quiz" element={<CreateQuiz />} />
           </Routes>
         </div>
       </AppContext.Provider>

@@ -9,14 +9,7 @@ import {
 } from "firebase/database";
 import { db } from "../config/firebase-config.js";
 
-export const createUsername = (
-  firstName,
-  lastName,
-  username,
-  uid,
-  email,
-  role
-) => {
+export const createUsername = (firstName, lastName, username, uid, email, role) => {
   return set(ref(db, `users/${username}`), {
     firstName,
     lastName,
