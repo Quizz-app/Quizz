@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { createUsername, getUserByUsername } from "../services/users-service";
 import { registerUser } from "../services/auth-service";
@@ -41,6 +41,8 @@ const Register = () => {
         form.email,
         form.role
       );
+
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
