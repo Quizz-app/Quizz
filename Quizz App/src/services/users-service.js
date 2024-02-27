@@ -30,7 +30,6 @@ export const getUserByUsername = (handle) => {
 
 export const getAllUsers = async () => {
   const snapshot = get(ref(db, `users`));
-
   return snapshot;
 };
 
