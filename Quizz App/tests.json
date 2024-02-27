@@ -1,0 +1,90 @@
+{
+    // database structure
+    //new document
+
+"category": {
+    "geography": {
+        "quizId": true,
+        "quizId": true
+    },
+    "math": {
+        "quizId": true,
+        "quizId": true
+    },
+
+
+  "quiz": {
+    "quizId": {
+        "quesions":{
+                "questin1": {    //id
+                    "question": "What is the capital of France?",
+                    "ponits": 10,  //dynamicaly added
+                    "time": 10,  //dynamicaly added
+                    "answers": [
+                        "Paris",
+                        "London",
+                        "Berlin",
+                        "Madrid"
+                    ],
+                    "correctAnswer": ["Berlin","Paris" ],  //the answear that is checked as correct - possible for more than one correct answear 
+                    "type":[] // to be continued
+                }
+            },
+
+            "totalTime": 100, //dynamicaly added - iteration thru all questions and adding time
+            "category": "geography", //dynamicaly added  **
+            "educatorId": "uid", //dynamicaly added
+            //"isPublic": true, //dynamicaly added
+
+            "isPublic": false, //dynamicaly added    
+            "authenticatedUsers": {  
+                "uid": true,     //=> send invite 
+                "uid": true
+            }
+
+            //if user's category is an element on category document 
+
+          }
+
+     },
+
+    "user": {
+        //..
+        "userQuizzes": {
+            "quizId": {
+                "isOngoing": true,
+                "isFinished": false
+            }
+        },
+        "scores": {
+                "quizid": {
+                    "score": 100,
+                    "timeTaken": 100
+                }
+        }
+    }
+}
+
+
+    "groups": {
+    "group1": {
+        "educators": {
+            "uid": true,
+            "uid": true,
+        },
+        "quizzes": {
+            "qid": true,
+            "qid": true
+        }
+    },
+    "group2": {
+        "educators": {
+            "uid": true
+        },
+        "quizzes": {
+            "qid": true,
+            "quid": true
+        }
+    }
+},
+}
