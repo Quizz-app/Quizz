@@ -59,13 +59,14 @@ const CreateQuiz = () => {
                     type="number"
                 ></input>
 
-
-                <label htmlFor="isPublic">Privacy:</label>
-                <input
-                    checked={quiz.isPublic}
-                    onChange={event => updateForm("isPublic")(event.target.checked)}
-                    type="checkbox"
-                />
+                <label htmlFor="isPublic">Visibility:</label>
+                <select
+                    value={quiz.isPublic ? "Public" : "Private"}
+                    onChange={event => updateForm("isPublic")({ target: { value: event.target.value === "Public" } })}
+                >
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                </select>
 
                 <button onClick={quizCreation}>Create Quiz</button>
 

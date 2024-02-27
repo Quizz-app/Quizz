@@ -22,16 +22,32 @@ export const createQuiz = async (creator, title, category, isPublic, time, quest
 
 }
 
+export const getAllQuizzes = async () => {
+  const snapShot = await get(ref(db, "quizzes"), orderByChild("createdOn"));
 
-// export const addPost = async (author, title, content, tags) => {
-//     return push(ref(db, 'posts'), {
-//         author,
-//         title,
-//         content,
-//         createdOn: Date.now(),
-//         comments: {},
-//         likedBy: {},
-//         tags: tags || []
-//     });
+  if (!snapShot.exists()) {
+    return [];
+  }
+  const quizzes = Object.keys(snapShot.val()).map((key) => ({
+    id: key,
+    ...snapShot.val()[key],
 
-// }
+  }));
+
+  return quizzes;
+};
+
+export const getQuizById = async (id) => {
+  const snapShot = await get(ref(db, `quizzes/${id}`));
+
+  if (!snapShot.exists()) {
+    return null;
+  }
+
+  const quiz = {
+    id,
+    ...snapShot.val(),
+  };
+
+  return quiz;
+};

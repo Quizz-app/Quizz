@@ -10,7 +10,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
-import {  getAllEducators, getAllUsers } from "../services/users-service";
+import { getAllEducators, getAllUsers } from "../services/users-service";
 import { useEffect, useState } from "react";
 import { get } from "firebase/database";
 
@@ -34,8 +34,6 @@ const Home = () => {
 
     return (
         <>
-            {/* <Button>Hello world</Button> */}
-
             {/* <Calendar
                 mode="single"
                 selected={date}
@@ -43,13 +41,48 @@ const Home = () => {
                 className="rounded-md border shadow"
             /> */}
 
+
+            <div className="carousel carousel-center rounded-box">
+                <div className="carousel-item">
+                    <img src="https://daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.jpg" alt="Pizza" />
+                </div>
+                <div className="carousel-item">
+                    <img src="https://daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.jpg" alt="Pizza" />
+                </div>
+                <div className="carousel-item">
+                    <img src="https://daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.jpg" alt="Pizza" />
+                </div>
+                <div className="carousel-item">
+                    <img src="https://daisyui.com/images/stock/photo-1494253109108-2e30c049369b.jpg" alt="Pizza" />
+                </div>
+                <div className="carousel-item">
+                    <img src="https://daisyui.com/images/stock/photo-1550258987-190a2d41a8ba.jpg" alt="Pizza" />
+                </div>
+                <div className="carousel-item">
+                    <img src="https://daisyui.com/images/stock/photo-1559181567-c3190ca9959b.jpg" alt="Pizza" />
+                </div>
+                <div className="carousel-item">
+                    <img src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Pizza" />
+                </div>
+            </div>
+
+
+
             <div className="flex flex-col items-center justify-center mt-20 ">
                 <h1 className="text-4xl text-center font-bold">Become a Master Genius and Get Brainburst!</h1>
             </div>
 
             <div className="flex items-center justify-center my-10 pb-10">
 
-                <div className="stats shadow border  w-3/4 h-48">
+
+
+                <div className="stats shadow border">
+
+                    <div className="stat place-items-center">
+                        <div className="stat-title">Downloads</div>
+                        <div className="stat-value">31K</div>
+                        <div className="stat-desc">From January 1st to February 1st</div>
+                    </div>
 
                     <div className="stat place-items-center">
                         <div className="stat-title">Users</div>
@@ -65,6 +98,8 @@ const Home = () => {
 
                 </div>
             </div>
+
+
 
 
             <div className="flex items-center justify-center">
