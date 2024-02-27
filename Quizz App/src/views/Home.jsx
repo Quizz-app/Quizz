@@ -42,7 +42,7 @@ const Home = () => {
             /> */}
 
 
-            <div className="carousel carousel-center rounded-box">
+            <div className="carousel carousel-center rounded-box mt-10">
                 <div className="carousel-item">
                     <img src="https://daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.jpg" alt="Pizza" />
                 </div>
@@ -68,21 +68,12 @@ const Home = () => {
 
 
 
+            {/* //hero */}
             <div className="flex flex-col items-center justify-center mt-20 ">
                 <h1 className="text-4xl text-center font-bold">Become a Master Genius and Get Brainburst!</h1>
             </div>
-
-            <div className="flex items-center justify-center my-10 pb-10">
-
-
-
-                <div className="stats shadow border">
-
-                    <div className="stat place-items-center">
-                        <div className="stat-title">Downloads</div>
-                        <div className="stat-value">31K</div>
-                        <div className="stat-desc">From January 1st to February 1st</div>
-                    </div>
+            <div className="flex items-center justify-center my-10 ">
+                <div className="stats shadow border w-3/4 h-48">
 
                     <div className="stat place-items-center">
                         <div className="stat-title">Users</div>
@@ -101,8 +92,11 @@ const Home = () => {
 
 
 
-
-            <div className="flex items-center justify-center">
+            {/* cateogirs */}
+            <div className="flex flex-col items-center justify-center mt-20 ">
+                <h1 className="text-4xl text-center font-bold">Top Ctaegories:</h1>
+            </div>
+            <div className="flex items-center justify-center p-10">
                 <Carousel
                     opts={{
                         align: "start",
@@ -111,10 +105,10 @@ const Home = () => {
                 >
                     <CarouselContent>
                         {Array.from({ length: 5 }).map((_, index) => (
-                            <CarouselItem key={index} className="md:basis-1/3 lg:basis-1/3 h-80">
-                                <div className=" w-3/4 h-full">
-                                    <Card className="h-full">
-                                        <CardContent className="flex aspect-square items-center justify-center  w-full h-full">
+                            <CarouselItem key={index} className="md:basis-1/3 lg:basis-1/3 h-80 ">
+                                <div className="h-full ">
+                                    <Card className=" w-80">
+                                        <CardContent className="flex aspect-square items-center justify-center w-full h-full">
                                             <span className="text-3xl font-semibold">{index + 1}</span>
                                         </CardContent>
                                     </Card>
@@ -125,7 +119,6 @@ const Home = () => {
                     <CarouselPrevious />
                     <CarouselNext />
                 </Carousel>
-
             </div>
 
 
