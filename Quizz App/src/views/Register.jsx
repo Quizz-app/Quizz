@@ -84,11 +84,11 @@ const Register = () => {
 
           <button
             onClick={() => {
-              setForm({ ...form, role: "teacher" });
+              setForm({ ...form, role: "educator" });
               setStep(4);
             }}
           >
-            Teacher
+            Educator
           </button>
         </>
       )}
