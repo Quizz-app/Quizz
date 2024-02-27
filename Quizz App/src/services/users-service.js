@@ -9,7 +9,7 @@ import {
 } from "firebase/database";
 import { db } from "../config/firebase-config.js";
 
-export const createUsername = (firstName, lastName, username, uid, email) => {
+export const createUsername = (firstName, lastName, username, uid, email, role) => {
   return set(ref(db, `users/${username}`), {
     firstName,
     lastName,
@@ -20,6 +20,7 @@ export const createUsername = (firstName, lastName, username, uid, email) => {
     likedPosts: {},
     isAdmin: false,
     isBlocked: false,
+    role,
   });
 };
 
@@ -29,7 +30,6 @@ export const getUserByUsername = (handle) => {
 
 export const getAllUsers = async () => {
   const snapshot = get(ref(db, `users`));
-
   return snapshot;
 };
 

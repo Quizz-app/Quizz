@@ -1,41 +1,52 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import { AppContext } from "./context/AppContext";
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuthState } from "react-firebase-hooks/auth";
 import Register from "./views/Register";
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { auth } from "./config/firebase-config";
 import { getUserData } from "./services/users-service";
 import Home from "./views/Home";
-
+import Login from "./views/Login";
+import Header from "./components/Header";
+import CreateQuiz from "./views/CreateQuiz";
 
 const App = () => {
-
   const [context, setContext] = useState({
     user: null,
     userData: null,
   });
 
   const [user, loading, error] = useAuthState(auth);
-
+  const [theme, setTheme] = useState("default");
   useEffect(() => {
     if (user) {
-      getUserData(user.uid)
-        .then(snapshot => {
-          if (snapshot.exists()) {
-            setContext({ user, userData: snapshot.val()[Object.keys(snapshot.val())[0]] });
-          }
-        })
+      getUserData(user.uid).then((snapshot) => {
+        if (snapshot.exists()) {
+          setContext({
+            user,
+            userData: snapshot.val()[Object.keys(snapshot.val())[0]],
+          });
+        }
+      });
     }
-  }, [user]);
+  }, [user, loading, error]);
+
+  const handleThemeChange = (event) => {
+    setTheme(event.target.checked ? "synthwave" : "1");
+  };
 
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/register" element={<Register />} />
-        </Routes>
+        <Header theme={theme} onThemeChange={handleThemeChange} />
+        <div className={`min-h-screen flex-nowrap theme-${theme}`}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/create-quiz" element={<CreateQuiz />} />
+          </Routes>
+        </div>
       </AppContext.Provider>
     </BrowserRouter>
   );
