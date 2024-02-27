@@ -1,12 +1,4 @@
-import {
-  get,
-  set,
-  ref,
-  query,
-  equalTo,
-  orderByChild,
-  update,
-} from "firebase/database";
+import { get, set, ref, query, equalTo, orderByChild, update} from "firebase/database";
 import { db } from "../config/firebase-config.js";
 
 export const createUsername = (firstName, lastName, username, uid, email, role) => {
