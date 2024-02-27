@@ -1,15 +1,6 @@
 import React from "react";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
-import {
-    Menubar,
-    MenubarContent,
-    MenubarItem,
-    MenubarMenu,
-    MenubarSeparator,
-    MenubarShortcut,
-    MenubarTrigger,
-} from "@/components/ui/menubar"
 
 
 
@@ -19,19 +10,16 @@ const Home = () => {
     return (
         <>
             <Button>Hello world</Button>
-            <Menubar>
-                <MenubarContent>
-                    {<MenubarItem/>}
-                    </MenubarContent>
-            </Menubar>
+            <div className="mt-5 mb-5">
+                
 
+            </div>
             <Calendar
                 mode="single"
                 selected={date}
                 onSelect={setDate}
                 className="rounded-md border shadow"
             />
-
         </>
     );
 };
