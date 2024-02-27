@@ -49,87 +49,128 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      {step === 1 && (
-        <>
-          <label htmlFor="username">Username</label>
-          <input
-            value={form.username}
-            onChange={updateForm("username")}
-            type="text"
-          ></input>
+    <div className="relative w-full flex flex-col justify-center h-screen overflow-hidden">
+      <div className="w-full p-6 m-auto bg-gray border border-amber-950 rounded-md shadow-2xl shad ring-2 ring-white lg:max-w-xl">
+        <h1 className="text-3xl font-semibold text-center text-gray-700">
+          Sign Up
+        </h1>
+        <br />
+        {step === 1 && (
+          <>
+            <div className="mb-7">
+              <label htmlFor="username"></label>
 
-          <label htmlFor="email">Email</label>
-          <input
-            value={form.email}
-            onChange={updateForm("email")}
-            type="text"
-          ></input>
+              <input
+                className="w-full input input-bordered"
+                value={form.username}
+                onChange={updateForm("username")}
+                type="text"
+                placeholder="Username"
+              ></input>
+            </div>
+            <div className="mb-7">
+              <label htmlFor="email"></label>
 
-          <button onClick={() => setStep(2)}>Continue</button>
-        </>
-      )}
+              <input
+                className="w-full input input-bordered"
+                value={form.email}
+                onChange={updateForm("email")}
+                type="text"
+                placeholder="name@example.com"
+              ></input>
+            </div>
 
-      {step === 2 && (
-        <>
-          <button
-            onClick={() => {
-              setForm({ ...form, role: "student" });
-              setStep(3);
-            }}
-          >
-            Student
-          </button>
+            <div className="mb-7">
+              <button
+                className="btn btn-ghost btn-circle avatar bg-base-200 w-full border-2 border-amber-950"
+                onClick={() => setStep(2)}
+              >
+                Continue
+              </button>
+            </div>
+          </>
+        )}
 
-          <button
-            onClick={() => {
-              setForm({ ...form, role: "teacher" });
-              setStep(4);
-            }}
-          >
-            Teacher
-          </button>
-        </>
-      )}
-      {step === 3 && (
-        <>
-          <label htmlFor="age">Age</label>
-          <input
-            value={form.age}
-            onChange={updateForm("age")}
-            type="text"
-          ></input>
+        {step === 2 && (
+          <>
+            <div>
+              <button
+                className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
+                onClick={() => {
+                  setForm({ ...form, role: "student" });
+                  setStep(3);
+                }}
+              >
+                Student
+              </button>
+            </div>
 
-          <button onClick={() => setStep(4)}>Continue</button>
-        </>
-      )}
-      {step === 4 && (
-        <>
-          <label htmlFor="firstName">First Name</label>
-          <input
-            value={form.firstName}
-            onChange={updateForm("firstName")}
-            type="text"
-          ></input>
+            <div>
+              <button
+                className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
+                onClick={() => {
+                  setForm({ ...form, role: "teacher" });
+                  setStep(4);
+                }}
+              >
+                Teacher
+              </button>
+            </div>
+          </>
+        )}
+        {step === 3 && (
+          <>
+            <label htmlFor="age">Age</label>
+            <input
+              className="w-full input input-bordered"
+              value={form.age}
+              onChange={updateForm("age")}
+              type="text"
+            ></input>
 
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            value={form.lastName}
-            onChange={updateForm("lastName")}
-            type="text"
-          ></input>
+            <button
+              className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
+              onClick={() => setStep(4)}
+            >
+              Continue
+            </button>
+          </>
+        )}
+        {step === 4 && (
+          <>
+            <label htmlFor="firstName">First Name</label>
+            <input
+              className="w-full input input-bordered"
+              value={form.firstName}
+              onChange={updateForm("firstName")}
+              type="text"
+            ></input>
 
-          <label htmlFor="password">Password</label>
-          <input
-            value={form.password}
-            onChange={updateForm("password")}
-            type="password"
-          ></input>
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              className="w-full input input-bordered"
+              value={form.lastName}
+              onChange={updateForm("lastName")}
+              type="text"
+            ></input>
 
-          <button onClick={register}>Register</button>
-        </>
-      )}
+            <label htmlFor="password">Password</label>
+            <input
+              className="w-full input input-bordered"
+              value={form.password}
+              onChange={updateForm("password")}
+              type="password"
+            ></input>
+
+            <button
+              className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
+              onClick={register}
+            >
+              Register
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 };
