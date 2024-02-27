@@ -23,7 +23,7 @@ const Header = ({ theme, onThemeChange }) => {
   return (
     <div className="navbar bg-base-100 flex justify-between">
       <div className="flex-2">
-        <a className="btn btn-ghost text-xl">BrainBurst</a>
+        <a className="btn btn-ghost text-xl" onClick={()=>navigate('/')}>BrainBurst</a>
         <label className="flex cursor-pointer gap-2" onClick={handleClick}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +61,10 @@ const Header = ({ theme, onThemeChange }) => {
           </svg>
         </label>
       </div>
-      <div className="form-control flex justify-center">
+
+
+      {/* //search bar */}
+      <div className="form-control flex justify-center w-3/4">
         <input
           type="text"
           placeholder="Search"
@@ -69,19 +72,22 @@ const Header = ({ theme, onThemeChange }) => {
         />
       </div>
 
+
+
+      {/* login and register */}
       <div className="flex-none gap-2 mr-3">
         {!user ? (
           <>
             <button
               onClick={() => navigate("/login")}
-              className="btn btn-outline btn-info"
+              className="btn btn-outline btn-secondary"
             >
               Log in
             </button>
 
             <button
               onClick={() => navigate("/register")}
-              className="btn btn-outline btn-info"
+              className="btn btn-outline btn-secondary"
             >
               Sign up
             </button>
