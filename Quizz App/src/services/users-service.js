@@ -1,12 +1,4 @@
-import {
-  get,
-  set,
-  ref,
-  query,
-  equalTo,
-  orderByChild,
-  update,
-} from "firebase/database";
+import { get, set, ref, query, equalTo, orderByChild, update} from "firebase/database";
 import { db } from "../config/firebase-config.js";
 
 export const createUsername = (firstName, lastName, username, uid, email, role) => {
@@ -40,4 +32,27 @@ export const getUserData = (uid) => {
 export const updateUser = async (username, userData) => {
   const userRef = ref(db, `users/${username}`);
   await update(userRef, userData);
+};
+
+
+//get all admins
+export const getAllAdmins = async () => {
+  try {
+    const snapshot =  get(query(ref(db, 'users'), orderByChild('isAdmin'), equalTo(true)));
+    return snapshot;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+//get all educators
+export const getAllEducators = async () => {
+  try {
+    const snapshot =  get(query(ref(db, 'users'), orderByChild('role'), equalTo('educator')));
+    return snapshot;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
