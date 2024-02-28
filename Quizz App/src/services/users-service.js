@@ -1,7 +1,22 @@
-import { get, set, ref, query, equalTo, orderByChild, update} from "firebase/database";
+import {
+  get,
+  set,
+  ref,
+  query,
+  equalTo,
+  orderByChild,
+  update,
+} from "firebase/database";
 import { db } from "../config/firebase-config.js";
 
-export const createUsername = (firstName, lastName, username, uid, email, role) => {
+export const createUsername = (
+  firstName,
+  lastName,
+  username,
+  uid,
+  email,
+  role
+) => {
   return set(ref(db, `users/${username}`), {
     firstName,
     lastName,
@@ -34,11 +49,16 @@ export const updateUser = async (username, userData) => {
   await update(userRef, userData);
 };
 
+export const updateUserInfo = async (username, prop, value) => {
+  await update(ref(db, `users/${username}`), { [prop]: value });
+};
 
 //get all admins
 export const getAllAdmins = async () => {
   try {
-    const snapshot =  get(query(ref(db, 'users'), orderByChild('isAdmin'), equalTo(true)));
+    const snapshot = get(
+      query(ref(db, "users"), orderByChild("isAdmin"), equalTo(true))
+    );
     return snapshot;
   } catch (err) {
     console.error(err);
@@ -49,7 +69,9 @@ export const getAllAdmins = async () => {
 //get all educators
 export const getAllEducators = async () => {
   try {
-    const snapshot =  get(query(ref(db, 'users'), orderByChild('role'), equalTo('educator')));
+    const snapshot = get(
+      query(ref(db, "users"), orderByChild("role"), equalTo("educator"))
+    );
     return snapshot;
   } catch (err) {
     console.error(err);
