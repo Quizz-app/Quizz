@@ -52,7 +52,7 @@ const App = () => {
             className="min-h-full max-w-full"   //{/* if you want a border add  - rounded-lg border */ }
           >
             <ResizablePanel defaultSize={25}>
-              <div className="flex h-full items-center justify-center p-6 flex-col">
+              <div className="flex h-full items-start justify-start p-6 flex-col">
                 <Link to="/home" className="font-semibold mb-2">Overview</Link>
                 <Link to="/library" className="font-semibold mb-2">Library</Link>
                 <Link to="/create-quiz" className="font-semibold mb-2">QuizCraft</Link>
