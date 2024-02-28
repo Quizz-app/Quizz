@@ -15,6 +15,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 
 import { Link } from "react-router-dom";
 import Teams from "./views/Teams";
+import Profile from "./views/Profile";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -71,6 +72,7 @@ const App = () => {
                   <Route path="/login" element={<Login />} />
                   <Route path="/create-quiz" element={<CreateQuiz />} />
                   <Route path="/my-teams" element={<Teams />} />
+                  <Route path="/profile" element={<Profile />} />
                   {/* Add more routes as needed */}
                 </Routes>
               </div>
