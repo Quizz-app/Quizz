@@ -60,7 +60,10 @@ const Home = () => {
                 </div>
             </div> */}
 
-            {user ? []
+            {user ? 
+            (
+                <h1>Home</h1>
+            )
                 :
                 <>
                     {/* //hero */}
