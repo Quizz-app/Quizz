@@ -10,7 +10,7 @@ export const createQuiz = async (creator, title, category, isPublic, time, quest
     createdOn: new Date().toString(),
   });
 
-  return push(ref(db, `quizzes`), {
+  const newQuizRef = await push(ref(db, `quizzes`), {
     creator,
     title,
     category,
@@ -20,7 +20,8 @@ export const createQuiz = async (creator, title, category, isPublic, time, quest
     questionTypes
   });
 
-}
+  return newQuizRef.key;
+};
 
 export const getAllQuizzes = async () => {
   const snapShot = await get(ref(db, "quizzes"), orderByChild("createdOn"));

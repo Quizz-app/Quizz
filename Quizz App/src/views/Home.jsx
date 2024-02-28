@@ -14,7 +14,7 @@ const Home = () => {
     const [userCount, setUserCount] = useState(0);
     const [educatorCount, setEducatorCount] = useState(0);
 
-    useEffect(() => {
+    useEffect(() => { 
         const fetchUsers = async () => {
             const users = await getAllUsers();
             const educators = await getAllEducators();

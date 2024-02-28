@@ -16,6 +16,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { Link } from "react-router-dom";
 import Teams from "./views/Teams";
 import Profile from "./views/Profile";
+import MyLibrary from "./views/MyLibrary";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -54,9 +55,8 @@ const App = () => {
           >
             <ResizablePanel defaultSize={25}>
               <div className="flex h-full items-start justify-start p-6 flex-col">
-                <Link to="/home" className="font-semibold mb-2">Overview</Link>
-                <Link to="/library" className="font-semibold mb-2">Library</Link>
-                <Link to="/create-quiz" className="font-semibold mb-2">QuizCraft</Link>
+                <Link to="/home" className="font-semibold mb-2">Dashboard</Link>
+                <Link to="/my-library" className="font-semibold mb-2">Library</Link>
                 <Link to="/my-teams" className="font-semibold mb-2">Workspaces</Link>
                 <Link to="/classrooms" className="font-semibold mb-2">Classrooms</Link>
                 <Link to="/statistics" className="font-semibold mb-2">Statistics</Link>
@@ -64,13 +64,15 @@ const App = () => {
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={75}>
-              <div className="flex h-full items-center justify-center p-6">
+              <div className="flex h-full items-start justify-start p-6 ">
                 <Routes>
                   <Route index element={<Home />} />
                   <Route path="/home" element={<Home />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
-                  <Route path="/create-quiz" element={<CreateQuiz />} />
+                  <Route path="/my-library" element={<MyLibrary />} />
+                  <Route path="/quiz/:id" element={<CreateQuiz />} />
+                  <Route path="/create-quiz" element={<CreateQuiz />} /> {/* Add this line */}
                   <Route path="/my-teams" element={<Teams />} />
                   <Route path="/profile" element={<Profile />} />
                   {/* Add more routes as needed */}
@@ -78,7 +80,7 @@ const App = () => {
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
-          
+
         </AppContext.Provider>
       </BrowserRouter>
     ) : (
