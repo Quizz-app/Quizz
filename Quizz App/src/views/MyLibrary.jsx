@@ -40,7 +40,7 @@ const MyLibrary = () => {
         category: "",
         time: 0,
         questions: [],
-        isPublic: "",
+        isPublic: true,
     });
 
     const updateForm = (prop) => (e) => {
