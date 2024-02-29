@@ -1,17 +1,20 @@
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-const QuizCard = ({content}) => {
-    return(
+const QuizCard = ({ content, id }) => {
+    const navigate = useNavigate();
+
+    return (
         <div className="card w-96 bg-base-100 shadow-xl image-full">
-                <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
-                <div className="card-body">
-                    <h2 className="card-title"></h2>
-                    <p>{content}</p>
-                    <div className="card-actions justify-end">
-                        <button className="btn btn-primary">see quiz</button>
-                    </div>
+            <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+            <div className="card-body">
+                <h2 className="card-title"></h2>
+                <p>{content}</p>
+                <div className="card-actions justify-end">
+                    <button className="btn btn-primary" onClick={() => navigate(`/quiz/${id}`)}>see quiz</button>
                 </div>
             </div>
+        </div>
     )
 }
 
@@ -19,4 +22,5 @@ export default QuizCard;
 
 QuizCard.propTypes = {
     content: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired
 }

@@ -36,6 +36,7 @@ const CreateQuiz = () => {
     const [answers, setAnswers] = useState(["", ""]);
     const [createMode, setCreateMode] = useState(false);
     const [correctAnswerIndices, setCorrectAnswerIndices] = useState([]);
+    const [editMode, setEditMode] = useState(false);
     const navigate = useNavigate();
 
     const [question, setQuestion] = useState({
@@ -138,6 +139,8 @@ const CreateQuiz = () => {
                                     answers={question.answers}
                                     time={question.time}
                                     points={question.points}
+                                    editMode={editMode}
+                                    setEditMode={setEditMode}
                                 />
                             ))
                         )

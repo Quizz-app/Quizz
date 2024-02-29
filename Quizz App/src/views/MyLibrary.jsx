@@ -45,6 +45,10 @@ const MyLibrary = () => {
     const quizCreation = async () => {
         try {
             const id = await createQuiz(userData.username, quiz.title, quiz.category, quiz.isPublic, quiz.time, quiz.questions);
+            setQuiz({
+                ...quiz,
+                id: id
+            });
             navigate(`/quiz/${id}`);
         } catch (error) {
             console.error(error);
@@ -64,7 +68,7 @@ const MyLibrary = () => {
         <div>
 
             {myQuizzes.map(quiz => (
-                <QuizCard key={quiz.id} content={quiz.title} />
+                <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} />
             ))}
 
 
