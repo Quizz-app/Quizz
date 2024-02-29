@@ -22,7 +22,7 @@ const MyLibrary = () => {
         if (userData){
             getQuizByCreator(userData.username).then(quizzes => setMyQuizzes(quizzes))
         }
-    }, [userData])
+    }, [userData, myQuizzes])
 
    
 
