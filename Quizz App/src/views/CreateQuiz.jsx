@@ -33,7 +33,7 @@ const CreateQuiz = () => {
     const [quiz, setQuiz] = useState(null);
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState(["", "", "", ""]);
-    const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
+    const [correctAnswerIndices, setCorrectAnswerIndices] = useState([]);
 
     const [question, setQuestion] = useState({
         content: "",
@@ -69,7 +69,7 @@ const CreateQuiz = () => {
 
     const handleAddQuestion = async () => {
         try {
-            const newQuestion = await addQuestion(quiz.id, question.content, question.answers, question.time, question.points, correctAnswerIndex);
+            const newQuestion = await addQuestion(quiz.id, question.content, question.answers, question.time, question.points, correctAnswerIndices);
             setQuestions([...questions, newQuestion]);
         }
         catch (error) {
@@ -81,37 +81,52 @@ const CreateQuiz = () => {
         setAnswers([...answers, ""]);
     };
 
+    const handleCheckboxChange = (index) => {
+        if (correctAnswerIndices.includes(index)) {
+            setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
+        } else {
+            setCorrectAnswerIndices([...correctAnswerIndices, index]);
+        }
+    };
 
+    const handleRemoveAnswer = (index) => {
+        const newAnswers = answers.filter((_, i) => i !== index);
+        setAnswers(newAnswers);
+        setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
+    };
     return (
-        <>  
-        <div className="flex flex-row items-center justify-center">
-            {quiz && <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>}
+        <>
             <div className="flex flex-row items-center justify-center">
-                <div className="flex flex-col items-center justify-center">
-                    <input type="text" placeholder="Enter question" onChange={handleQuestionChange} />
-                    {answers.map((answer, index) => (
-                        <div key={index}>
-                            <input
-                                type="text"
-                                placeholder={`Enter answer ${index + 1}`}
-                                value={answer}
-                                onChange={handleAnswerChange(index)}
-                            />
-                            <input
-                                type="checkbox"
-                                checked={correctAnswerIndex === index}
-                                onChange={() => setCorrectAnswerIndex(index)}
-                            />
-                        </div>
-                    ))}
-                    <button onClick={handleAddAnswer}>Add Answer</button>
-                    <button onClick={handleAddQuestion}>Add Question</button>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                    <Button>Create</Button>
+                {quiz && <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>}
+                <div className="flex flex-row items-center justify-center">
+                    <div className="flex flex-col items-center justify-center">
+                        <input type="text" placeholder="Enter question" onChange={handleQuestionChange} />
+                        {answers.map((answer, index) => (
+                            <div key={index}>
+                                <input
+                                    type="text"
+                                    placeholder={`Enter answer ${index + 1}`}
+                                    value={answer}
+                                    onChange={handleAnswerChange(index)}
+                                />
+                                <input
+                                    type="checkbox"
+                                    checked={correctAnswerIndices.includes(index)}
+                                    onChange={() => handleCheckboxChange(index)}
+                                />
+                                <button onClick={() => handleRemoveAnswer(index)}>Remove Answer</button>
+                            </div>
+
+                        ))}
+                        
+                        <button onClick={handleAddAnswer}>Add Answer</button>
+                        <button onClick={handleAddQuestion}>Add Question</button>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                        <Button>Create</Button>
+                    </div>
                 </div>
             </div>
-        </div>
         </>
     );
 
