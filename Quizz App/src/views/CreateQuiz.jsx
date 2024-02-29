@@ -35,7 +35,7 @@ const CreateQuiz = () => {
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState(["", ""]);
     const [createMode, setCreateMode] = useState(false);
-    const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
+    const [correctAnswerIndices, setCorrectAnswerIndices] = useState([]);
 
     const [question, setQuestion] = useState({
         content: "",
@@ -71,9 +71,10 @@ const CreateQuiz = () => {
 
     const handleAddQuestion = async () => {
         try {
-            const newQuestion = await addQuestion(quiz.id, question.content, question.answers, question.time, question.points, correctAnswerIndex);
+            const newQuestion = await addQuestion(quiz.id, question.content, question.answers, question.time, question.points, correctAnswerIndices);
             setCreateMode(false);
             setQuestions([...questions, newQuestion]);
+            console.log(newQuestion);
         }
         catch (error) {
             console.error(error);
@@ -89,7 +90,19 @@ const CreateQuiz = () => {
     }
 
 
+    const handleCheckboxChange = (index) => {
+        if (correctAnswerIndices.includes(index)) {
+            setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
+        } else {
+            setCorrectAnswerIndices([...correctAnswerIndices, index]);
+        }
+    };
 
+    const handleRemoveAnswer = (index) => {
+        const newAnswers = answers.filter((_, i) => i !== index);
+        setAnswers(newAnswers);
+        setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
+    };
     return (
         <>
 
@@ -115,12 +128,12 @@ const CreateQuiz = () => {
                     {questions ?
                         (
                             questions.map((question, index) => (
-                                <QuestionCard 
-                                    key={index} 
-                                    content={question.content} 
-                                    answers={question.answers} 
-                                    time={question.time} 
-                                    points={question.points} 
+                                <QuestionCard
+                                    key={index}
+                                    content={question.content}
+                                    answers={question.answers}
+                                    time={question.time}
+                                    points={question.points}
                                 />
                             ))
                         )
@@ -153,9 +166,14 @@ const CreateQuiz = () => {
                                                 />
                                                 {/* checkbox for the rigth */}
                                                 <div className="flex items-center justify-center ml-5">
-                                                    <input type="checkbox" checked={correctAnswerIndex === index}
-                                                        onChange={() => setCorrectAnswerIndex(index)} className="checkbox checkbox-secondary" />
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={correctAnswerIndices.includes(index)}
+                                                        onChange={() => handleCheckboxChange(index)}
+                                                    />
                                                 </div>
+
+                                                <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
                                             </div>
                                         ))}
 
