@@ -58,6 +58,8 @@ const CreateQuiz = () => {
         fetchQuiz();
     }, [id]); // Add id as a dependency
 
+    console.log(quiz);
+
     const handleQuestionChange = (e) => {
         setQuestion({ ...question, content: e.target.value });
     };
@@ -104,6 +106,8 @@ const CreateQuiz = () => {
         setAnswers(newAnswers);
         setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
     };
+
+    console.log(questions)
     return (
         <>
 
@@ -145,10 +149,6 @@ const CreateQuiz = () => {
                         (
                             <div className=" border rounded-md w-1000px">
                                 <div className="p-3">
-
-
-
-
                                     <div className="flex flex-col items-start justify-start w-800px ">
 
                                         {/* the question */}
@@ -159,7 +159,6 @@ const CreateQuiz = () => {
                                         {answers.map((answer, index) => (
                                             <div key={index} className="flex flex-row items-start justify-start w-600px ">
                                                 <Input
-
                                                     type="text"
                                                     placeholder={`Enter answer ${index + 1}`}
                                                     value={quiz.answers}
@@ -173,7 +172,6 @@ const CreateQuiz = () => {
                                                         onChange={() => handleCheckboxChange(index)}
                                                     />
                                                 </div>
-
                                                 <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
                                             </div>
                                         ))}
@@ -186,42 +184,9 @@ const CreateQuiz = () => {
                                 </div>
                             </div>
                         )}
-
-
-
                 </div>
                 <button className="btn btn-outline btn-primary" onClick={questionCreation}>Add +</button>
             </div>
-
-
-
-
-            {/* <div className="flex flex-col items-center justify-center">
-                <input type="text" placeholder="Enter question" onChange={handleQuestionChange} />
-                {answers.map((answer, index) => (
-                    <div key={index}>
-                        <Input
-                            type="text"
-                            placeholder={`Enter answer ${index + 1}`}
-                            value={answer}
-                            onChange={handleAnswerChange(index)}
-                        />
-                        <Input
-                            type="checkbox"
-                            checked={correctAnswerIndex === index}
-                            onChange={() => setCorrectAnswerIndex(index)}
-                        />
-                    </div>
-                ))}
-                <button onClick={handleAddAnswer}>Add Answer</button>
-                <button onClick={handleAddQuestion}>Save</button>
-            </div>
-
-            <div className="flex flex-col items-center justify-center">
-                <Button>Create</Button>
-            </div> */}
-
-
         </>
     );
 
