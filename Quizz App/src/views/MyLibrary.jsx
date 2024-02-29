@@ -24,7 +24,7 @@ const MyLibrary = () => {
         }
     }, [userData])
 
-    console.log(myQuizzes)
+   
 
     const [quiz, setQuiz] = useState({
         title: "",

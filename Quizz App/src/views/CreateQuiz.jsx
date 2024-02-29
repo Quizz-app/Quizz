@@ -79,7 +79,7 @@ const CreateQuiz = () => {
             const newQuestion = await addQuestion(quiz.id, question.content, question.answers, question.time, question.points, correctAnswerIndices);
             setCreateMode(false);
             setQuestions([...questions, newQuestion]);
-            console.log(newQuestion);
+            
         }
         catch (error) {
             console.error(error);

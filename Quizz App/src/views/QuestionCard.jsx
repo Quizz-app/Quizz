@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const QuestionCard = ({ content, answers, time, points,editMode, setEditMode }) => {
+const QuestionCard = ({ content, answers, time, points, editMode, setEditMode }) => {
 
     const setEMode = (value) => () => {
         setEditMode(value);
