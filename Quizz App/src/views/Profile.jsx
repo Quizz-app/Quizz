@@ -2,17 +2,57 @@ import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { updateUserInfo } from "../services/users-service";
+import toast from "react-hot-toast";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../config/firebase-config";
 
 const Profile = () => {
-  const { setContext, userData } = useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const [form, setForm] = useState({
     firstName: userData?.firstName,
     lastName: userData?.lastName,
     email: userData?.email,
+    role: userData?.role,
     password: "",
-    role: "",
   });
 
+  const [user] = useAuthState(auth);
+  const [currentPassword, setCurrentPassword] = useState(null);
+  const [newPassword, setNewPassword] = useState(null);
+  const [email] = useState(user?.email);
+
+  const handleUpdatePassword = async () => {
+    try {
+      await updatePassword(user, newPassword);
+      toast.success("Password updated successfully!");
+    } catch (error) {
+      toast.error(
+        "Error updating password. Please check the console for details."
+      );
+      // TODO: To be removed
+      console.error("Error updating password:", error.message);
+    }
+  };
+
+  const handleSavePassword = async () => {
+    if (currentPassword && newPassword && newPassword === newPassword) {
+      const credential = EmailAuthProvider.credential(email, currentPassword);
+      try {
+        await reauthenticateWithCredential(user, credential);
+        await handleUpdatePassword();
+      } catch (error) {
+        console.error(
+          "Error reauthenticating or updating password:",
+          error.message
+        );
+      }
+    }
+  };
   const navigate = useNavigate();
 
   const updateForm = (prop) => (e) => {
@@ -21,21 +61,20 @@ const Profile = () => {
   };
 
   const saveChanges = async () => {
+    await handleSavePassword();
     await updateUserInfo(userData.username, "firstName", form.firstName);
     await updateUserInfo(userData.username, "lastName", form.lastName);
     await updateUserInfo(userData.username, "email", form.email);
+    await updateUserInfo(userData.username, "role", form.role);
 
+    // await handleSavePassword();
     navigate("/home");
   };
 
-  console.log(userData);
   return (
     <div className="hero min-h-screen bg-base-200 flex flex-col">
       <h2 className="text-2xl font-bold mb-4 flex-col">Profile details</h2>
-      <p>
-        Update your information.If your email address changes, we&apos;ll send
-        you a confirmation message.
-      </p>
+      <p>Update your information. You can also change your password here.</p>
 
       <div className="hero-content basis-1/4"></div>
 
@@ -69,6 +108,38 @@ const Profile = () => {
           </div>
 
           <div className="form-control">
+            <label htmlFor="email">
+              <span className="label-text">Email address</span>
+            </label>
+            <input
+              value={form.email}
+              onChange={updateForm("email")}
+              type="email"
+              placeholder="email"
+              name="email"
+              className="input input-bordered"
+            />
+          </div>
+
+          <div className="form-control">
+            <label htmlFor="currentPassword">
+              <span className="label-text">Current password</span>
+            </label>
+            <input
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              type="password"
+              className="input input-bordered"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col basis-1/2 mb-5">
+          <h2>About me</h2>
+          <textarea
+            className="textarea textarea-bordered mb-4"
+            placeholder="Write something about you..."
+          ></textarea>
+          <div className="form-control">
             <label htmlFor="name">
               <span className="label-text">Last name</span>
             </label>
@@ -82,59 +153,22 @@ const Profile = () => {
           </div>
 
           <div className="form-control">
-            <label htmlFor="email">
-              <span className="label-text">Email</span>
+            <label htmlFor="role">
+              <span className="label-text">Role</span>
             </label>
             <input
-              value={form.email}
-              onChange={updateForm("email")}
-              type="email"
-              placeholder="email"
-              name="email"
-              className="input input-bordered"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col basis-1/2 mb-5">
-          <h2>About me</h2>
-          <textarea
-            className="textarea textarea-bordered mb-4"
-            placeholder="Write something about you..."
-          ></textarea>
-          <div className="form-control">
-            <label htmlFor="currentPassword">
-              <span className="label-text">Current password</span>
-            </label>
-            <input
-              // onChange={(e) => setCurrentPassword(e.target.value)}
+              onChange={(e) => setNewPassword(e.target.value)}
               type="password"
-              placeholder="Current password"
-              name="currentPassword"
-              className="input input-bordered"
-            />
-          </div>
-
-          <div className="form-control">
-            <label htmlFor="email">
-              <span className="label-text">New password</span>
-            </label>
-            <input
-              // value={form.password}
-              // onChange={(e) => setNewPassword(e.target.value)}
-              type="password"
-              name="password"
               className="input input-bordered"
             />
           </div>
 
           <div className="form-control">
             <label htmlFor="password">
-              <span className="label-text">Confirm password</span>
+              <span className="label-text">New password</span>
             </label>
             <input
-              // value={form.password}
-              // onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => setNewPassword(e.target.value)}
               type="password"
               name="password"
               className="input input-bordered"
