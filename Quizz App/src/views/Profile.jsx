@@ -50,6 +50,7 @@ const Profile = () => {
           "Error reauthenticating or updating password:",
           error.message
         );
+        toast.error("Please double-check and try again.");
       }
     }
   };
@@ -67,7 +68,6 @@ const Profile = () => {
     await updateUserInfo(userData.username, "email", form.email);
     await updateUserInfo(userData.username, "role", form.role);
 
-    // await handleSavePassword();
     navigate("/home");
   };
 
@@ -80,19 +80,16 @@ const Profile = () => {
 
       <div className="hero-content basis-3/4 flex flex-row">
         <div className="flex flex-col basis-1/2 mb-5">
-          <div className="avatar relative mb-4">
-            <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+          <div className="avatar relative mb-4 flex items-center">
+            <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 mr-2">
               <img
                 src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
                 className="object-cover rounded-full"
               />
             </div>
-            <button className="btn btn-primary text-xs py-1 px-2 absolute bottom-0 right-0 mb-1 mr-2">
-              Change photo
+            <button>
+              <input type="file" className="mt-12" />
             </button>
-            {/* <button className="btn btn-primary text-xs absolute bottom-0 right-0 mb-2 mr-2">
-              Change photo
-            </button> */}
           </div>
           <div className="form-control">
             <label htmlFor="name">
@@ -118,6 +115,8 @@ const Profile = () => {
               placeholder="email"
               name="email"
               className="input input-bordered"
+              readOnly
+              onDoubleClick={() => toast.error("You cannot change your email.")}
             />
           </div>
 
@@ -157,9 +156,12 @@ const Profile = () => {
               <span className="label-text">Role</span>
             </label>
             <input
-              onChange={(e) => setNewPassword(e.target.value)}
-              type="password"
+              value={form.role}
+              onChange={updateForm("role")}
+              type="text"
+              name="lastName"
               className="input input-bordered"
+              readOnly
             />
           </div>
 
