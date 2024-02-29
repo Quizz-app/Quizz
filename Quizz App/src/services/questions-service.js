@@ -1,4 +1,4 @@
-import { ref, push, get, update, remove } from 'firebase/database';
+import { ref, push, get, update, remove, query } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
 export const addQuestion = async (quizId, content, answers, time, points, correctAnswer) => {
@@ -22,13 +22,17 @@ export const addQuestion = async (quizId, content, answers, time, points, correc
 };
 
 export const getQuestionsByQuizId = async (quizId) => {
-    const questionsSnapshot = await get(ref(db, `quizzes/${quizId}/questions`));
-    const questions = questionsSnapshot.val();
+    const questionsSnapshot = await get(query(ref(db, `quizzes/${quizId}/questions`)));
 
     if (!questionsSnapshot.exists()) {
         throw new Error('No questions found');
     }
 
-    return questions;
+    const questionsObject = questionsSnapshot.val();
+    const questionsArray = Object.keys(questionsObject).map(key => ({
+        id: key,
+        ...questionsObject[key]
+    }));
 
+    return questionsArray;
 };

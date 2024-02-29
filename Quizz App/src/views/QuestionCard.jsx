@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 
-const QuestionCard = ({ content, answers, time, points }) => {
+const QuestionCard = ({ content, answers, time, points,editMode, setEditMode }) => {
+
+    const setEMode = (value) => () => {
+        setEditMode(value);
+    }
 
     return (
         <div className="card w-96 bg-base-100 shadow-xl">
@@ -14,7 +18,7 @@ const QuestionCard = ({ content, answers, time, points }) => {
                 <p>Time: {time} seconds</p>
                 <p>Points: {points}</p>
                 <div className="card-actions justify-end">
-                    <button className="btn btn-primary">edit</button>
+                    <button className="btn btn-primary" onClick={setEMode(true)}>edit</button>
                 </div>
             </div>
         </div>
@@ -28,5 +32,7 @@ QuestionCard.propTypes = {
     content: PropTypes.string.isRequired,
     answers: PropTypes.array.isRequired,
     time: PropTypes.number.isRequired,
-    points: PropTypes.number.isRequired
+    points: PropTypes.number.isRequired,
+    editMode: PropTypes.bool.isRequired,
+    setEditMode: PropTypes.func.isRequired
 }

@@ -25,8 +25,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useParams } from "react-router-dom";
-import { addQuestion } from "../services/questions-service";
+import { useNavigate, useParams } from "react-router-dom";
+import { addQuestion, getQuestionsByQuizId } from "../services/questions-service";
 import QuestionCard from "./QuestionCard";
 
 const CreateQuiz = () => {
@@ -36,6 +36,8 @@ const CreateQuiz = () => {
     const [answers, setAnswers] = useState(["", ""]);
     const [createMode, setCreateMode] = useState(false);
     const [correctAnswerIndices, setCorrectAnswerIndices] = useState([]);
+    const [editMode, setEditMode] = useState(false);
+    const navigate = useNavigate();
 
     const [question, setQuestion] = useState({
         content: "",
@@ -48,7 +50,9 @@ const CreateQuiz = () => {
         const fetchQuiz = async () => {
             try {
                 const quiz = await getQuizById(id);
+                const questions = await getQuestionsByQuizId(id);
                 setQuiz(quiz);
+                setQuestions(questions);
             }
             catch (error) {
                 console.error(error);
@@ -56,7 +60,7 @@ const CreateQuiz = () => {
         };
 
         fetchQuiz();
-    }, [id]); // Add id as a dependency
+    }, [id, questions]); // Add id as a dependency
 
     console.log(quiz);
 
@@ -121,7 +125,7 @@ const CreateQuiz = () => {
                         <Button>Assign to group</Button>
                     </div>
                     <div className="flex flex-col items-center justify-center">
-                        <Button>Create</Button>
+                        <Button onClick={()=>navigate('/my-library')}>Create</Button>
                     </div>
                 </div>
 
@@ -139,6 +143,8 @@ const CreateQuiz = () => {
                                     answers={question.answers}
                                     time={question.time}
                                     points={question.points}
+                                    editMode={editMode}
+                                    setEditMode={setEditMode}
                                 />
                             ))
                         )

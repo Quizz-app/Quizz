@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import { useNavigate } from "react-router-dom";
+import QuizCard from "./QuizCard";
 import { get } from "firebase/database";
 
 
@@ -44,6 +45,10 @@ const MyLibrary = () => {
     const quizCreation = async () => {
         try {
             const id = await createQuiz(userData.username, quiz.title, quiz.category, quiz.isPublic, quiz.time, quiz.questions);
+            setQuiz({
+                ...quiz,
+                id: id
+            });
             navigate(`/quiz/${id}`);
         } catch (error) {
             console.error(error);
@@ -62,16 +67,11 @@ const MyLibrary = () => {
     return (
         <div>
 
-            <div className="card w-96 bg-base-100 shadow-xl image-full">
-                <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
-                <div className="card-body">
-                    <h2 className="card-title">Shoes!</h2>
-                    <p>If a dog chews shoes whose shoes does he choose?</p>
-                    <div className="card-actions justify-end">
-                        <button className="btn btn-primary">Buy Now</button>
-                    </div>
-                </div>
-            </div>
+            {myQuizzes.map(quiz => (
+                <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} />
+            ))}
+
+
             <Dialog onClose={handleCloseDialog}>
                 <DialogTrigger asChild>
                     <Button variant="outline" onClick={handleButtonClick} > New Quiz +</Button>
