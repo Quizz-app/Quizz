@@ -55,7 +55,7 @@ const CreateQuiz = () => {
         };
 
         fetchQuiz();
-    }, [id]);
+    }, [id, questions]);
    
 
 
