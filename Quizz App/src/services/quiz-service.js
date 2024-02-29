@@ -39,6 +39,11 @@ export const getAllQuizzes = async () => {
 };
 
 export const getQuizByCreator = async (creator) => {
+  if (!creator) {
+    console.error('Creator is undefined');
+    return [];
+  }
+  
   const snapShot = await get(ref(db, "quizzes"), query(orderByChild("creator"), equalTo(creator)));
 
   if (!snapShot.exists()) {
@@ -49,10 +54,11 @@ export const getQuizByCreator = async (creator) => {
     id: key,
     ...snapShot.val()[key],
   }));
-
+  console.log(quizzes);
   return quizzes;
-
 }
+
+
 
 export const getQuizById = async (id) => {
   const snapShot = await get(ref(db, `quizzes/${id}`));

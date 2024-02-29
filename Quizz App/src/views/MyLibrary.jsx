@@ -2,56 +2,29 @@ import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import { createQuiz, getAllQuizzes, getQuizByCreator } from "../services/quiz-service";
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import { useNavigate } from "react-router-dom";
 
 
 const MyLibrary = () => {
     const { userData } = useContext(AppContext);
-    const [isDialogOpen, setIsDialogOpen] = useState(false); //for the window for quiz creation
-    const [myQuizzes, setMyQuizzes] = useState([]); //for the window for quiz creation
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [myQuizzes, setMyQuizzes] = useState([]); 
     const navigate = useNavigate();
 
 
     useEffect(() => {
-        const fetchQuizzes = async () => {
-            try {
-                const quizzes = await getQuizByCreator(userData?.username);
-                setMyQuizzes(quizzes);
-            } catch (error) {
-                console.error(error);
-            }
-        }
+        getAllQuizzes()
+            .then(quizzes => quizzes.filter(quiz => quiz.creator === userData?.username))
+            .then(setMyQuizzes)
+    }, [userData?.username]);
 
-        if (userData && userData.username) {
-            fetchQuizzes();
-        }
-    }, [userData]);
-
-    console.log(myQuizzes);
-
+    console.log(myQuizzes)
+    
     const [quiz, setQuiz] = useState({
         title: "",
         creator: "",
@@ -71,15 +44,10 @@ const MyLibrary = () => {
     const quizCreation = async () => {
         try {
             const id = await createQuiz(userData.username, quiz.title, quiz.category, quiz.isPublic, quiz.time, quiz.questions);
-            console.log(id);
             navigate(`/quiz/${id}`);
         } catch (error) {
             console.error(error);
         }
-    }
-
-    const handleButtonVsibility = () => {
-        setButtonVisibility(buttonVisibility);
     }
 
     //dialog actions
@@ -90,7 +58,6 @@ const MyLibrary = () => {
     const handleCloseDialog = () => {
         setIsDialogOpen(false);
     };
-
 
     return (
         <div>
@@ -115,7 +82,7 @@ const MyLibrary = () => {
                     <DialogHeader>
                         <DialogTitle>Edit profile</DialogTitle>
                         <DialogDescription>
-                            Make changes to your profile here. Click save when you're done.
+                            {`Make changes to your profile here. Click save when you're done.`}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">

@@ -68,7 +68,8 @@ const CreateQuiz = () => {
         setAnswers(newAnswers);
         setQuestion({ ...question, answers: newAnswers });
     };
-
+     
+    
     const handleAddQuestion = async () => {
         try {
             const newQuestion = await addQuestion(quiz.id, question.content, question.answers, question.time, question.points, correctAnswerIndices);

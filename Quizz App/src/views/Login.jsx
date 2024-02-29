@@ -32,8 +32,7 @@ const Login = () => {
     }
   };
 
-  console.log(user);
-
+  
   return (
     <div>
       {/* <h1>Login</h1>
