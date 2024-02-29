@@ -8,23 +8,23 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import { useNavigate } from "react-router-dom";
+import { get } from "firebase/database";
 
 
 const MyLibrary = () => {
     const { userData } = useContext(AppContext);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [myQuizzes, setMyQuizzes] = useState([]); 
+    const [myQuizzes, setMyQuizzes] = useState([]);
     const navigate = useNavigate();
 
-
     useEffect(() => {
-        getAllQuizzes()
-            .then(quizzes => quizzes.filter(quiz => quiz.creator === userData?.username))
-            .then(setMyQuizzes)
-    }, [userData?.username]);
+        if (userData){
+            getQuizByCreator(userData.username).then(quizzes => setMyQuizzes(quizzes))
+        }
+    }, [userData])
 
     console.log(myQuizzes)
-    
+
     const [quiz, setQuiz] = useState({
         title: "",
         creator: "",
@@ -72,8 +72,6 @@ const MyLibrary = () => {
                     </div>
                 </div>
             </div>
-
-
             <Dialog onClose={handleCloseDialog}>
                 <DialogTrigger asChild>
                     <Button variant="outline" onClick={handleButtonClick} > New Quiz +</Button>
@@ -121,8 +119,6 @@ const MyLibrary = () => {
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <DialogFooter>
                         <Button type="submit" onClick={quizCreation}>Create Quiz</Button>
