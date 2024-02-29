@@ -72,7 +72,6 @@ const App = () => {
                   <Route path="/login" element={<Login />} />
                   <Route path="/my-library" element={<MyLibrary />} />
                   <Route path="/quiz/:id" element={<CreateQuiz />} />
-                  <Route path="/create-quiz" element={<CreateQuiz />} /> {/* Add this line */}
                   <Route path="/my-teams" element={<Teams />} />
                   <Route path="/profile" element={<Profile />} />
                   {/* Add more routes as needed */}

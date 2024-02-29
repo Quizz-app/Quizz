@@ -1,30 +1,81 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { updateQuestion } from '../services/questions-service';
 
-const QuestionCard = ({ content, answers, time, points, editMode, setEditMode }) => {
+const QuestionCard = ({ quizId, questionId, content, answers, time, points, correctAnswer, handleUpdateQuestion, onDelete }) => {
+    const [editing, setEditing] = useState(false);
+    const [editedContent, setEditedContent] = useState(content);
+    const [editedAnswers, setEditedAnswers] = useState([...answers]);
+    const [editedTime, setEditedTime] = useState(time);
+    const [editedPoints, setEditedPoints] = useState(points);
+    const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(correctAnswer || 0);
 
-    const setEMode = (value) => () => {
-        setEditMode(value);
-    }
+    console.log(questionId);
+    const handleEdit = () => {
+        setEditing(true);
+    };
+
+
+    const handleSave = async () => {
+        handleUpdateQuestion({
+            id: questionId, 
+            content: editedContent,
+            answers: editedAnswers,
+            time: editedTime,
+            points: editedPoints,
+            correctAnswer: editedCorrectAnswer,
+        });
+
+        await updateQuestion(quizId, questionId, content, editedAnswers, editedTime, editedPoints, editedCorrectAnswer); // Use editedCorrectAnswer
+        setEditing(false);
+    };
 
     return (
         <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
-                <h2 className="card-title">{content}</h2>
-                <ul>
-                    {answers.map((answer, index) => (
-                        <li key={index}>{answer}</li>
-                    ))}
-                </ul>
-                <p>Time: {time} seconds</p>
-                <p>Points: {points}</p>
-                <div className="card-actions justify-end">
-                    <button className="btn btn-primary" onClick={setEMode(true)}>edit</button>
-                </div>
+                {editing ? (
+                    <>
+                        <input type="text" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
+                        {editedAnswers.map((answer, index) => (
+                            <div key={index}>
+                                <input
+                                    type="text"
+                                    value={editedAnswers[index]}
+                                    onChange={(e) => {
+                                        const newAnswers = [...editedAnswers];
+                                        newAnswers[index] = e.target.value;
+                                        setEditedAnswers(newAnswers);
+                                    }}
+                                />
+                                <input
+                                    type="checkbox"
+                                    checked={editedCorrectAnswer === index}
+                                    onChange={() => setEditedCorrectAnswer(index)}
+                                />
+                            </div>
+                        ))}
+                        <input type="number" value={editedTime} onChange={(e) => setEditedTime(Number(e.target.value))} />
+                        <input type="number" value={editedPoints} onChange={(e) => setEditedPoints(Number(e.target.value))} />
+                        <button className="btn btn-outline btn-info" onClick={handleSave}>Save</button>
+                    </>
+                ) : (
+                    <>
+                        <h2 className="card-title">{content}</h2>
+                        <ul>
+                            {answers.map((answer, index) => (
+                                <li key={index}>{answer}</li>
+                            ))}
+                        </ul>
+                        <p>Time: {time} seconds</p>
+                        <p>Points: {points}</p>
+                        <button className="btn btn-outline btn-info" onClick={handleEdit}>Edit</button>
+                        <button className="btn btn-danger" onClick={() => onDelete(questionId)}>delete</button>
+                    </>
+                )}
             </div>
         </div>
-    )
-
-}
+    );
+};
 
 export default QuestionCard;
 
@@ -33,6 +84,8 @@ QuestionCard.propTypes = {
     answers: PropTypes.array.isRequired,
     time: PropTypes.number.isRequired,
     points: PropTypes.number.isRequired,
-    editMode: PropTypes.bool.isRequired,
-    setEditMode: PropTypes.func.isRequired
-}
+    handleUpdateQuestion: PropTypes.func.isRequired,
+    quizId: PropTypes.string.isRequired,
+    questionId: PropTypes.string.isRequired,
+    correctAnswer: PropTypes.array
+};
