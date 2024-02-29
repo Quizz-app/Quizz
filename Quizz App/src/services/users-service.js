@@ -1,3 +1,4 @@
+import { toast } from 'react-hot-toast';
 import {
   get,
   set,
@@ -8,6 +9,7 @@ import {
   update,
 } from "firebase/database";
 import { db } from "../config/firebase-config.js";
+import { sendEmailVerification } from 'firebase/auth';
 
 export const createUsername = (
   firstName,
@@ -78,3 +80,12 @@ export const getAllEducators = async () => {
     return null;
   }
 };
+
+export const verifyUser = async (user) => {
+  try {
+      await sendEmailVerification(user);
+      toast.success('Verification email sent!')
+  } catch (error) {
+      toast.error('Something went wrong. Please, try again.')
+  }
+}

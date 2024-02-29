@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { createUsername, getUserByUsername } from "../services/users-service";
+import { createUsername, getUserByUsername, verifyUser } from "../services/users-service";
 import { registerUser } from "../services/auth-service";
 import { useNavigate } from "react-router-dom";
 
@@ -30,9 +30,10 @@ const Register = () => {
     try {
       const user = await getUserByUsername(form.username);
       if (user.exists()) {
-        return alert(`Потребителско име @${form.username} вече съществува!`);
+        return alert(`Username ${form.username} already exists!`);
       }
       const credentials = await registerUser(form.email, form.password);
+      await verifyUser(credentials.user); 
       await createUsername(
         form.firstName,
         form.lastName,
@@ -41,7 +42,7 @@ const Register = () => {
         form.email,
         form.role
       );
-
+  
       navigate("/");
     } catch (error) {
       console.error(error);
