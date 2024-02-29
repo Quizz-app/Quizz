@@ -32,28 +32,21 @@ const CreateQuiz = () => {
     const { id } = useParams();
     const [quiz, setQuiz] = useState(null);
     const [questions, setQuestions] = useState([]);
-
-    const [answers, setAnswers] = useState({});
+    const [answers, setAnswers] = useState(["", "", "", ""]);
+    const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
 
     const [question, setQuestion] = useState({
         content: "",
-        answers: { 
-            question1: true, 
-            question2: false, 
-            question3: false, 
-            question4: false },
+        answers,
         time: 0,
         points: 0
-
     });
-
 
     useEffect(() => {
         const fetchQuiz = async () => {
             try {
                 const quiz = await getQuizById(id);
                 setQuiz(quiz);
-                console.log(quiz);
             }
             catch (error) {
                 console.error(error);
@@ -63,51 +56,62 @@ const CreateQuiz = () => {
         fetchQuiz();
     }, [id]); // Add id as a dependency
 
+    const handleQuestionChange = (e) => {
+        setQuestion({ ...question, content: e.target.value });
+    };
+
+    const handleAnswerChange = (index) => (e) => {
+        const newAnswers = [...answers];
+        newAnswers[index] = e.target.value;
+        setAnswers(newAnswers);
+        setQuestion({ ...question, answers: newAnswers });
+    };
+
     const handleAddQuestion = async () => {
         try {
-            const question = await addQuestion(quiz.id, content, answers, time, points);
-            setQuestions([...questions, question]);
+            const newQuestion = await addQuestion(quiz.id, question.content, question.answers, question.time, question.points, correctAnswerIndex);
+            setQuestions([...questions, newQuestion]);
         }
         catch (error) {
             console.error(error);
         }
-    }
+    };
+
+    const handleAddAnswer = () => {
+        setAnswers([...answers, ""]);
+    };
 
 
     return (
-        <>
+        <>  
+        <div className="flex flex-row items-center justify-center">
+            {quiz && <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>}
             <div className="flex flex-row items-center justify-center">
-
-                {quiz && <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>}
-
-
-
-                <div className="flex flex-row items-center justify-center">
-                    {/* <div className="flex flex-row items-center justify-center">
-                <Label htmlFor="time">Time</Label>
-                <Input id="time" type="number" placeholder="Enter the time in minutes" />
-            </div> */}
-
-                    <div className="flex flex-col items-center justify-center">
-                        <Button>Assign to group</Button>
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center">
-                        <Button>Create</Button>
-                    </div>
+                <div className="flex flex-col items-center justify-center">
+                    <input type="text" placeholder="Enter question" onChange={handleQuestionChange} />
+                    {answers.map((answer, index) => (
+                        <div key={index}>
+                            <input
+                                type="text"
+                                placeholder={`Enter answer ${index + 1}`}
+                                value={answer}
+                                onChange={handleAnswerChange(index)}
+                            />
+                            <input
+                                type="checkbox"
+                                checked={correctAnswerIndex === index}
+                                onChange={() => setCorrectAnswerIndex(index)}
+                            />
+                        </div>
+                    ))}
+                    <button onClick={handleAddAnswer}>Add Answer</button>
+                    <button onClick={handleAddQuestion}>Add Question</button>
                 </div>
-
-
+                <div className="flex flex-col items-center justify-center">
+                    <Button>Create</Button>
+                </div>
             </div>
-
-            <div className="flex flex-col">
-                <input className="border mb-3" name="content" type="text" />
-                <input className="border mb-3" name="answer" type="text" />
-                <input className="border mb-3" name="answer" type="text" />
-                <input className="border mb-3" name="answer" type="text" />
-                <input className="border mb-3" name="answer" type="text" />
-                <button>Add question</button>
-            </div>
+        </div>
         </>
     );
 
