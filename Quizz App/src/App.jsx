@@ -64,7 +64,7 @@ const App = () => {
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={75}>
-              <div className="flex h-full items-start justify-start p-6 ">
+              <div className="flex flex-col h-full items-start justify-start p-6 ">
                 <Routes>
                   <Route index element={<Home />} />
                   <Route path="/home" element={<Home />} />
