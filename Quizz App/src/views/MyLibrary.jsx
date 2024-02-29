@@ -1,6 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { createQuiz } from "../services/quiz-service";
+import { createQuiz, getAllQuizzes, getQuizByCreator } from "../services/quiz-service";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button"
@@ -31,8 +31,26 @@ import { useNavigate } from "react-router-dom";
 const MyLibrary = () => {
     const { userData } = useContext(AppContext);
     const [isDialogOpen, setIsDialogOpen] = useState(false); //for the window for quiz creation
+    const [myQuizzes, setMyQuizzes] = useState([]); //for the window for quiz creation
     const navigate = useNavigate();
 
+
+    useEffect(() => {
+        const fetchQuizzes = async () => {
+            try {
+                const quizzes = await getQuizByCreator(userData?.username);
+                setMyQuizzes(quizzes);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        if (userData && userData.username) {
+            fetchQuizzes();
+        }
+    }, [userData]);
+
+    console.log(myQuizzes);
 
     const [quiz, setQuiz] = useState({
         title: "",
@@ -76,6 +94,19 @@ const MyLibrary = () => {
 
     return (
         <div>
+
+            <div className="card w-96 bg-base-100 shadow-xl image-full">
+                <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+                <div className="card-body">
+                    <h2 className="card-title">Shoes!</h2>
+                    <p>If a dog chews shoes whose shoes does he choose?</p>
+                    <div className="card-actions justify-end">
+                        <button className="btn btn-primary">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+
             <Dialog onClose={handleCloseDialog}>
                 <DialogTrigger asChild>
                     <Button variant="outline" onClick={handleButtonClick} > New Quiz +</Button>

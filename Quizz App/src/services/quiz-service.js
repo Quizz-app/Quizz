@@ -38,6 +38,22 @@ export const getAllQuizzes = async () => {
   return quizzes;
 };
 
+export const getQuizByCreator = async (creator) => {
+  const snapShot = await get(ref(db, "quizzes"), query(orderByChild("creator"), equalTo(creator)));
+
+  if (!snapShot.exists()) {
+    return [];
+  }
+
+  const quizzes = Object.keys(snapShot.val()).map((key) => ({
+    id: key,
+    ...snapShot.val()[key],
+  }));
+
+  return quizzes;
+
+}
+
 export const getQuizById = async (id) => {
   const snapShot = await get(ref(db, `quizzes/${id}`));
 
