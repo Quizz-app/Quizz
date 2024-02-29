@@ -36,16 +36,7 @@ const CreateQuiz = () => {
                 const quiz = await getQuizById(id);
                 setQuiz(quiz); 
 
-                try {
-                    const questions = await getQuestionsByQuizId(id);
-                    setQuestions(questions);
-                } catch (error) {
-                    if (error.message === 'No questions found') {
-                        setQuestions([]);
-                    } else {
-                        throw error;
-                    }
-                }
+              
 
                 setLoading(false); // Set loading to false after the data is fetched
             }
@@ -55,9 +46,25 @@ const CreateQuiz = () => {
         };
 
         fetchQuiz();
-    }, [id, questions]);
-   
+    }, [id]);
 
+    
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            try {
+                const questions = await getQuestionsByQuizId(id);
+                setQuestions(questions);
+            } catch (error) {
+                if (error.message === 'No questions found') {
+                    setQuestions([]);
+                } else {
+                    throw error;
+                }
+            }
+        };
+
+        fetchQuestions();
+    }, [id]);
 
     const handleQuestionChange = (e) => {
         setQuestion({ ...question, content: e.target.value });
