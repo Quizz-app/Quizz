@@ -8,12 +8,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import { useNavigate } from "react-router-dom";
+import QuizCard from "./QuizCard";
 
 
 const MyLibrary = () => {
     const { userData } = useContext(AppContext);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [myQuizzes, setMyQuizzes] = useState([]); 
+    const [myQuizzes, setMyQuizzes] = useState([]);
     const navigate = useNavigate();
 
 
@@ -24,7 +25,7 @@ const MyLibrary = () => {
     }, [userData?.username]);
 
     console.log(myQuizzes)
-    
+
     const [quiz, setQuiz] = useState({
         title: "",
         creator: "",
@@ -62,16 +63,9 @@ const MyLibrary = () => {
     return (
         <div>
 
-            <div className="card w-96 bg-base-100 shadow-xl image-full">
-                <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
-                <div className="card-body">
-                    <h2 className="card-title">Shoes!</h2>
-                    <p>If a dog chews shoes whose shoes does he choose?</p>
-                    <div className="card-actions justify-end">
-                        <button className="btn btn-primary">Buy Now</button>
-                    </div>
-                </div>
-            </div>
+            {myQuizzes.map(quiz => (
+                <QuizCard key={quiz.id} content={quiz.title} />
+            ))}
 
 
             <Dialog onClose={handleCloseDialog}>
