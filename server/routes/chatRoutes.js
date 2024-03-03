@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const OpenAI = require("openai");
+const { json } = require("body-parser");
 
 dotenv.config();
 
@@ -9,6 +10,7 @@ const router = express.Router();
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 router.post("/chat", async (req, res) => {
+
   const { prompt } = req.body;
 
 //   console.log(prompt)
@@ -19,6 +21,9 @@ router.post("/chat", async (req, res) => {
         {
           role: "user",
           content: prompt,
+         response_format: {
+          type: "json_object",
+         }
         },
       ],
       temperature: 1,
