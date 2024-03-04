@@ -1,11 +1,31 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/auth-service";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 
 const Header = ({ theme, onThemeChange }) => {
-  const { user, setContext } = useContext(AppContext);
+  const { user, setContext, userData } = useContext(AppContext);
+  console.log(userData?.avatar);
 
+  const [form, setForm] = useState({
+    firstName: userData?.firstName || "",
+    lastName: userData?.lastName || "",
+    email: userData?.email || "",
+    role: userData?.role || "",
+    avatar: userData?.avatar || "",
+    password: userData?.password || "",
+  });
+
+  useEffect(() => {
+    setForm({
+      firstName: userData?.firstName || "",
+      lastName: userData?.lastName || "",
+      email: userData?.email || "",
+      role: userData?.role || "",
+      avatar: userData?.avatar || "",
+      password: userData?.password || "",
+    });
+  }, [userData]);
   const navigate = useNavigate();
 
   const logOut = async () => {
@@ -99,10 +119,7 @@ const Header = ({ theme, onThemeChange }) => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-                />
+                <img alt="Tailwind CSS Navbar component" src={form.avatar} />
               </div>
             </div>
             <ul

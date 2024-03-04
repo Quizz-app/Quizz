@@ -9,8 +9,9 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, storage } from "../config/firebase-config";
+import { auth, db, storage } from "../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { get } from "firebase/database";
 
 const Profile = () => {
   const { userData } = useContext(AppContext);
@@ -25,12 +26,12 @@ const Profile = () => {
   const [errMessage, setErrMessage] = useState(null);
 
   const [form, setForm] = useState({
-    firstName: userData.firstName || "",
-    lastName: userData.lastName || "",
-    email: userData.email || "",
-    role: userData.role || "",
-    avatar: userData.avatar || "",
-    password: userData.password || "",
+    firstName: userData?.firstName || "",
+    lastName: userData?.lastName || "",
+    email: userData?.email || "",
+    role: userData?.role || "",
+    // avatar: userData.avatar || "",
+    password: userData?.password || "",
   });
 
   useEffect(() => {
@@ -46,6 +47,7 @@ const Profile = () => {
     }
   }, [user]);
 
+  console.log(user);
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     // console.log(selectedFile);
@@ -61,7 +63,7 @@ const Profile = () => {
     }
   };
 
-  const uploadFile = () => {
+  const uploadFile = async () => {
     if (uploadImage === null) return;
 
     if (uploadImage?.size > 1024 * 1024 * 5) {
@@ -82,20 +84,25 @@ const Profile = () => {
       .then(() => {
         toast.success("Image uploaded successfully");
         setErrMessage(null);
+        return getDownloadURL(imageRef);
+      })
+      .then((url) => {
+        console.log("Download URL:", url);
+        // Here you can save the URL to your database
+        updateUserInfo(userData?.username, "avatar", url);
+
       })
       .catch((error) => {
-        toast.success("Failed to upload the image");
-
+        toast.error("Failed to upload the image");
         console.error("Upload error:", error);
       });
-    };
-    
-    const handleSavePhoto = async () => {
-      uploadFile();
-      await updateUserInfo(userData.username, "avatar", avatarURL);
-      updateForm("avatar")
-    };
-  
+  };
+
+  const handleSavePhoto = async () => {
+    await uploadFile();
+    // await updateUserInfo(userData.username, "avatar", avatarURL);
+  };
+
   const handleUpdatePassword = async () => {
     try {
       await updatePassword(user, newPassword);
@@ -138,7 +145,7 @@ const Profile = () => {
     await updateUserInfo(userData.username, "lastName", form.lastName);
     await updateUserInfo(userData.username, "email", form.email);
     await updateUserInfo(userData.username, "role", form.role);
-    await updateUserInfo(userData.username, "avatar", form.avatar);
+    // await updateUserInfo(userData.username, "avatar", avatarURL);
 
     navigate("/home");
   };
