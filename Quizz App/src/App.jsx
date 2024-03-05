@@ -9,14 +9,14 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import Header from "./components/Header";
 import CreateQuiz from "./views/CreateQuiz";
-import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import CreateTeam from './views/CreateTeam';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 
 
 import { Link } from "react-router-dom";
-import Teams from "./views/Teams";
 import Profile from "./views/Profile";
 import MyLibrary from "./views/MyLibrary";
+import MyTeamsView from "./views/MyTeamsView";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -57,7 +57,7 @@ const App = () => {
               <div className="flex h-full items-start justify-start p-6 flex-col">
                 <Link to="/home" className="font-semibold mb-2">Dashboard</Link>
                 <Link to="/my-library" className="font-semibold mb-2">Library</Link>
-                <Link to="/my-teams" className="font-semibold mb-2">Workspaces</Link>
+                <Link to="/my-teams" className="font-semibold mb-2">Teams</Link>
                 <Link to="/classrooms" className="font-semibold mb-2">Classrooms</Link>
                 <Link to="/statistics" className="font-semibold mb-2">Statistics</Link>
               </div>
@@ -71,8 +71,9 @@ const App = () => {
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/my-library" element={<MyLibrary />} />
+                  <Route path="/my-teams" element={<MyTeamsView />} />
                   <Route path="/quiz/:id" element={<CreateQuiz />} />
-                  <Route path="/my-teams" element={<Teams />} />
+                  <Route path="/team/:id" element={<CreateTeam/>} />
                   <Route path="/profile" element={<Profile />} />
                   {/* Add more routes as needed */}
                 </Routes>
