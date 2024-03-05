@@ -1,8 +1,10 @@
 import { get, set, ref, query, equalTo, orderByChild, update, onValue } from "firebase/database";
 import { db } from "../config/firebase-config.js";
 import { addMemberToTeam } from "./teams-service.js";
+import { toast } from "react-toastify";
+import { sendEmailVerification } from "./auth-service.js";
 
-export const createUsername = (firstName, lastName, username, uid, email, role) => {
+export const createUsername = (firstName, lastName, username, uid, email, role, avatar) => {
 
   return set(ref(db, `users/${username}`), {
     firstName,
@@ -16,6 +18,7 @@ export const createUsername = (firstName, lastName, username, uid, email, role) 
     isBlocked: false,
     role,
     teams: {},
+    avatar,
   });
 
 };
@@ -41,6 +44,16 @@ export const updateUser = async (username, userData) => {
 export const updateUserInfo = async (username, prop, value) => {
   await update(ref(db, `users/${username}`), { [prop]: value });
 };
+
+// export const updateUserPhoto = async (uid, avatar) => {
+//   try {
+//     const userRef = ref(db, `users/${uid}`);
+//     await update(userRef, { avatar });
+//     return true;
+//   } catch (error) {
+//     return false;
+//   }
+// };
 
 //get all admins
 export const getAllAdmins = async () => {
@@ -207,3 +220,11 @@ export const getUserTeamInvites = (username, callback) => {
 
   return () => unsubscribe();
 }
+export const verifyUser = async (user) => {
+  try {
+    await sendEmailVerification(user);
+    toast.success("Verification email sent!");
+  } catch (error) {
+    toast.error("Something went wrong. Please, try again.");
+  }
+};
