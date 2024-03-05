@@ -9,14 +9,16 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import Header from "./components/Header";
 import CreateQuiz from "./views/CreateQuiz";
+import CreateTeam from './views/CreateTeam';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { Link } from "react-router-dom";
-import Teams from "./views/Teams";
 import Profile from "./views/Profile";
 import MyLibrary from "./views/MyLibrary";
 import QuizSolve from "./components/QuizSolve";
 import QuizPreview from "./components/QuizPreview";
 import QuizResults from "./views/QuizResults";
+import MyTeamsView from "./views/MyTeamsView";
+import Assistant from "./views/Assistant";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -43,11 +45,10 @@ const App = () => {
     setTheme(event.target.checked ? "synthwave" : "1");
   };
 
-  return (
-    user ? (
-      <BrowserRouter>
-        <AppContext.Provider value={{ ...context, setContext }}>
-          <Header theme={theme} onThemeChange={handleThemeChange} />
+  return (user ? (
+    <BrowserRouter>
+      <AppContext.Provider value={{ ...context, setContext }}>
+        <Header theme={theme} onThemeChange={handleThemeChange} />
 
           <ResizablePanelGroup
             direction="horizontal"
@@ -57,7 +58,7 @@ const App = () => {
               <div className="flex h-full items-start justify-start p-6 flex-col">
                 <Link to="/home" className="font-semibold mb-2">Dashboard</Link>
                 <Link to="/my-library" className="font-semibold mb-2">Library</Link>
-                <Link to="/my-teams" className="font-semibold mb-2">Workspaces</Link>
+                <Link to="/my-teams" className="font-semibold mb-2">Teams</Link>
                 <Link to="/classrooms" className="font-semibold mb-2">Classrooms</Link>
                 <Link to="/statistics" className="font-semibold mb-2">Statistics</Link>
               </div>
@@ -71,35 +72,35 @@ const App = () => {
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/my-library" element={<MyLibrary />} />
+                  <Route path="/my-teams" element={<MyTeamsView />} />
                   <Route path="/quiz-preview/:id" element={<QuizPreview />} /> {/* change this */}
                   <Route path="/quiz-solve/:id" element={<QuizSolve />} />
+                  <Route path="/team/:id" element={<CreateTeam />} />
                   <Route path="/quiz/:id" element={<CreateQuiz />} />
                   <Route path="/results/:id" element={<QuizResults />} />
-                  <Route path="/my-teams" element={<Teams />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/assistant" element={<Assistant />} />
                   {/* Add more routes as needed */}
                 </Routes>
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
 
-        </AppContext.Provider>
-      </BrowserRouter>
-    ) : (
-      <BrowserRouter>
-        <AppContext.Provider value={{ ...context, setContext }}>
-          <Header theme={theme} onThemeChange={handleThemeChange} />
-          <Routes>
-            <Route index element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </AppContext.Provider>
-      </BrowserRouter>
-    )
+      </AppContext.Provider>
+    </BrowserRouter>
+  ) : (
+    <BrowserRouter>
+      <AppContext.Provider value={{ ...context, setContext }}>
+        <Header theme={theme} onThemeChange={handleThemeChange} />
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </AppContext.Provider>
+    </BrowserRouter>
+  )
   );
 };
-
-//delete this line
 
 export default App;
