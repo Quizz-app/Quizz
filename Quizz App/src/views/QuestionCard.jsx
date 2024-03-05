@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { updateQuestion } from '../services/questions-service';
 
-const QuestionCard = ({ quizId, questionId, content, answers,  points, correctAnswer, handleUpdateQuestion, onDelete }) => {
+const QuestionCard = ({ quizId, questionId, content, answers, points, correctAnswer, handleUpdateQuestion, onDelete }) => {
     const [editing, setEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(content);
     const [editedAnswers, setEditedAnswers] = useState([...answers]);
     const [editedPoints, setEditedPoints] = useState(points);
-    const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(correctAnswer || 0);
+    const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]);
 
     //console.log(questionId);
     const handleEdit = () => {
@@ -16,18 +16,19 @@ const QuestionCard = ({ quizId, questionId, content, answers,  points, correctAn
 
 
     const handleSave = async () => {
-        handleUpdateQuestion({
-            id: questionId, 
+        const updatedQuestion = {
+            id: questionId,
             content: editedContent,
             answers: editedAnswers,
             points: editedPoints,
-            correctAnswer: editedCorrectAnswer,
-        });
+            correctAnswer: editedCorrectAnswer.filter(i => i !== undefined), // a bug with the undefines
+        };
 
-        await updateQuestion(quizId, questionId, content, editedAnswers,  editedPoints, editedCorrectAnswer); // Use editedCorrectAnswer
+        handleUpdateQuestion(updatedQuestion);
+
+        await updateQuestion(quizId, questionId, updatedQuestion.content, updatedQuestion.answers, updatedQuestion.points, updatedQuestion.correctAnswer);
         setEditing(false);
     };
-
     return (
         <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
@@ -47,8 +48,14 @@ const QuestionCard = ({ quizId, questionId, content, answers,  points, correctAn
                                 />
                                 <input
                                     type="checkbox"
-                                    checked={editedCorrectAnswer === index}
-                                    onChange={() => setEditedCorrectAnswer(index)}
+                                    checked={editedCorrectAnswer.includes(index)}
+                                    onChange={() => {
+                                        if (editedCorrectAnswer.includes(index)) {
+                                            setEditedCorrectAnswer(editedCorrectAnswer.filter(i => i !== index));
+                                        } else {
+                                            setEditedCorrectAnswer([...editedCorrectAnswer, index]);
+                                        }
+                                    }}
                                 />
                             </div>
                         ))}
@@ -78,7 +85,7 @@ export default QuestionCard;
 QuestionCard.propTypes = {
     content: PropTypes.string.isRequired,
     answers: PropTypes.array.isRequired,
-    
+
     points: PropTypes.number.isRequired,
     handleUpdateQuestion: PropTypes.func.isRequired,
     quizId: PropTypes.string.isRequired,
