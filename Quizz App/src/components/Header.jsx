@@ -9,26 +9,6 @@ const Header = ({ theme, onThemeChange }) => {
   
   const [teamInvites, setTeamInvites] = useState([]);
   
-
-  const [form, setForm] = useState({
-    firstName: userData?.firstName || "",
-    lastName: userData?.lastName || "",
-    email: userData?.email || "",
-    role: userData?.role || "",
-    avatar: userData?.avatar || "",
-    password: userData?.password || "",
-  });
-
-  useEffect(() => {
-    setForm({
-      firstName: userData?.firstName || "",
-      lastName: userData?.lastName || "",
-      email: userData?.email || "",
-      role: userData?.role || "",
-      avatar: userData?.avatar || "",
-      password: userData?.password || "",
-    });
-  }, [userData]);
   const navigate = useNavigate();
 
   const logOut = async () => {
@@ -47,7 +27,6 @@ const Header = ({ theme, onThemeChange }) => {
 
     if (userData && userData.username) {
       getUserTeamInvites(userData.username, (invites) => {
-        console.log(Object.values(invites));
         setTeamInvites(Object.values(invites));
       });
     }
@@ -58,7 +37,6 @@ const Header = ({ theme, onThemeChange }) => {
   }
 
   
-
   return (
         <div className="navbar bg-base-100 flex justify-between">
           <div className="flex-2">
@@ -118,7 +96,7 @@ const Header = ({ theme, onThemeChange }) => {
                 <div className="dropdown dropdown-end">
                   <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                     <div className="w-10 rounded-full">
-                      <img alt="Tailwind CSS Navbar component" src={form.avatar} />
+                      <img alt="Tailwind CSS Navbar component" src={userData?.avatar} />
                     </div>
                   </div>
                   <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">

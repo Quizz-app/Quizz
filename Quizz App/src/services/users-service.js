@@ -2,9 +2,9 @@ import { get, set, ref, query, equalTo, orderByChild, update, onValue } from "fi
 import { db } from "../config/firebase-config.js";
 import { addMemberToTeam } from "./teams-service.js";
 import { toast } from "react-toastify";
-import { sendEmailVerification } from "./auth-service.js";
+import { sendEmailVerification } from "firebase/auth";
 
-export const createUsername = (firstName, lastName, username, uid, email, role, avatar) => {
+export const createUsername = (firstName, lastName, username, uid, email, role,) => {
 
   return set(ref(db, `users/${username}`), {
     firstName,
@@ -18,7 +18,7 @@ export const createUsername = (firstName, lastName, username, uid, email, role, 
     isBlocked: false,
     role,
     teams: {},
-    avatar,
+    avatar:"https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg",
   });
 
 };
@@ -220,6 +220,8 @@ export const getUserTeamInvites = (username, callback) => {
 
   return () => unsubscribe();
 }
+
+
 export const verifyUser = async (user) => {
   try {
     await sendEmailVerification(user);
