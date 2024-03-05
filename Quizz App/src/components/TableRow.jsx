@@ -8,8 +8,8 @@ import PropTypes from 'prop-types';
 const TableRow = ({ teacher, handleRemoveMember, creator }) => {
     const { email, firstName, lastName, role, username } = teacher;
     //Tuka trqbva da go opravq tova zashtoto username bygna da e creator
-    console.log(creator);
-    console.log(username);
+    console.log({creator});
+    console.log({username});
     return (
         <tbody>
             <tr>
