@@ -3,7 +3,7 @@ import { Calendar } from "../components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { getAllEducators, getAllUsers } from "../services/users-service";
+import { getAllTeachers, getAllUsers } from "../services/users-service";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 
@@ -17,9 +17,9 @@ const Home = () => {
     useEffect(() => { 
         const fetchUsers = async () => {
             const users = await getAllUsers();
-            const educators = await getAllEducators();
+            const educators = await getAllTeachers();
 
-            setEducatorCount(educators.size);
+            setEducatorCount(educators.length);
             setUserCount(users.size);
         };
 
