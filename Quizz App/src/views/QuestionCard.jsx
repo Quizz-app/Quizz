@@ -2,15 +2,14 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { updateQuestion } from '../services/questions-service';
 
-const QuestionCard = ({ quizId, questionId, content, answers, time, points, correctAnswer, handleUpdateQuestion, onDelete }) => {
+const QuestionCard = ({ quizId, questionId, content, answers,  points, correctAnswer, handleUpdateQuestion, onDelete }) => {
     const [editing, setEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(content);
     const [editedAnswers, setEditedAnswers] = useState([...answers]);
-    const [editedTime, setEditedTime] = useState(time);
     const [editedPoints, setEditedPoints] = useState(points);
     const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(correctAnswer || 0);
 
-    console.log(questionId);
+    //console.log(questionId);
     const handleEdit = () => {
         setEditing(true);
     };
@@ -21,12 +20,11 @@ const QuestionCard = ({ quizId, questionId, content, answers, time, points, corr
             id: questionId, 
             content: editedContent,
             answers: editedAnswers,
-            time: editedTime,
             points: editedPoints,
             correctAnswer: editedCorrectAnswer,
         });
 
-        await updateQuestion(quizId, questionId, content, editedAnswers, editedTime, editedPoints, editedCorrectAnswer); // Use editedCorrectAnswer
+        await updateQuestion(quizId, questionId, content, editedAnswers,  editedPoints, editedCorrectAnswer); // Use editedCorrectAnswer
         setEditing(false);
     };
 
@@ -54,7 +52,6 @@ const QuestionCard = ({ quizId, questionId, content, answers, time, points, corr
                                 />
                             </div>
                         ))}
-                        <input type="number" value={editedTime} onChange={(e) => setEditedTime(Number(e.target.value))} />
                         <input type="number" value={editedPoints} onChange={(e) => setEditedPoints(Number(e.target.value))} />
                         <button className="btn btn-outline btn-info" onClick={handleSave}>Save</button>
                     </>
@@ -66,7 +63,6 @@ const QuestionCard = ({ quizId, questionId, content, answers, time, points, corr
                                 <li key={index}>{answer}</li>
                             ))}
                         </ul>
-                        <p>Time: {time} seconds</p>
                         <p>Points: {points}</p>
                         <button className="btn btn-outline btn-info" onClick={handleEdit}>Edit</button>
                         <button className="btn btn-danger" onClick={() => onDelete(questionId)}>delete</button>
@@ -82,10 +78,12 @@ export default QuestionCard;
 QuestionCard.propTypes = {
     content: PropTypes.string.isRequired,
     answers: PropTypes.array.isRequired,
-    time: PropTypes.number.isRequired,
+    
     points: PropTypes.number.isRequired,
     handleUpdateQuestion: PropTypes.func.isRequired,
     quizId: PropTypes.string.isRequired,
     questionId: PropTypes.string.isRequired,
-    correctAnswer: PropTypes.array
+    correctAnswer: PropTypes.array,
+    onDelete: PropTypes.func.isRequired,
+
 };

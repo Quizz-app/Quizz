@@ -60,12 +60,11 @@ export const getQuizByCreator = async (creator) => {
 }
 
 
-
 export const getQuizById = async (id) => {
-  const snapShot = await get(query(ref(db, `quizzes/${id}`)));
-  
- 
+  const snapShot = await get(ref(db, `quizzes/${id}`));
+
   if (!snapShot.exists()) {
+    console.error('No quiz found with this id');
     return null;
   }
 
@@ -74,6 +73,19 @@ export const getQuizById = async (id) => {
     ...snapShot.val(),
   };
 
-
   return quiz;
+};
+
+
+export const updateQuiz = async (id, updatedQuiz) => {
+  const quizRef = ref(db, `quizzes/${id}`);
+  await update(quizRef, updatedQuiz);
+  const snapshot = await get(quizRef);
+  return snapshot.val();
+};
+
+export const deleteQuizById = async (id) => {
+  const quizRef = ref(db, `quizzes/${id}`);
+  await set(quizRef, null);
+  return true;
 };

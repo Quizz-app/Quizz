@@ -5,7 +5,7 @@ import { registerUser } from "../services/auth-service";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const { setContext } = useContext(AppContext);
+  //const { setContext } = useContext(AppContext);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -14,7 +14,6 @@ const Register = () => {
     password: "",
     role: "",
   });
-
   const [step, setStep] = useState(1);
 
   const navigate = useNavigate();
@@ -118,7 +117,7 @@ const Register = () => {
             </div>
           </>
         )}
-        {step === 3 && (
+        {/* {step === 3 && (
           <>
             <label htmlFor="age">Age</label>
             <input
@@ -135,8 +134,8 @@ const Register = () => {
               Continue
             </button>
           </>
-        )}
-        {step === 4 && (
+        )} */}
+        {step === 3 && (
           <>
             <label htmlFor="firstName">First Name</label>
             <input

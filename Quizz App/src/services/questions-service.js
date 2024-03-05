@@ -1,7 +1,7 @@
 import { ref, push, get, update, remove, query } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
-export const addQuestion = async (quizId, content, answers, time, points, correctAnswer) => {
+export const addQuestion = async (quizId, content, answers,  points, correctAnswer) => {
     // validation if the quiz exists
     const quizSnapshot = await get(ref(db, `quizzes/${quizId}`));
     if (!quizSnapshot.exists()) {
@@ -12,7 +12,6 @@ export const addQuestion = async (quizId, content, answers, time, points, correc
         content,
         answers,
         correctAnswer,
-        time,
         points
     };
 
@@ -37,7 +36,7 @@ export const getQuestionsByQuizId = async (quizId) => {
     return questionsArray;
 };
 
-export const updateQuestion = async (quizId, questionId, content, answers, time, points, correctAnswer) => {
+export const updateQuestion = async (quizId, questionId, content, answers,  points, correctAnswer) => {
     const questionRef = ref(db, `quizzes/${quizId}/questions/${questionId}`);
 
     const questionSnapshot = await get(questionRef);
@@ -49,7 +48,6 @@ export const updateQuestion = async (quizId, questionId, content, answers, time,
         content,
         answers,
         correctAnswer,
-        time,
         points
     };
 

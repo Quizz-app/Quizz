@@ -9,14 +9,14 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import Header from "./components/Header";
 import CreateQuiz from "./views/CreateQuiz";
-import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-
-
 import { Link } from "react-router-dom";
 import Teams from "./views/Teams";
 import Profile from "./views/Profile";
 import MyLibrary from "./views/MyLibrary";
+import QuizSolve from "./components/QuizSolve";
+import QuizPreview from "./components/QuizPreview";
+import QuizResults from "./views/QuizResults";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -64,14 +64,17 @@ const App = () => {
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={75}>
-              <div className="flex flex-col h-full items-start justify-start p-6 ">
+              <div >
                 <Routes>
                   <Route index element={<Home />} />
                   <Route path="/home" element={<Home />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/my-library" element={<MyLibrary />} />
+                  <Route path="/quiz-preview/:id" element={<QuizPreview />} /> {/* change this */}
+                  <Route path="/quiz-solve/:id" element={<QuizSolve />} />
                   <Route path="/quiz/:id" element={<CreateQuiz />} />
+                  <Route path="/results/:id" element={<QuizResults />} />
                   <Route path="/my-teams" element={<Teams />} />
                   <Route path="/profile" element={<Profile />} />
                   {/* Add more routes as needed */}

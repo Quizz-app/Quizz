@@ -4,7 +4,7 @@ import { AppContext } from "../context/AppContext";
 import { loginUser } from "../services/auth-service";
 
 const Login = () => {
-  const { user, setContext } = useContext(AppContext);
+  const { user, userData ,setContext } = useContext(AppContext);
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -17,11 +17,15 @@ const Login = () => {
     setForm({ ...form, [prop]: e.target.value });
   };
 
-  useEffect(() => {
-    if (user) {
+useEffect(() => {
+  if (user && userData) {
+    if (userData.role === 'student') {
+      navigate('/my-library');
+    } else {
       navigate(location.state?.from.pathname || "/");
     }
-  }, [user]);
+  }
+}, [user, userData]);
 
   const login = async () => {
     try {
