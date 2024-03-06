@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { addQuizToTeam, createQuiz, getQuizById, updateQuiz } from "../services/quiz-service";
+import { addQuizToTeam, createQuiz, getQuizById, inviteUserToQuiz, updateQuiz } from "../services/quiz-service";
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input"
@@ -13,7 +13,7 @@ import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { getUserTeams } from "../services/users-service";
+import { getAllStudents, getUserTeams } from "../services/users-service";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -43,8 +43,11 @@ const CreateQuiz = () => {
         points: 0
     });
     const [userTeams, setUserTeams] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
+
     const [showTeams, setShowTeams] = useState(false);
+    const [showUsers, setShowUsers] = useState(false);
+
+    const [students, setStudents] = useState([]);
 
 
 
@@ -54,14 +57,27 @@ const CreateQuiz = () => {
     }, [userData]);
     //Filter the user teams to get the teams the user is a member of
     const filteredTeams = userTeams.filter(team => team.members[userData?.username]);
+    //Set the students
+    useEffect(() => {
+        getAllStudents().then(setStudents);
+    }, []);
+    console.log(students)
     //Handle the click event to show the teams
-    const handleClick = () => {
+    const handleAssignTeamClick = () => {
         setShowTeams(!showTeams);
     }
-
+    //Handle the click event to show the users
+    const handleAssignUserClick = () => {
+        setShowUsers(!showUsers);
+    }
+    //Handle the click event to add the quiz to the team
     const handleAddQuizToTeam = async (teamId) => {
         addQuizToTeam(teamId, id);
     }
+
+    const handleAddQuizToStudent = async (studentId) => {
+        inviteUserToQuiz(id, studentId, userData.username);
+    };
 
 
     useEffect(() => {
@@ -265,7 +281,10 @@ const CreateQuiz = () => {
                 {/* //action buttons */}
                 <div className="flex flex-row items-center justify-center">
                     <div className="flex flex-col items-center justify-center">
-                        <Button onClick={handleClick}>Assign to group</Button>
+                        <Button onClick={handleAssignTeamClick}>Assign to group</Button>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                        <Button onClick={handleAssignUserClick}>Assign to user</Button>
                     </div>
                     <div className="flex flex-col items-center justify-center">
                         <Button onClick={() => navigate('/my-library')}>See all quizzes</Button>
@@ -332,6 +351,18 @@ const CreateQuiz = () => {
                         <div key={team.id}>
                             <p>{team.name}</p>
                             <button onClick={() => handleAddQuizToTeam(team.id)}>Add quiz to team</button>
+                        </div>
+                    ))}
+                </div>
+            )}
+            {/* Here we can see all the students that are in the system*/}
+            {showUsers && students.length > 0 && (
+                <div>
+                    <h1>TOUK SE POKAZVAT UCHENICITE KOITO UCHASTVAT SLED KATO E NATISNAL Assign to user</h1>
+                    {students.map((student, index) => (
+                        <div key={index}>
+                            <p>{student.username}</p>
+                            <button onClick={() => handleAddQuizToStudent(student)}>Add quiz to student</button>
                         </div>
                     ))}
                 </div>
@@ -418,9 +449,6 @@ const CreateQuiz = () => {
                 </div>
 
                 <button className="btn btn-outline btn-primary" onClick={questionCreation}>Add +</button>
-            </div>
-            <div>
-                <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
             </div>
 
             <div className="flex flex-col items-center justify-center">

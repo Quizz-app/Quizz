@@ -115,3 +115,28 @@ export const addQuizToTeam = async (teamId, quizId) => {
   await set(teamRef, teamData);
 
 };
+
+
+export const inviteUserToQuiz = async (quizId, user, inviter) => {
+  console.log(user);
+  const userRef = ref(db, `users/${user.username}`);
+  const userSnapshot = await get(userRef);
+  const userData = userSnapshot.val();
+
+  const quizRef = await get(ref(db, `quizzes/${quizId}`));
+  const quizData = quizRef.val();
+
+  if (!userData.invitesForQuiz) {
+    userData.invitesForQuiz = {};
+  }
+
+  userData.invitesForQuiz[quizId] = {
+    quizId,
+    quizTitle: quizData.title,
+    inviter: inviter,
+    status: 'pending',
+  };
+
+  await set(userRef, userData);
+
+};

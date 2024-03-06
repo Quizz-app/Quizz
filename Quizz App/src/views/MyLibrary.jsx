@@ -76,6 +76,7 @@ const MyLibrary = () => {
         setIsDialogOpen(false);
     };
 
+    console.log(userData)
     return (
         <>
             {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
