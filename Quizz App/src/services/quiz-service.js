@@ -140,3 +140,19 @@ export const inviteUserToQuiz = async (quizId, user, inviter) => {
   await set(userRef, userData);
 
 };
+
+
+export const addQuizToUser = async (userId, quiz) => {
+  const userRef = ref(db, `users/${userId}`);
+  const userSnapshot = await get(userRef);
+  const userData = userSnapshot.val();
+
+  if (!userData.quizzes) {
+    userData.quizzes = {};
+  }
+
+  userData.quizzes[quiz.id] = false;
+
+  await set(userRef, userData);
+
+}

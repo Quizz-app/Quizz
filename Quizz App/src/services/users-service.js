@@ -239,7 +239,7 @@ export const updateQuizCompletion = async (username, quizId, isCompleted) => {
  * @function
  */
 
-export const respondToInvite = async (username, teamId, accept) => {
+export const respondToTeamInvite = async (username, teamId, accept) => {
   const userRef = ref(db, `users/${username}`);
   const userSnapshot = await get(userRef);
   const userData = userSnapshot.val();
@@ -260,12 +260,38 @@ export const respondToInvite = async (username, teamId, accept) => {
     userData.teams[teamId] = true;
 
   } else {
-
     userData.invitesForTeam[teamId].status = 'declined';
   }
   delete userData.invitesForTeam[teamId];
   await set(userRef, userData);
 }
+
+
+export const respondToQuizInvite = async (username, quizId, accept) => {
+  const userRef = ref(db, `users/${username}`);
+  const userSnapshot = await get(userRef);
+  const userData = userSnapshot.val();
+
+  if (!userData.invitesForQuiz || !userData.invitesForQuiz[quizId]) {
+    throw new Error('No such invite');
+  }
+  console.log(quizId)
+  if (accept) {
+
+    await addQuizToUser(username, quizId);
+    userData.invitesForQuiz[quizId].status = 'accepted';
+    if (!userData.quizzes) {
+      userData.quizzes = {};
+    }
+
+    userData.quizzes[quizId] = true;
+
+  } else {
+    userData.invitesForQuiz[quizId].status = 'declined';
+  }
+  delete userData.invitesForQuiz[quizId];
+  await set(userRef, userData);
+};
 
 /**
  * Sets up a listener for changes in the teams of a user in the database.
@@ -343,7 +369,7 @@ export const userLeaveTeam = async (username, teamId) => {
   await set(userRef, userData);
 };
 
-//list of invites for to join a team
+//Listen of invites for to join a team
 export const getUserTeamInvites = (username, callback) => {
   const userInvitesRef = ref(db, `users/${username}/invitesForTeam`);
   // console.log(userInvitesRef);

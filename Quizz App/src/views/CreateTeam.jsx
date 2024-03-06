@@ -58,9 +58,6 @@ const CreateTeam = () => {
 
     };
 
-
-    console.log(teamQuizzes);
-
     const filteredTeachers = teachers.filter(teacher => teacher.email.toLowerCase().includes(searchTerm.toLowerCase()));
     return (
         <div>

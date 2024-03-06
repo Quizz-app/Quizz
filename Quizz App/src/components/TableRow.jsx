@@ -8,6 +8,7 @@ import { AppContext } from '../context/AppContext';
  */
 const TableRow = ({ teacher, handleRemoveMember, creator }) => {
     const { avatar, email, firstName, lastName, role, username } = teacher;
+    console.log(username)
 
     const { userData } = useContext(AppContext)
 
@@ -33,7 +34,7 @@ const TableRow = ({ teacher, handleRemoveMember, creator }) => {
                 </td>
                 <td>{`${email}`}</td>
                 <th>
-                    {userData?.username === creator &&
+                    {(userData?.username === creator || userData?.isAdmin || userData?.username === username) &&
                         <button className="btn btn-ghost btn-xs" onClick={handleRemoveMember}>Remove member</button>
                     }
                 </th>
