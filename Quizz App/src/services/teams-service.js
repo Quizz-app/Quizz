@@ -214,3 +214,16 @@ export const deleteTeam = async (teamId) => {
         }
     }
 };
+
+
+
+export const getAllTeamQuizzes = (teamId, callback) => {
+    const teamRef = ref(db, `teams/${teamId}/quizzes`);
+    const unsubscribe = onValue(teamRef, (snapshot) => {
+        const quizzesObject = snapshot.val();
+        const quizzesArray = Object.keys(quizzesObject || {}).map(key => quizzesObject[key]);
+        callback(quizzesArray);
+    });
+
+    return unsubscribe;
+}
