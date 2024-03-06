@@ -13,6 +13,7 @@ import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { getUserTeams } from "../services/users-service";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -22,7 +23,7 @@ const CreateQuiz = () => {
     const [createMode, setCreateMode] = useState(false);
     const [correctAnswerIndices, setCorrectAnswerIndices] = useState([]);
     const [editingQuestion, setEditingQuestion] = useState(null);
-    const [quizTime, setQuizTime] = useState(0);
+    //const [quizTime, setQuizTime] = useState(0);
     const [totalPoints, setTotalPoints] = useState(0);
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(true);
@@ -35,11 +36,23 @@ const CreateQuiz = () => {
         bad: 0,
     });
 
+    const { userData } = useContext(AppContext)
     const [question, setQuestion] = useState({
         content: "",
         answers,
         points: 0
     });
+    const [userTeams, setUserTeams] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    
+
+    
+    //Set the user teams
+    useEffect(() => {
+        getUserTeams(userData?.username, setUserTeams);
+    }, [userData]);
+    //Filter the user teams to get the teams the user is a member of
+    const filteredTeams = userTeams.filter(team => team.members[userData?.username]);
 
     useEffect(() => {
         const fetchQuiz = async () => {
@@ -162,7 +175,7 @@ const CreateQuiz = () => {
 
 
     const handleSetDescription = async () => {
-        const updatedQuiz = { ...quiz, description, quizTime }; // Include quizTime
+        const updatedQuiz = { ...quiz, description }; // Include quizTime
         try {
             await updateQuiz(id, updatedQuiz);
             setQuiz(updatedQuiz);
@@ -305,8 +318,6 @@ const CreateQuiz = () => {
 
             <p>Add description:</p>
             <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
-
-
             {/* //questions */}
             <div className="flex flex-row items-start justify-start w-screen">
                 <div className="flex flex-col items-start justify-start ">
@@ -328,7 +339,6 @@ const CreateQuiz = () => {
                         )
                         :
                         (<h1>No questions yet</h1>)}
-
                     {createMode &&
                         (
                             <div className=" border rounded-md w-1000px">
@@ -356,14 +366,9 @@ const CreateQuiz = () => {
                                                         onChange={() => handleCheckboxChange(index)}
                                                     />
                                                 </div>
-
-
                                                 <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
                                             </div>
                                         ))}
-
-
-
                                         {/* points */}
                                         <Label htmlFor="points">Points</Label>
                                         <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
@@ -376,7 +381,6 @@ const CreateQuiz = () => {
                                 </div>
                             </div>
                         )}
-
                     {editingQuestion && (
                         <form onSubmit={() => handleUpdateQuestion(editingQuestion)}>
                             <input
@@ -392,10 +396,12 @@ const CreateQuiz = () => {
 
 
                 </div>
+                
                 <button className="btn btn-outline btn-primary" onClick={questionCreation}>Add +</button>
-
             </div>
-
+            <div>
+            <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
+            </div>
 
             <div className="flex flex-col items-center justify-center">
                 <p>Set grades (optional):</p>

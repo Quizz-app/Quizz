@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContext';
 /**
  * 
  * @param {{teacher: {username: string, email: string, role: string, firstName: string, lastName: string}, handleRemoveMember: function, creator: string}} param0 
@@ -7,9 +8,9 @@ import PropTypes from 'prop-types';
  */
 const TableRow = ({ teacher, handleRemoveMember, creator }) => {
     const { email, firstName, lastName, role, username } = teacher;
-    //Tuka trqbva da go opravq tova zashtoto username bygna da e creator
-    console.log({creator});
-    console.log({username});
+
+    const {userData} = useContext(AppContext)
+
     return (
         <tbody>
             <tr>
@@ -32,7 +33,7 @@ const TableRow = ({ teacher, handleRemoveMember, creator }) => {
                 </td>
                 <td>{`${email}`}</td>
                 <th>
-                    {username === creator &&
+                    {userData?.username === creator &&
                         <button className="btn btn-ghost btn-xs" onClick={handleRemoveMember}>Remove member</button>
                     }
                 </th>

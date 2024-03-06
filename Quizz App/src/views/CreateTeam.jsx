@@ -53,8 +53,8 @@ const CreateTeam = () => {
 
     };
 
-    
-    
+
+
 
     const filteredTeachers = teachers.filter(teacher => teacher.email.toLowerCase().includes(searchTerm.toLowerCase()));
     return (
@@ -73,7 +73,6 @@ const CreateTeam = () => {
                         // <TableRow key={index} teacher={teacher} handleRemoveMember={() => handleRemoveMember(teacher)} />
                     )}
                 </div>
-                <hr />
                 {`Members of team ${team.name}`}
                 <div className="overflow-x-auto">
                     <table className="table">
@@ -86,7 +85,7 @@ const CreateTeam = () => {
                             </tr>
                         </thead>
                         {members && userData && team.creator && members.map((member, index) => (
-                            <TableRow key={index} teacher={member} handleRemoveMember={() => handleRemoveMember(member)} creator={team.creator.username} />
+                            <TableRow key={index} teacher={member} creator={team.creator.username} handleRemoveMember={() => handleRemoveMember(member)} />
                         ))}
                         <tfoot>
                             <tr>
@@ -102,6 +101,10 @@ const CreateTeam = () => {
                 {userData && team.creator && (userData.isAdmin || userData.username === team.creator.username) &&
                     <button className="border" onClick={() => handleDeleteTeam()}>Delete team</button>
                 }
+            </div>
+            <hr />
+            <div>
+                <h1>Team Quizzes</h1>
             </div>
         </div>
     );
