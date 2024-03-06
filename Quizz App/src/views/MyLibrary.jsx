@@ -76,6 +76,7 @@ const MyLibrary = () => {
         setIsDialogOpen(false);
     };
 
+    console.log(studentQuizzes)
     
     return (
         <>

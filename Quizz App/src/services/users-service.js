@@ -19,7 +19,7 @@ export const createUsername = (firstName, lastName, username, uid, email, role,)
     isBlocked: false,
     role,
     teams: {},
-    userQuizzes: {},
+    // quizzes: {},
     avatar: "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg",
   });
 
@@ -278,26 +278,23 @@ export const respondToQuizInvite = async (username, quizId, accept) => {
   }
 
   if (accept) {
-    
-    if (!userData.userQuizzes) {
-      userData.userQuizzes = {};
-    }
-
-    if (userData.userQuizzes[quizId]) {
-      throw new Error('Quiz already added to the user');
-    }
-    userData.userQuizzes[quizId] = { isCompleted: false };
-
-    userData.invitesForQuiz[quizId].status = 'accepted';
 
     if (!userData.quizzes) {
       userData.quizzes = {};
     }
 
+    if (userData.quizzes[quizId]) {
+      throw new Error('Quiz already added to the user');
+    }
+    userData.quizzes[quizId] = { isCompleted: false };
+
+    userData.invitesForQuiz[quizId].status = 'accepted';
+
+  
   } else {
     userData.invitesForQuiz[quizId].status = 'declined';
   }
-  // delete userData.invitesForQuiz[quizId];
+  delete userData.invitesForQuiz[quizId];
   await set(userRef, userData);
 };
 
