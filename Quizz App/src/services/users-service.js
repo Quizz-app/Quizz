@@ -1,12 +1,27 @@
-import { get, set, ref, query, equalTo, orderByChild, update, onValue } from "firebase/database";
+import {
+  get,
+  set,
+  ref,
+  query,
+  equalTo,
+  orderByChild,
+  update,
+  onValue,
+} from "firebase/database";
 import { db } from "../config/firebase-config.js";
 import { addQuizToTheUser, getQuizById } from "./quiz-service.js";
 import { addMemberToTeam } from "./teams-service.js";
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
 
-export const createUsername = (firstName, lastName, username, uid, email, role,) => {
-
+export const createUsername = (
+  firstName,
+  lastName,
+  username,
+  uid,
+  email,
+  role
+) => {
   return set(ref(db, `users/${username}`), {
     firstName,
     lastName,
@@ -20,9 +35,9 @@ export const createUsername = (firstName, lastName, username, uid, email, role,)
     role,
     teams: {},
     // quizzes: {},
-    avatar: "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg",
+    avatar:
+      "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg",
   });
-
 };
 
 export const getUserByUsername = (handle) => {
@@ -30,8 +45,9 @@ export const getUserByUsername = (handle) => {
 };
 
 export const getAllUsers = async () => {
-  const snapshot = get(ref(db, `users`));
-  return snapshot;
+  const snapshot = await get(ref(db, `users`));
+  const data = snapshot.val();
+  return data ? Object.values(data) : [];
 };
 
 export const getUserData = (uid) => {
@@ -47,7 +63,6 @@ export const updateUserInfo = async (username, prop, value) => {
   await update(ref(db, `users/${username}`), { [prop]: value });
 };
 
-
 //get all admins
 export const getAllAdmins = async () => {
   try {
@@ -61,15 +76,16 @@ export const getAllAdmins = async () => {
   }
 };
 
-
-
 export const getAllStudents = async () => {
   try {
     const snapshot = await get(
       query(ref(db, "users"), orderByChild("role"), equalTo("student"))
     );
     if (snapshot.exists()) {
-      return Object.entries(snapshot.val()).map(([key, value]) => ({ key, ...value }));
+      return Object.entries(snapshot.val()).map(([key, value]) => ({
+        key,
+        ...value,
+      }));
     } else {
       return [];
     }
@@ -81,7 +97,7 @@ export const getAllStudents = async () => {
 
 /**
  * Retrieves all users with the role of 'teacher' from the database.
- * 
+ *
  * @returns {Promise<Array|Null>} An array of teacher objects if found, an empty array if no teachers exist, or null if an error occurs.
  *
  * @async
@@ -93,7 +109,10 @@ export const getAllTeachers = async () => {
       query(ref(db, "users"), orderByChild("role"), equalTo("teacher"))
     );
     if (snapshot.exists()) {
-      return Object.entries(snapshot.val()).map(([key, value]) => ({ key, ...value }));
+      return Object.entries(snapshot.val()).map(([key, value]) => ({
+        key,
+        ...value,
+      }));
     } else {
       return [];
     }
@@ -103,13 +122,12 @@ export const getAllTeachers = async () => {
   }
 };
 
-
 export const getUserQuizzes = async (username) => {
   try {
     const snapshot = await get(query(ref(db, `users/${username}/quizzes`)));
 
     if (!snapshot.val()) {
-      console.log('No quizzes found for this user');
+      console.log("No quizzes found for this user");
       return [];
     }
 
@@ -133,24 +151,25 @@ export const getUserQuizzes = async (username) => {
           console.log(`No quiz found with id ${quiz.id}`);
         }
       } else {
-        console.log('No valid quiz id found');
+        console.log("No valid quiz id found");
       }
     }
 
     return quizzesData;
   } catch (error) {
-    console.error('Error getting user quizzes:', error);
+    console.error("Error getting user quizzes:", error);
   }
 };
 
-
 export const getUserQuizById = async (username, quizId) => {
   try {
-    const snapshot = await get(query(ref(db, `users/${username}/quizzes/${quizId}`)));
+    const snapshot = await get(
+      query(ref(db, `users/${username}/quizzes/${quizId}`))
+    );
 
     console.log(snapshot.val());
     if (!snapshot.val()) {
-      console.log('No such quiz found for this user');
+      console.log("No such quiz found for this user");
       return null;
     }
 
@@ -172,12 +191,12 @@ export const getUserQuizById = async (username, quizId) => {
         console.log(`No quiz found with id ${quiz.id}`);
       }
     } else {
-      console.log('No valid quiz id found');
+      console.log("No valid quiz id found");
     }
 
     return quizzData;
   } catch (error) {
-    console.error('Error getting user quizzes:', error);
+    console.error("Error getting user quizzes:", error);
   }
 };
 
@@ -196,7 +215,7 @@ export const removeQuizFromUser = async (username, quizId) => {
 export const addQuizToCreator = async (username, quizId) => {
   const userRef = ref(db, `users/${username}/createdQuizzes/${quizId}`);
   await set(userRef, true);
-}
+};
 
 export const addUserAnswer = async (username, quizId, questionId, answer) => {
   const userQuizRef = ref(db, `users/${username}/quizzes/${quizId}`);
@@ -224,14 +243,13 @@ export const updateQuizCompletion = async (username, quizId, isCompleted) => {
   await update(userQuizRef, { isCompleted });
 };
 
-
 /**
  * Responds to an invite to join a team.
  *
  * @param {string} username - The username of the user responding to the invite.
  * @param {string} teamId - The ID of the team to which the user was invited.
  * @param {boolean} accept - Whether the user accepts or declines the invite.
- * 
+ *
  * @returns {Promise<void>} Returns a promise which resolves when the operation is complete.
  *
  * @throws {Error} Throws an error if no such invite exists.
@@ -246,27 +264,24 @@ export const respondToTeamInvite = async (username, teamId, accept) => {
   const userData = userSnapshot.val();
 
   if (!userData.invitesForTeam || !userData.invitesForTeam[teamId]) {
-    throw new Error('No such invite');
+    throw new Error("No such invite");
   }
 
   if (accept) {
-
     await addMemberToTeam(teamId, userData);
-    userData.invitesForTeam[teamId].status = 'accepted';
+    userData.invitesForTeam[teamId].status = "accepted";
 
     if (!userData.teams) {
       userData.teams = {};
     }
 
     userData.teams[teamId] = true;
-
   } else {
-    userData.invitesForTeam[teamId].status = 'declined';
+    userData.invitesForTeam[teamId].status = "declined";
   }
   delete userData.invitesForTeam[teamId];
   await set(userRef, userData);
-}
-
+};
 
 export const respondToQuizInvite = async (username, quizId, accept) => {
   const userRef = ref(db, `users/${username}`);
@@ -274,25 +289,22 @@ export const respondToQuizInvite = async (username, quizId, accept) => {
   const userData = userSnapshot.val();
 
   if (!userData.invitesForQuiz || !userData.invitesForQuiz[quizId]) {
-    throw new Error('No such invite');
+    throw new Error("No such invite");
   }
 
   if (accept) {
-
     if (!userData.quizzes) {
       userData.quizzes = {};
     }
 
     if (userData.quizzes[quizId]) {
-      throw new Error('Quiz already added to the user');
+      throw new Error("Quiz already added to the user");
     }
     userData.quizzes[quizId] = { isCompleted: false };
 
-    userData.invitesForQuiz[quizId].status = 'accepted';
-
-  
+    userData.invitesForQuiz[quizId].status = "accepted";
   } else {
-    userData.invitesForQuiz[quizId].status = 'declined';
+    userData.invitesForQuiz[quizId].status = "declined";
   }
   delete userData.invitesForQuiz[quizId];
   await set(userRef, userData);
@@ -303,7 +315,7 @@ export const respondToQuizInvite = async (username, quizId, accept) => {
  *
  * @param {string} username - The username of the user to listen for changes.
  * @param {Function} callback - The function to call when the user's teams change. The function is called with an array of the user's teams.
- * 
+ *
  * @returns {Function} A function that when called, unsubscribes from the listener.
  *
  * @function
@@ -324,7 +336,7 @@ export const getUserTeams = (username, callback) => {
       const teams = teamSnapshots.map((teamSnapshot, index) => {
         return {
           id: teamIds[index],
-          ...teamSnapshot.val()
+          ...teamSnapshot.val(),
         };
       });
 
@@ -340,7 +352,7 @@ export const getUserTeams = (username, callback) => {
  *
  * @param {string} username - The username of the user to remove from the team.
  * @param {string} teamId - The ID of the team from which to remove the user.
- * 
+ *
  * @returns {Promise<void>} Returns a promise which resolves when the operation is complete.
  *
  * @throws {Error} Throws an error if the user is not in the team or if the user is not a member of the team.
@@ -354,7 +366,7 @@ export const userLeaveTeam = async (username, teamId) => {
   const userData = userSnapshot.val();
 
   if (!userData.teams || !userData.teams[teamId]) {
-    throw new Error('User is not in this team');
+    throw new Error("User is not in this team");
   }
 
   // Remove the user from the team
@@ -363,8 +375,9 @@ export const userLeaveTeam = async (username, teamId) => {
   const teamData = teamSnapshot.val();
 
   if (!teamData.members || !teamData.members[username]) {
-    throw new Error('User is not a member of this team');
-  } 2
+    throw new Error("User is not a member of this team");
+  }
+  2;
 
   delete teamData.members[username];
   await set(teamRef, teamData);
@@ -383,8 +396,7 @@ export const getUserTeamInvites = (username, callback) => {
   });
 
   return () => unsubscribe();
-}
-
+};
 
 //Listen for invites to join a quiz
 export const getUserQuizInvites = (username, callback) => {
@@ -395,7 +407,7 @@ export const getUserQuizInvites = (username, callback) => {
   });
 
   return () => unsubscribe();
-}
+};
 
 export const verifyUser = async (user) => {
   try {
@@ -404,4 +416,27 @@ export const verifyUser = async (user) => {
   } catch (error) {
     toast.error("Something went wrong. Please, try again.");
   }
+};
+
+export const updateBlockedUser = (username) => {
+  const updateUser = {};
+  updateUser[`/users/${username}/isBlocked`] = true;
+
+  return update(ref(db), updateUser);
+};
+
+export const updateUnblockedUser = (username) => {
+  const updateUser = {};
+  updateUser[`/users/${username}/isBlocked`] = false;
+
+  return update(ref(db), updateUser);
+};
+
+export const updateAdminStatus = async (username) => {
+  console.log(username);
+  const isAdmin = await get(ref(db, `/users/${username}/isAdmin`));
+  const updateUser = {};
+  updateUser[`/users/${username}/isAdmin`] = !isAdmin.val();
+  console.log(isAdmin.val());
+  return update(ref(db), updateUser);
 };
