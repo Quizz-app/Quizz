@@ -1,10 +1,6 @@
-
 const AIResponse = ({response}) => {
-
-    const res = response.data;
-
     return (
-        <div>{res}</div>
+        <div>{response}</div>
     )
 }
 

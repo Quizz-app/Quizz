@@ -6,7 +6,7 @@ import AIResponse from "./AIResponse";
 const Assistant = () => {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState(null); // Changed from empty string to null
   const [loading, setLoading] = useState(false);
   const { userData } = useContext(AppContext);
 
@@ -20,9 +20,9 @@ const Assistant = () => {
     const res = await axios.post("http://localhost:3000/chat", {
       prompt: prompt,
     });
-    setResponse(res);
+    setResponse(res.data); // Assuming res.data is the object you want
     setLoading(false);
-    console.log(res);
+    console.log(res.data);
   };
 
   return (
@@ -48,7 +48,7 @@ const Assistant = () => {
               {/* if there is a button in form, it will close the modal */}
             </form>
 
-            {response && <AIResponse response={response} />}
+            {response && <AIResponse response={response.message} />}
             
           </div>
         </div>

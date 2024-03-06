@@ -64,6 +64,7 @@ const CreateQuiz = () => {
 
         fetchQuiz();
     }, [id]);
+
     useEffect(() => {
         const fetchQuestions = async () => {    //THIS SYNTAXIS CAUSES A RESURSION
             try {
@@ -108,9 +109,13 @@ const CreateQuiz = () => {
         }
     };
 
+    const handlePointsChange = (e) => {
+        setQuestion({ ...question, points: Number(e.target.value) });
+    };
+
     const handleUpdateQuestion = async (updatedQuestion) => {
         try {
-            await updateQuestion(quiz.id, updatedQuestion.id, updatedQuestion.content, updatedQuestion.answers, updatedQuestion.time, updatedQuestion.points, updatedQuestion.correctAnswer);
+            await updateQuestion(quiz.id, updatedQuestion.id, updatedQuestion.content, updatedQuestion.answers, updatedQuestion.points, updatedQuestion.correctAnswer);
 
             setRefreshQuestions(prev => !prev);
             setEditingQuestion(null);
@@ -124,9 +129,11 @@ const CreateQuiz = () => {
         setAnswers([...answers, ""]);
     };
 
+    
     const questionCreation = () => {
         setCreateMode(true);
     }
+
 
     const handleCheckboxChange = (index) => {
         if (correctAnswerIndices.includes(index)) {
@@ -136,11 +143,13 @@ const CreateQuiz = () => {
         }
     };
 
+
     const handleRemoveAnswer = (index) => {
         const newAnswers = answers.filter((_, i) => i !== index);
         setAnswers(newAnswers);
         setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
     };
+
 
     const handleDeleteQuestion = async (questionId) => {
         try {
@@ -150,6 +159,8 @@ const CreateQuiz = () => {
             console.error(error);
         }
     };
+
+
     const handleSetDescription = async () => {
         const updatedQuiz = { ...quiz, description, quizTime }; // Include quizTime
         try {
@@ -159,6 +170,7 @@ const CreateQuiz = () => {
             console.error(error);
         }
     };
+
 
     const handleSetTime = async (e) => {
         const newQuizTime = Number(e.target.value);
@@ -171,6 +183,8 @@ const CreateQuiz = () => {
             console.error(error);
         }
     };
+
+
     const handleSetGrades = async () => {
         if (grades.good !== 0 || grades.bad !== 0) {
             const updatedQuiz = { ...quiz, grades };
@@ -187,9 +201,7 @@ const CreateQuiz = () => {
 
 
 
-    const handlePointsChange = (e) => {
-        setQuestion({ ...question, points: Number(e.target.value) });
-    };
+
 
 
     return (
@@ -285,8 +297,9 @@ const CreateQuiz = () => {
                             <input
                                 type="text"
                                 value={editingQuestion.content}
-                                onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value })}
+                                onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value,  })}
                             />
+
                             {/* Add more inputs for other fields */}
                             <button type="submit">Update Question</button>
                         </form>

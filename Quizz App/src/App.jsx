@@ -56,11 +56,9 @@ const App = () => {
           >
             <ResizablePanel defaultSize={25}>
               <div className="flex h-full items-start justify-start p-6 flex-col">
-                <Link to="/home" className="font-semibold mb-2">Dashboard</Link>
                 <Link to="/my-library" className="font-semibold mb-2">Library</Link>
                 <Link to="/my-teams" className="font-semibold mb-2">Teams</Link>
-                <Link to="/classrooms" className="font-semibold mb-2">Classrooms</Link>
-                <Link to="/statistics" className="font-semibold mb-2">Statistics</Link>
+               
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle />
