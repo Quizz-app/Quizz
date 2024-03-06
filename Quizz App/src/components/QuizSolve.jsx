@@ -7,6 +7,7 @@ import { getQuizById } from "../services/quiz-service";
 import QuizSolveCard from "../views/QuizSolveCard";
 import { useNavigate } from "react-router-dom";
 import { updateQuizCompletion } from "../services/users-service";
+import Countdown from 'react-countdown';
 
 const QuizSolve = () => {
     const { user, userData } = useContext(AppContext);
@@ -16,6 +17,7 @@ const QuizSolve = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answeredQuestionsCount, setAnsweredQuestionsCount] = useState(0);
     const [countdownTime, setCountdownTime] = useState(0);
+    const [isCountdownFinished, setIsCountdownFinished] = useState(false);
 
     const navigate = useNavigate();
 
@@ -29,83 +31,85 @@ const QuizSolve = () => {
 
                 setQuiz(quiz);
                 setQuestions(questions);
-                setCountdownTime(quiz.quizTime);
-            } catch (error) {
-                console.error(error);
-            }
-        };
 
-        fetchData();
-    }, [id]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const quiz = await getQuizById(id);
-                const questions = await getQuestionsByQuizId(id);
-
-                setQuiz(quiz);
-                setQuestions(questions);
-                setCountdownTime(quiz.quizTime); // Set countdownTime to quizTime
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData();
-    }, [id]);
-
-    useEffect(() => {
-        const countdownTimer = setInterval(() => {
-            setCountdownTime((prevTime) => {
-                if (prevTime > 0) {
-                    return prevTime - 1;
+                //this operation prevents the timer to be refreshed along with the page
+                const savedCountdownTime = localStorage.getItem('countdownTime')
+                if (savedCountdownTime) {                             //if there is saved countdown time we set its value to the countdownTime state
+                    setCountdownTime(Number(savedCountdownTime))
                 } else {
-                    // Time is over, update the quiz's isCompleted property
-                    (async () => {
-                        await updateQuizCompletion(userData.username, id, true);
-                    })();
-                    return 0;
+                    const countdownTime = quiz.quizTime * 60 * 1000;  //from minutes to milliseconds   //if not - we set it to the new value
+                    localStorage.setItem('countdownTime', countdownTime.toString())
                 }
-            });
-        }, 1000);
 
-        return () => {
-            clearInterval(countdownTimer);
-        }
-    }, [userData]);
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const quiz = await getQuizById(id);
+    //             const questions = await getQuestionsByQuizId(id);
+
+    //             setQuiz(quiz);
+    //             setQuestions(questions);
+    //             setCountdownTime(quiz.quizTime); // Set countdownTime to quizTime
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, [id]);
+
+    // useEffect(() => {
+    //     const countdownTimer = setInterval(() => {
+    //         setCountdownTime((prevTime) => {
+    //             if (prevTime > 0) {
+    //                 return prevTime - 1;
+    //             } else {
+    //                 // Time is over, update the quiz's isCompleted property
+    //                 (async () => {
+    //                     await updateQuizCompletion(userData.username, id, true);
+    //                 })();
+    //                 return 0;
+    //             }
+    //         });
+    //     }, 1000);
+
+    //     return () => {
+    //         clearInterval(countdownTimer);
+    //     }
+    // }, [userData]);
+
+
+    const handleCountdownEnd = async () => {
+        setIsCountdownFinished(true);
+        await updateQuizCompletion(userData.username, id, true);
+        localStorage.removeItem('countdownTime'); // Remove countdownTime from localStorage
+    };
 
     return (
         <>
             <div>
-                <h1>QuizSolve1</h1>
-                {countdownTime > 0 ? (
+
+                {!isCountdownFinished ? (
                     questions[currentQuestionIndex] && (
                         <>
                             <QuizSolveCard question={questions[currentQuestionIndex]} quizId={id} onAnswerSelect={() => {
                                 setAnsweredQuestionsCount((prevCount) => prevCount + 1);
                             }} />
 
-                            < div className="grid grid-flow-col gap-5 text-center auto-cols-max" >
-                                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                                    <span className="countdown font-mono text-5xl">
-                                        <span style={{ "--value": Math.floor(countdownTime / 3600) }}></span>
-                                    </span>
-                                    hours
-                                </div>
-                                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                                    <span className="countdown font-mono text-5xl">
-                                        <span style={{ "--value": Math.floor((countdownTime % 3600) / 60) }}></span>
-                                    </span>
-                                    min
-                                </div>
-                                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                                    <span className="countdown font-mono text-5xl">
-                                        <span style={{ "--value": countdownTime % 60 }}></span>
-                                    </span>
-                                    sec
-                                </div>
-                            </div>
+                            <Countdown
+                                date={Date.now() + countdownTime}
+                                onComplete={handleCountdownEnd}
+                                onTick={({ total }) => localStorage.setItem('countdownTime', total.toString())} // Convert to string before saving
+                            />
 
                             <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex < questions.length - 1 ? prevIndex + 1 : prevIndex)}>Next</button>
                         </>

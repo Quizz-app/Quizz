@@ -9,6 +9,10 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useNavigate, useParams } from "react-router-dom";
 import { addQuestion, deleteQuestion, getQuestionsByQuizId, updateQuestion } from "../services/questions-service";
 import QuestionCard from "./QuestionCard";
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -21,13 +25,15 @@ const CreateQuiz = () => {
     const [quizTime, setQuizTime] = useState(0);
     const [totalPoints, setTotalPoints] = useState(0);
     const [description, setDescription] = useState("");
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    const [refreshQuestions, setRefreshQuestions] = useState(false);
+    const [open, setOpen] = useState(false)
+    const [timeLimit, setTimeLimit] = useState(0)
     const [grades, setGrades] = useState({
         good: 0,
         bad: 0,
     });
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-    const [refreshQuestions, setRefreshQuestions] = useState(false);
 
     const [question, setQuestion] = useState({
         content: "",
@@ -40,7 +46,7 @@ const CreateQuiz = () => {
             try {
                 const quiz = await getQuizById(id);
                 setQuiz(quiz);
-                setQuizTime(quiz.quizTime || 0);
+                setTimeLimit(quiz.quizTime || 0);
                 setGrades(quiz.grades || { good: 0, bad: 0 });
                 setDescription(quiz.description || "");
                 setLoading(false);
@@ -62,6 +68,8 @@ const CreateQuiz = () => {
                 const totalPoints = questions.reduce((total, question) => total + Number(question.points), 0);
                 setTotalPoints(totalPoints);
 
+                await handleSetTime(Number(timeLimit));
+
             } catch (error) {
                 if (error.message === 'No questions found') {
                     setQuestions([]);
@@ -72,7 +80,11 @@ const CreateQuiz = () => {
         };
 
         fetchQuestions();  //
-    }, [id, refreshQuestions]);
+    }, [id, refreshQuestions, timeLimit]);
+
+
+
+    
 
     const handleQuestionChange = (e) => {
         setQuestion({ ...question, content: e.target.value });
@@ -117,7 +129,7 @@ const CreateQuiz = () => {
         setAnswers([...answers, ""]);
     };
 
-    
+
     const questionCreation = () => {
         setCreateMode(true);
     }
@@ -160,10 +172,8 @@ const CreateQuiz = () => {
     };
 
 
-    const handleSetTime = async (e) => {
-        const newQuizTime = Number(e.target.value);
-        setQuizTime(newQuizTime);
-        const updatedQuiz = { ...quiz, quizTime: newQuizTime };
+    const handleSetTime = async (time) => {
+        const updatedQuiz = { ...quiz, quizTime: time };
         try {
             await updateQuiz(id, updatedQuiz);
             setQuiz(updatedQuiz);
@@ -187,10 +197,41 @@ const CreateQuiz = () => {
         }
     };
 
+    const timeRanges = [
+        {
+            value: '5',
+            label: "5m",
+        },
+        {
+            value: '10',
+            label: "10m",
+        },
+        {
+            value: '15',
+            label: "15m",
+        },
+        {
+            value: '20',
+            label: "20m",
+        },
+        {
+            value: '25',
+            label: "25m",
+        },
+        {
+            value: '30',
+            label: "30m",
+        },
+        {
+            value: '40',
+            label: "40m",
+        },
+        {
+            value: '50',
+            label: "50m",
+        },
 
-
-
-
+    ]
 
     return (
         <>
@@ -209,8 +250,55 @@ const CreateQuiz = () => {
                     </div>
                     <p>Total points: {totalPoints}</p>
                     {/* time */}
-                    <Label htmlFor="quizTime">Quiz Time</Label>
-                    <Input id="quizTime" type="number" value={quizTime} placeholder="Enter quiz time" onChange={handleSetTime} />
+                    {/* <Label htmlFor="quizTime">Time limit:</Label>
+                    <Input id="quizTime" type="number" value={quizTime} placeholder="Enter quiz time" onChange={handleSetTime} /> */}
+
+
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={open}
+                                className="w-[200px] justify-between"
+                            >
+                                {timeLimit
+                                    ? timeRanges.find((framework) => framework.value === timeLimit)?.label
+                                    : "Set time limit"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                {/* <CommandInput placeholder="Search framework..." /> */}
+                                <CommandEmpty>No time limit set</CommandEmpty>
+                                <CommandGroup>
+                                    {timeRanges.map((timeRange) => (
+                                        <CommandItem
+                                            key={timeRange.value}
+                                            value={timeRange.value}
+                                            onSelect={(currentValue) => {
+                                                setTimeLimit(currentValue)
+                                                setOpen(false)
+                                                
+                                            }}
+                                        >
+                                            <Check
+                                                className={cn(
+                                                    "mr-2 h-5 w-4",
+                                                    timeLimit === timeRange.value ? "opacity-100" : "opacity-0"
+                                                )}
+                                            />
+                                            {timeRange.label}
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+
+
+
                 </div>
 
             </div>
@@ -294,7 +382,7 @@ const CreateQuiz = () => {
                             <input
                                 type="text"
                                 value={editingQuestion.content}
-                                onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value,  })}
+                                onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value, })}
                             />
 
                             {/* Add more inputs for other fields */}
