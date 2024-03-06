@@ -18,6 +18,7 @@ const QuizSolve = () => {
     const [answeredQuestionsCount, setAnsweredQuestionsCount] = useState(0);
     const [countdownTime, setCountdownTime] = useState(0);
     const [isCountdownFinished, setIsCountdownFinished] = useState(false);
+    const [userAnswers, setUserAnswers] = useState([]);
 
     const navigate = useNavigate();
 
@@ -33,12 +34,13 @@ const QuizSolve = () => {
                 setQuestions(questions);
 
                 //this operation prevents the timer to be refreshed along with the page
-                const savedCountdownTime = localStorage.getItem('countdownTime')
+                const savedCountdownTime = localStorage.getItem(`countdownTime-${id}`)
                 if (savedCountdownTime) {                             //if there is saved countdown time we set its value to the countdownTime state
-                    setCountdownTime(Number(savedCountdownTime))
+                    setCountdownTime(Number(savedCountdownTime))//
                 } else {
                     const countdownTime = quiz.quizTime * 60 * 1000;  //from minutes to milliseconds   //if not - we set it to the new value
-                    localStorage.setItem('countdownTime', countdownTime.toString())
+                    console.log(countdownTime);
+                    localStorage.setItem(`countdownTime-${id}`, countdownTime.toString())
                 }
 
 
@@ -48,7 +50,7 @@ const QuizSolve = () => {
         };
 
         fetchData();
-    }, [id]);
+    }, [id, countdownTime]);
 
     // useEffect(() => {
     //     const fetchData = async () => {
@@ -91,7 +93,7 @@ const QuizSolve = () => {
     const handleCountdownEnd = async () => {
         setIsCountdownFinished(true);
         await updateQuizCompletion(userData.username, id, true);
-        localStorage.removeItem('countdownTime'); // Remove countdownTime from localStorage
+        localStorage.removeItem(`countdownTime-${id}`); // Remove countdownTime from localStorage
     };
 
     return (
@@ -102,16 +104,18 @@ const QuizSolve = () => {
                     questions[currentQuestionIndex] && (
                         <>
                             <QuizSolveCard question={questions[currentQuestionIndex]} quizId={id} onAnswerSelect={() => {
-                                setAnsweredQuestionsCount((prevCount) => prevCount + 1);
+                                // setAnsweredQuestionsCount((prevCount) => prevCount + 1);
+                                // selectedAnswer = {userAnswers[currentQuestionIndex]};
                             }} />
 
                             <Countdown
                                 date={Date.now() + countdownTime}
                                 onComplete={handleCountdownEnd}
-                                onTick={({ total }) => localStorage.setItem('countdownTime', total.toString())} // Convert to string before saving
+                                onTick={({ total }) => localStorage.setItem(`countdownTime-${id}`, total.toString())} // Convert to string before saving
                             />
 
                             <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex < questions.length - 1 ? prevIndex + 1 : prevIndex)}>Next</button>
+                            <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex > 0  ? prevIndex - 1 : 0)}>Previous</button>
                         </>
                     )
                 ) : (
