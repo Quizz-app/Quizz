@@ -46,15 +46,6 @@ export const updateUserInfo = async (username, prop, value) => {
   await update(ref(db, `users/${username}`), { [prop]: value });
 };
 
-// export const updateUserPhoto = async (uid, avatar) => {
-//   try {
-//     const userRef = ref(db, `users/${uid}`);
-//     await update(userRef, { avatar });
-//     return true;
-//   } catch (error) {
-//     return false;
-//   }
-// };
 
 //get all admins
 export const getAllAdmins = async () => {
@@ -63,6 +54,24 @@ export const getAllAdmins = async () => {
       query(ref(db, "users"), orderByChild("isAdmin"), equalTo(true))
     );
     return snapshot;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+
+
+export const getAllStudents = async () => {
+  try {
+    const snapshot = await get(
+      query(ref(db, "users"), orderByChild("role"), equalTo("student"))
+    );
+    if (snapshot.exists()) {
+      return Object.entries(snapshot.val()).map(([key, value]) => ({ key, ...value }));
+    } else {
+      return [];
+    }
   } catch (err) {
     console.error(err);
     return null;
@@ -117,7 +126,7 @@ export const getUserQuizzes = async (username) => {
         if (quizData) {
           quizzesData.push({
             ...quizData,
-            isCompleted: quiz.isCompleted, // Add this line
+            isCompleted: quiz.isCompleted,
           });
         } else {
           console.log(`No quiz found with id ${quiz.id}`);
@@ -127,7 +136,6 @@ export const getUserQuizzes = async (username) => {
       }
     }
 
-    console.log(quizzesData);
     return quizzesData;
   } catch (error) {
     console.error('Error getting user quizzes:', error);
@@ -231,7 +239,7 @@ export const updateQuizCompletion = async (username, quizId, isCompleted) => {
  * @function
  */
 
-export const respondToInvite = async (username, teamId, accept) => {
+export const respondToTeamInvite = async (username, teamId, accept) => {
   const userRef = ref(db, `users/${username}`);
   const userSnapshot = await get(userRef);
   const userData = userSnapshot.val();
@@ -252,12 +260,38 @@ export const respondToInvite = async (username, teamId, accept) => {
     userData.teams[teamId] = true;
 
   } else {
-
     userData.invitesForTeam[teamId].status = 'declined';
   }
   delete userData.invitesForTeam[teamId];
   await set(userRef, userData);
 }
+
+
+export const respondToQuizInvite = async (username, quizId, accept) => {
+  const userRef = ref(db, `users/${username}`);
+  const userSnapshot = await get(userRef);
+  const userData = userSnapshot.val();
+
+  if (!userData.invitesForQuiz || !userData.invitesForQuiz[quizId]) {
+    throw new Error('No such invite');
+  }
+  console.log(quizId)
+  if (accept) {
+
+    await addQuizToUser(username, quizId);
+    userData.invitesForQuiz[quizId].status = 'accepted';
+    if (!userData.quizzes) {
+      userData.quizzes = {};
+    }
+
+    userData.quizzes[quizId] = true;
+
+  } else {
+    userData.invitesForQuiz[quizId].status = 'declined';
+  }
+  delete userData.invitesForQuiz[quizId];
+  await set(userRef, userData);
+};
 
 /**
  * Sets up a listener for changes in the teams of a user in the database.
@@ -335,7 +369,7 @@ export const userLeaveTeam = async (username, teamId) => {
   await set(userRef, userData);
 };
 
-
+//Listen of invites for to join a team
 export const getUserTeamInvites = (username, callback) => {
   const userInvitesRef = ref(db, `users/${username}/invitesForTeam`);
   // console.log(userInvitesRef);
@@ -346,6 +380,17 @@ export const getUserTeamInvites = (username, callback) => {
   return () => unsubscribe();
 }
 
+
+//Listen for invites to join a quiz
+export const getUserQuizInvites = (username, callback) => {
+  const userInvitesRef = ref(db, `users/${username}/invitesForQuiz`);
+  // console.log(userInvitesRef);
+  const unsubscribe = onValue(userInvitesRef, (snapshot) => {
+    callback(snapshot.val() || {});
+  });
+
+  return () => unsubscribe();
+}
 
 export const verifyUser = async (user) => {
   try {

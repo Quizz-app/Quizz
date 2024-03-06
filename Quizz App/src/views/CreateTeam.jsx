@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAllTeachers } from "../services/users-service";
-import { onTeamMembersChange, getTeamById, removeMemberFromTeam, inviteUserToTeam, deleteTeam } from "../services/teams-service";
+import { onTeamMembersChange, getTeamById, removeMemberFromTeam, inviteUserToTeam, deleteTeam, getAllTeamQuizzes } from "../services/teams-service";
 import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
 
@@ -12,6 +12,7 @@ const CreateTeam = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [members, setMembers] = useState([]);
     const [team, setTeam] = useState([]);
+    const [teamQuizzes, setTeamQuizzes] = useState([]);
 
     const navigate = useNavigate();
 
@@ -42,9 +43,13 @@ const CreateTeam = () => {
         }
     }, [isLoading, userData]);
 
+    useEffect(() => {
+        const unsubscribe = getAllTeamQuizzes(id, setTeamQuizzes);
+        return () => unsubscribe();
+    }, [id])
+
     const handleRemoveMember = (member) => {
         removeMemberFromTeam(id, member);
-
     };
 
     const handleDeleteTeam = () => {
@@ -52,9 +57,6 @@ const CreateTeam = () => {
         navigate('/my-teams');
 
     };
-
-
-
 
     const filteredTeachers = teachers.filter(teacher => teacher.email.toLowerCase().includes(searchTerm.toLowerCase()));
     return (
@@ -105,6 +107,16 @@ const CreateTeam = () => {
             <hr />
             <div>
                 <h1>Team Quizzes</h1>
+
+                {teamQuizzes.map((quiz, index) => (
+                    <div  className="border flex flex-row justify-between"key={index}>
+                        <h2>{quiz.title}</h2>
+                        <p>{quiz.description}</p>
+                        <p>{quiz.creator}</p>
+                        <button onClick={() => navigate(`/quiz/${quiz.id}`)}>Got to quiz</button>
+                        <button>Remove quiz Trqbva da se opravi</button>
+                    </div>
+                ))}
             </div>
         </div>
     );

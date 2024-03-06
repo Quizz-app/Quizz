@@ -1,8 +1,6 @@
 import { db } from "../config/firebase-config";
 import { get, set, ref, query, equalTo, orderByChild, update, push, } from "firebase/database";
 
-
-
 export const createQuiz = async (creator, title, category, isPublic, time, questionTypes) => {
 
   await set(ref(db, `categories/${category}`), {
@@ -117,3 +115,44 @@ export const addQuizToTeam = async (teamId, quizId) => {
   await set(teamRef, teamData);
 
 };
+
+
+export const inviteUserToQuiz = async (quizId, user, inviter) => {
+  console.log(user);
+  const userRef = ref(db, `users/${user.username}`);
+  const userSnapshot = await get(userRef);
+  const userData = userSnapshot.val();
+
+  const quizRef = await get(ref(db, `quizzes/${quizId}`));
+  const quizData = quizRef.val();
+
+  if (!userData.invitesForQuiz) {
+    userData.invitesForQuiz = {};
+  }
+
+  userData.invitesForQuiz[quizId] = {
+    quizId,
+    quizTitle: quizData.title,
+    inviter: inviter,
+    status: 'pending',
+  };
+
+  await set(userRef, userData);
+
+};
+
+
+export const addQuizToUser = async (userId, quiz) => {
+  const userRef = ref(db, `users/${userId}`);
+  const userSnapshot = await get(userRef);
+  const userData = userSnapshot.val();
+
+  if (!userData.quizzes) {
+    userData.quizzes = {};
+  }
+
+  userData.quizzes[quiz.id] = false;
+
+  await set(userRef, userData);
+
+}
