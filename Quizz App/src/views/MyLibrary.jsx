@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useNavigate } from "react-router-dom";
 import QuizCard from "./QuizCard";
 import { get } from "firebase/database";
-import { addQuizToCreator, addQuizToUser, getUserQuizzes } from "../services/users-service";
+import { addQuizToCreator, getUserQuizzes } from "../services/users-service";
 import { set } from "date-fns";
 
 

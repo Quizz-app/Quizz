@@ -118,7 +118,7 @@ export const addQuizToTeam = async (teamId, quizId) => {
 
 
 export const inviteUserToQuiz = async (quizId, user, inviter) => {
-  console.log(user);
+  
   const userRef = ref(db, `users/${user.username}`);
   const userSnapshot = await get(userRef);
   const userData = userSnapshot.val();
@@ -142,17 +142,28 @@ export const inviteUserToQuiz = async (quizId, user, inviter) => {
 };
 
 
-export const addQuizToUser = async (userId, quiz) => {
-  const userRef = ref(db, `users/${userId}`);
+export const addQuizToTheUser = async (username, quizId) => {
+  if (!username || !quizId) {
+    throw new Error('Invalid username or quizId');
+  }
+
+  const userRef = ref(db, `users/${username}`);
   const userSnapshot = await get(userRef);
   const userData = userSnapshot.val();
 
-  if (!userData.quizzes) {
-    userData.quizzes = {};
+  if (!userData) {
+    throw new Error('User does not exist');
   }
 
-  userData.quizzes[quiz.id] = false;
+  if (!userData.userQuizzes) {
+    userData.userQuizzes = {};
+  }
+
+  if (userData.userQuizzes[quizId]) {
+    throw new Error('Quiz already added to the user');
+  }
+
+  userData.userQuizzes[quizId] = { isCompleted: false };
 
   await set(userRef, userData);
-
 }

@@ -51,7 +51,7 @@ const Header = ({ theme, onThemeChange }) => {
     respondToQuizInvite(userData.username, quizId, accept);
   }
 
-  
+  console.log(quizInvites)
   return (
     <div className="navbar bg-base-100 flex justify-between">
       <div className="flex-2">
@@ -82,10 +82,10 @@ const Header = ({ theme, onThemeChange }) => {
           </>
         ) : (
           <>
-            {(teamInvites.length > 0 || quizInvites.length > 0) && (
+            {userData?.role === 'teacher' && teamInvites.length > 0 && (
               <div className="indicator">
                 <span className="indicator-item badge badge-secondary">
-                  {teamInvites.length + quizInvites.length}
+                  {teamInvites.length}
                 </span>
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <div tabIndex={0} role="button" className="btn m-1">Notifications
@@ -103,6 +103,19 @@ const Header = ({ theme, onThemeChange }) => {
                           </div>
                         </li>
                       ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+            {userData?.role === 'student' && quizInvites.length > 0 && (
+              <div className="indicator">
+                <span className="indicator-item badge badge-secondary">
+                  {quizInvites.length}
+                </span>
+                <div className="dropdown dropdown-bottom dropdown-end">
+                  <div tabIndex={0} role="button" className="btn m-1">Notifications
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                       {quizInvites.map((invite, index) => (
                         <li key={index}>
                           <div className="flex flex-col">

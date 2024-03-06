@@ -61,7 +61,7 @@ const CreateQuiz = () => {
     useEffect(() => {
         getAllStudents().then(setStudents);
     }, []);
-    console.log(students)
+   
     //Handle the click event to show the teams
     const handleAssignTeamClick = () => {
         setShowTeams(!showTeams);

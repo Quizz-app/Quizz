@@ -1,6 +1,6 @@
 import { get, set, ref, query, equalTo, orderByChild, update, onValue } from "firebase/database";
 import { db } from "../config/firebase-config.js";
-import { getQuizById } from "./quiz-service.js";
+import { addQuizToTheUser, getQuizById } from "./quiz-service.js";
 import { addMemberToTeam } from "./teams-service.js";
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
@@ -19,6 +19,7 @@ export const createUsername = (firstName, lastName, username, uid, email, role,)
     isBlocked: false,
     role,
     teams: {},
+    userQuizzes: {},
     avatar: "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg",
   });
 
@@ -275,21 +276,28 @@ export const respondToQuizInvite = async (username, quizId, accept) => {
   if (!userData.invitesForQuiz || !userData.invitesForQuiz[quizId]) {
     throw new Error('No such invite');
   }
-  console.log(quizId)
-  if (accept) {
 
-    await addQuizToUser(username, quizId);
+  if (accept) {
+    
+    if (!userData.userQuizzes) {
+      userData.userQuizzes = {};
+    }
+
+    if (userData.userQuizzes[quizId]) {
+      throw new Error('Quiz already added to the user');
+    }
+    userData.userQuizzes[quizId] = { isCompleted: false };
+
     userData.invitesForQuiz[quizId].status = 'accepted';
+
     if (!userData.quizzes) {
       userData.quizzes = {};
     }
 
-    userData.quizzes[quizId] = true;
-
   } else {
     userData.invitesForQuiz[quizId].status = 'declined';
   }
-  delete userData.invitesForQuiz[quizId];
+  // delete userData.invitesForQuiz[quizId];
   await set(userRef, userData);
 };
 
