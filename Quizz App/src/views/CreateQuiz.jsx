@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useNavigate, useParams } from "react-router-dom";
 import { addQuestion, deleteQuestion, getQuestionsByQuizId, updateQuestion } from "../services/questions-service";
 import QuestionCard from "./QuestionCard";
+import { getUserTeams } from "../services/users-service";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -28,22 +29,33 @@ const CreateQuiz = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [refreshQuestions, setRefreshQuestions] = useState(false);
-
+    const { userData } = useContext(AppContext)
     const [question, setQuestion] = useState({
         content: "",
         answers,
         points: 0
     });
+    const [userTeams, setUserTeams] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    
+
+    
+    //Set the user teams
+    useEffect(() => {
+        getUserTeams(userData?.username, setUserTeams);
+    }, [userData]);
+    //Filter the user teams to get the teams the user is a member of
+    const filteredTeams = userTeams.filter(team => team.members[userData?.username]);
 
     useEffect(() => {
         const fetchQuiz = async () => {
             try {
                 const quiz = await getQuizById(id);
                 setQuiz(quiz);
-                setQuizTime(quiz.quizTime || 0); 
-                setGrades(quiz.grades || { good: 0, bad: 0 }); 
+                setQuizTime(quiz.quizTime || 0);
+                setGrades(quiz.grades || { good: 0, bad: 0 });
                 setDescription(quiz.description || "");
-                setLoading(false); 
+                setLoading(false);
             }
             catch (error) {
                 console.error(error);
@@ -86,7 +98,7 @@ const CreateQuiz = () => {
 
     const handleAddQuestion = async () => {
         try {
-            await addQuestion(quiz.id, question.content, question.answers,  question.points, correctAnswerIndices);
+            await addQuestion(quiz.id, question.content, question.answers, question.points, correctAnswerIndices);
 
             setCreateMode(false);
             setRefreshQuestions(prev => !prev);
@@ -205,8 +217,6 @@ const CreateQuiz = () => {
 
             <p>Add description:</p>
             <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
-
-
             {/* //questions */}
             <div className="flex flex-row items-start justify-start w-screen">
                 <div className="flex flex-col items-start justify-start ">
@@ -228,7 +238,6 @@ const CreateQuiz = () => {
                         )
                         :
                         (<h1>No questions yet</h1>)}
-
                     {createMode &&
                         (
                             <div className=" border rounded-md w-1000px">
@@ -256,14 +265,9 @@ const CreateQuiz = () => {
                                                         onChange={() => handleCheckboxChange(index)}
                                                     />
                                                 </div>
-
-
                                                 <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
                                             </div>
                                         ))}
-
-
-
                                         {/* points */}
                                         <Label htmlFor="points">Points</Label>
                                         <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
@@ -276,7 +280,6 @@ const CreateQuiz = () => {
                                 </div>
                             </div>
                         )}
-
                     {editingQuestion && (
                         <form onSubmit={() => handleUpdateQuestion(editingQuestion)}>
                             <input
@@ -291,10 +294,12 @@ const CreateQuiz = () => {
 
 
                 </div>
+                
                 <button className="btn btn-outline btn-primary" onClick={questionCreation}>Add +</button>
-
             </div>
-
+            <div>
+            <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
+            </div>
 
             <div className="flex flex-col items-center justify-center">
                 <p>Set grades (optional):</p>

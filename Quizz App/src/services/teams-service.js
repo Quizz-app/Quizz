@@ -82,7 +82,6 @@ export const getTeamById = async (teamId) => {
         console.error('Team does not exist');
         return null;
     }
-
     return snapShot.val();
 }
 
