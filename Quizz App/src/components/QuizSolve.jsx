@@ -46,17 +46,14 @@ const QuizSolve = () => {
                 setQuiz(quiz);
                 setQuestions(questions);
 
-                //this operation prevents the timer to be refreshed along with the page
                 const savedCountdownTime = localStorage.getItem(`countdownTime-${id}`)
-                if (savedCountdownTime) {                             //if there is saved countdown time we set its value to the countdownTime state
-                    setCountdownTime(Number(savedCountdownTime))//
+                if (savedCountdownTime) {
+                    setCountdownTime(Number(savedCountdownTime))
                 } else {
-                    const countdownTime = quiz.quizTime * 60 * 1000;  //from minutes to milliseconds   //if not - we set it to the new value
-                    console.log(countdownTime);
+                    const countdownTime = quiz.quizTime * 60 * 1000;
                     localStorage.setItem(`countdownTime-${id}`, countdownTime.toString())
+                    setCountdownTime(countdownTime);
                 }
-
-
             } catch (error) {
                 console.error(error);
             }
