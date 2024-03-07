@@ -299,7 +299,7 @@ const CreateQuiz = () => {
                         <Button onClick={() => navigate('/my-library')}>See all quizzes</Button>
                     </div>
                     <p>Total points: {totalPoints}</p>
-                   
+
                     <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
                             <Button
@@ -360,7 +360,7 @@ const CreateQuiz = () => {
                 </div>
             )}
 
-            
+
             {/* Here we can see all the students that are in the system*/}
             {showUsers && students.length > 0 && (
                 <div>
@@ -459,7 +459,8 @@ const CreateQuiz = () => {
                 <button className="btn btn-outline btn-primary" onClick={questionCreation}>Add +</button>
             </div>
 
-
+            
+            {/* grading */}
             <div className="flex flex-col items-center justify-center">
                 <p>Set grades (optional):</p>
                 <p>Add indexes:</p>
@@ -471,11 +472,11 @@ const CreateQuiz = () => {
                 <Button onClick={handleSetGrades}>Set Grades</Button>
             </div>
 
-
+            <h1>Retake quiz permission </h1>
             <label className="swap">
                 <input type="checkbox" />
-                <div className="swap-on">ON</div>
-                <div className="swap-off">OFF</div>
+                <div className="swap-on">YES</div>      {/* disable */}
+                <div className="swap-off">NO</div>       {/* enable */}
             </label>
         </>
     );
