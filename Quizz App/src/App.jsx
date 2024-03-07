@@ -9,8 +9,12 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import Header from "./components/Header";
 import CreateQuiz from "./views/CreateQuiz";
-import CreateTeam from './views/CreateTeam';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import CreateTeam from "./views/CreateTeam";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { Link } from "react-router-dom";
 import Profile from "./views/Profile";
 import MyLibrary from "./views/MyLibrary";
@@ -19,6 +23,7 @@ import QuizPreview from "./components/QuizPreview";
 import QuizResults from "./views/QuizResults";
 import MyTeamsView from "./views/MyTeamsView";
 import Assistant from "./views/Assistant";
+import Admin from "./views/Admin/Admin";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -45,45 +50,52 @@ const App = () => {
     setTheme(event.target.checked ? "synthwave" : "1");
   };
 
-  return (user ? (
+  return user ? (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
         <Header theme={theme} onThemeChange={handleThemeChange} />
 
-          <ResizablePanelGroup
-            direction="horizontal"
-            className="min-h-full max-w-full"   //{/* if you want a border add  - rounded-lg border */ }
-          >
-            <ResizablePanel defaultSize={25}>
-              <div className="flex h-full items-start justify-start p-6 flex-col">
-                <Link to="/my-library" className="font-semibold mb-2">Library</Link>
-                <Link to="/my-teams" className="font-semibold mb-2">Teams</Link>
-               
-              </div>
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={75}>
-              <div >
-                <Routes>
-                  <Route index element={<Home />} />
-                  <Route path="/home" element={<Home />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/my-library" element={<MyLibrary />} />
-                  <Route path="/my-teams" element={<MyTeamsView />} />
-                  <Route path="/quiz-preview/:id" element={<QuizPreview />} /> {/* change this */}
-                  <Route path="/quiz-solve/:id" element={<QuizSolve />} />
-                  <Route path="/team/:id" element={<CreateTeam />} />
-                  <Route path="/quiz/:id" element={<CreateQuiz />} />
-                  <Route path="/results/:id" element={<QuizResults />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/assistant" element={<Assistant />} />
-                  {/* Add more routes as needed */}
-                </Routes>
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="min-h-full max-w-full" //{/* if you want a border add  - rounded-lg border */ }
+        >
+          <ResizablePanel defaultSize={25}>
+            <div className="flex h-full items-start justify-start p-6 flex-col">
+              <Link to="/my-library" className="font-semibold mb-2">
+                Library
+              </Link>
+              <Link to="/my-teams" className="font-semibold mb-2">
+                Teams
+              </Link>
+            </div>
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel defaultSize={75}>
+            <div>
+              <Routes>
+                <Route index element={<Home />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/my-library" element={<MyLibrary />} />
+                <Route path="/my-teams" element={<MyTeamsView />} />
+                <Route
+                  path="/quiz-preview/:id"
+                  element={<QuizPreview />}
+                />{" "}
+                {/* change this */}
+                <Route path="/quiz-solve/:id" element={<QuizSolve />} />
+                <Route path="/team/:id" element={<CreateTeam />} />
+                <Route path="/quiz/:id" element={<CreateQuiz />} />
+                <Route path="/results/:id" element={<QuizResults />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/assistant" element={<Assistant />} />
+                <Route path="/admin" element={<Admin />} />
+                {/* Add more routes as needed */}
+              </Routes>
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </AppContext.Provider>
     </BrowserRouter>
   ) : (
@@ -97,7 +109,6 @@ const App = () => {
         </Routes>
       </AppContext.Provider>
     </BrowserRouter>
-  )
   );
 };
 
