@@ -8,6 +8,18 @@ import QuizSolveCard from "../views/QuizSolveCard";
 import { useNavigate } from "react-router-dom";
 import { updateQuizCompletion } from "../services/users-service";
 import Countdown from 'react-countdown';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 
 const QuizSolve = () => {
     const { user, userData } = useContext(AppContext);
@@ -18,7 +30,8 @@ const QuizSolve = () => {
     const [answeredQuestionsCount, setAnsweredQuestionsCount] = useState(0);
     const [countdownTime, setCountdownTime] = useState(0);
     const [isCountdownFinished, setIsCountdownFinished] = useState(false);
-    const [userAnswers, setUserAnswers] = useState([]);
+ 
+
 
     const navigate = useNavigate();
 
@@ -89,11 +102,14 @@ const QuizSolve = () => {
     //     }
     // }, [userData]);
 
+    
 
     const handleCountdownEnd = async () => {
         setIsCountdownFinished(true);
         await updateQuizCompletion(userData.username, id, true);
         localStorage.removeItem(`countdownTime-${id}`); // Remove countdownTime from localStorage
+
+        navigate(`/results/${id}`);
     };
 
     return (
@@ -103,10 +119,10 @@ const QuizSolve = () => {
                 {!isCountdownFinished ? (
                     questions[currentQuestionIndex] && (
                         <>
-                            <QuizSolveCard question={questions[currentQuestionIndex]} quizId={id} onAnswerSelect={() => {
-                                // setAnsweredQuestionsCount((prevCount) => prevCount + 1);
-                                // selectedAnswer = {userAnswers[currentQuestionIndex]};
-                            }} />
+                            <QuizSolveCard
+                                question={questions[currentQuestionIndex]}
+                                quizId={id}
+                            />
 
                             <Countdown
                                 date={Date.now() + countdownTime}
@@ -114,8 +130,29 @@ const QuizSolve = () => {
                                 onTick={({ total }) => localStorage.setItem(`countdownTime-${id}`, total.toString())} // Convert to string before saving
                             />
 
-                            <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex < questions.length - 1 ? prevIndex + 1 : prevIndex)}>Next</button>
-                            <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex > 0  ? prevIndex - 1 : 0)}>Previous</button>
+                            {currentQuestionIndex < questions.length - 1 ? (
+                                <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}>Next</button>
+                            ) : (
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant="outline">Finish</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="sm:max-w-[425px] bg-white dark:bg-neutral text-black dark:text-white">
+                                        <AlertDialogHeader >
+                                            <AlertDialogTitle>You will finish answering to quiz ${quiz.content} </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. It will save your answers and you will be redirected to the results page.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={handleCountdownEnd}>Finish</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            )}
+
+                            <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex > 0 ? prevIndex - 1 : 0)}>Previous</button>
                         </>
                     )
                 ) : (

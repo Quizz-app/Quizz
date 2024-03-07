@@ -212,7 +212,7 @@ export const addUserAnswer = async (username, quizId, questionId, answer) => {
   if (!quizData.userAnswers) {
     quizData.userAnswers = {};
   }
-
+  console.log(answer);
   // Set the answer directly instead of pushing it to an array
   quizData.userAnswers[questionId] = answer;
 

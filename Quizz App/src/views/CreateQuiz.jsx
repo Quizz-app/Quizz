@@ -14,54 +14,105 @@ import { cn } from "@/lib/utils"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getAllStudents, getUserTeams } from "../services/users-service";
+import { set } from "date-fns";
 
 const CreateQuiz = () => {
     const { id } = useParams();
-    const [quiz, setQuiz] = useState([]);
+    const [quiz, setQuiz] = useState([]); 
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState(["", ""]);
     const [createMode, setCreateMode] = useState(false);
     const [correctAnswerIndices, setCorrectAnswerIndices] = useState([]);
     const [editingQuestion, setEditingQuestion] = useState(null);
-    //const [quizTime, setQuizTime] = useState(0);
     const [totalPoints, setTotalPoints] = useState(0);
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
     const [refreshQuestions, setRefreshQuestions] = useState(false);
-    const [open, setOpen] = useState(false)
-    const [timeLimit, setTimeLimit] = useState(0)
+    const [open, setOpen] = useState(false);
+    const [timeLimit, setTimeLimit] = useState(0);
+    const [userTeams, setUserTeams] = useState([]);
+    const [showTeams, setShowTeams] = useState(false);
+    const [showUsers, setShowUsers] = useState(false);
+    const [students, setStudents] = useState([]);
+       const navigate = useNavigate();
     const [grades, setGrades] = useState({
         good: 0,
         bad: 0,
     });
-
     const { userData } = useContext(AppContext)
     const [question, setQuestion] = useState({
         content: "",
         answers,
         points: 0
     });
-    const [userTeams, setUserTeams] = useState([]);
-
-    const [showTeams, setShowTeams] = useState(false);
-    const [showUsers, setShowUsers] = useState(false);
-
-    const [students, setStudents] = useState([]);
 
 
-
-    //Set the user teams
+    //USE EFFECTS DO NOT TOUCH AT ANY COST
     useEffect(() => {
+        (async () => {
+            try {
+                setLoading(true);
+                const fetchedQuiz = await getQuizById(id);
+                if (JSON.stringify(fetchedQuiz) !== JSON.stringify(quiz)) {
+                    setQuiz(fetchedQuiz);
+                    setTimeLimit(fetchedQuiz.quizTime || 0);
+                    setGrades(fetchedQuiz.grades || { good: 0, bad: 0 });
+                    setDescription(fetchedQuiz.description || "");
+                    setLoading(false);
+
+                    console.log('use effect triggered');
+                }
+            }
+            catch (error) {
+                console.error(error);
+            }
+        })();
+    }, [id]); // Only re-run the effect if `id` changes
+
+
+    useEffect(() => {
+        (async () => {
+            try {
+                setLoading(true);
+                const fetchedQuestions = await getQuestionsByQuizId(id);
+                if (JSON.stringify(fetchedQuestions) !== JSON.stringify(questions)) {
+                    setQuestions(fetchedQuestions);
+
+                    const newTotalPoints = fetchedQuestions.reduce((total, question) => total + Number(question.points), 0);
+                    if (newTotalPoints !== totalPoints) {
+                        setTotalPoints(newTotalPoints);
+                    }
+                }
+                setLoading(false);
+            } catch (error) {
+                if (error.message === 'No questions found') {
+                    setQuestions([]);
+                } else {
+                    throw error;
+                }
+            }
+        })();
+    }, [id, refreshQuestions]); 
+    
+
+
+
+
+    //USE EFFECTS FOR THE TEAMS
+    useEffect(() => {
+        setLoading(true);
         getUserTeams(userData?.username, setUserTeams);
+        setLoading(false);
     }, [userData]);
     //Filter the user teams to get the teams the user is a member of
     const filteredTeams = userTeams.filter(team => team.members[userData?.username]);
     //Set the students
     useEffect(() => {
+        setLoading(true);
         getAllStudents().then(setStudents);
+        setLoading(false);
     }, []);
-   
+
     //Handle the click event to show the teams
     const handleAssignTeamClick = () => {
         setShowTeams(!showTeams);
@@ -80,64 +131,12 @@ const CreateQuiz = () => {
     };
 
 
-    useEffect(() => {
-        const fetchQuiz = async () => {
-            try {
-                const quiz = await getQuizById(id);
-                setQuiz(quiz);
-                setTimeLimit(quiz.quizTime || 0);
-                setGrades(quiz.grades || { good: 0, bad: 0 });
-                setDescription(quiz.description || "");
-                setLoading(false);
-            }
-            catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchQuiz();
-    }, [id]);
-
-    useEffect(() => {
-        const fetchQuestions = async () => {    //THIS SYNTAXIS CAUSES A RESURSION
-            try {
-                const questions = await getQuestionsByQuizId(id);
-                setQuestions(questions);
-
-                const totalPoints = questions.reduce((total, question) => total + Number(question.points), 0);
-                setTotalPoints(totalPoints);
-
-                await handleSetTime(Number(timeLimit));
-
-            } catch (error) {
-                if (error.message === 'No questions found') {
-                    setQuestions([]);
-                } else {
-                    throw error;
-                }
-            }
-        };
-
-        fetchQuestions();  //
-    }, [id, refreshQuestions, timeLimit]);
 
 
-
-
-
-    const handleQuestionChange = (e) => {
-        setQuestion({ ...question, content: e.target.value });
-    };
-
-    const handleAnswerChange = (index) => (e) => {
-        const newAnswers = [...answers];
-        newAnswers[index] = e.target.value;
-        setAnswers(newAnswers);
-        setQuestion({ ...question, answers: newAnswers });
-    };
-
+    //ASYNCHRONOUS FUNCTIONS DO NOT TOUCH AT ANY COST
     const handleAddQuestion = async () => {
         try {
+            console.log(quiz.id);
             await addQuestion(quiz.id, question.content, question.answers, question.points, correctAnswerIndices);
 
             setCreateMode(false);
@@ -148,12 +147,9 @@ const CreateQuiz = () => {
         }
     };
 
-    const handlePointsChange = (e) => {
-        setQuestion({ ...question, points: Number(e.target.value) });
-    };
-
     const handleUpdateQuestion = async (updatedQuestion) => {
         try {
+            console.log(updatedQuestion);
             await updateQuestion(quiz.id, updatedQuestion.id, updatedQuestion.content, updatedQuestion.answers, updatedQuestion.points, updatedQuestion.correctAnswer);
 
             setRefreshQuestions(prev => !prev);
@@ -164,32 +160,6 @@ const CreateQuiz = () => {
         }
     };
 
-    const handleAddAnswer = () => {
-        setAnswers([...answers, ""]);
-    };
-
-
-    const questionCreation = () => {
-        setCreateMode(true);
-    }
-
-
-    const handleCheckboxChange = (index) => {
-        if (correctAnswerIndices.includes(index)) {
-            setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
-        } else {
-            setCorrectAnswerIndices([...correctAnswerIndices, index]);
-        }
-    };
-
-
-    const handleRemoveAnswer = (index) => {
-        const newAnswers = answers.filter((_, i) => i !== index);
-        setAnswers(newAnswers);
-        setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
-    };
-
-
     const handleDeleteQuestion = async (questionId) => {
         try {
             await deleteQuestion(quiz.id, questionId);
@@ -198,7 +168,6 @@ const CreateQuiz = () => {
             console.error(error);
         }
     };
-
 
     const handleSetDescription = async () => {
         const updatedQuiz = { ...quiz, description }; // Include quizTime
@@ -210,9 +179,8 @@ const CreateQuiz = () => {
         }
     };
 
-
     const handleSetTime = async (time) => {
-        const updatedQuiz = { ...quiz, quizTime: time };
+        const updatedQuiz = { ...quiz, quizTime: Number(time) };
         try {
             await updateQuiz(id, updatedQuiz);
             setQuiz(updatedQuiz);
@@ -220,7 +188,6 @@ const CreateQuiz = () => {
             console.error(error);
         }
     };
-
 
     const handleSetGrades = async () => {
         if (grades.good !== 0 || grades.bad !== 0) {
@@ -234,6 +201,46 @@ const CreateQuiz = () => {
                 console.error(error);
             }
         }
+    };
+
+
+
+    //STATE HANDLERS
+    const handleQuestionChange = (e) => {
+        setQuestion({ ...question, content: e.target.value });
+    };
+
+    const handleAnswerChange = (index) => (e) => {
+        const newAnswers = [...answers];
+        newAnswers[index] = e.target.value;
+        setAnswers(newAnswers);
+        setQuestion({ ...question, answers: newAnswers });
+    };
+
+    const handlePointsChange = (e) => {
+        setQuestion({ ...question, points: Number(e.target.value) });
+    };
+
+    const handleAddAnswer = () => {
+        setAnswers([...answers, ""]);
+    };
+
+    const questionCreation = () => {
+        setCreateMode(true);
+    }
+
+    const handleCheckboxChange = (index) => {
+        if (correctAnswerIndices.includes(index)) {
+            setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
+        } else {
+            setCorrectAnswerIndices([...correctAnswerIndices, index]);
+        }
+    };
+
+    const handleRemoveAnswer = (index) => {
+        const newAnswers = answers.filter((_, i) => i !== index);
+        setAnswers(newAnswers);
+        setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
     };
 
     const timeRanges = [
@@ -318,10 +325,10 @@ const CreateQuiz = () => {
                                         <CommandItem
                                             key={timeRange.value}
                                             value={timeRange.value}
-                                            onSelect={(currentValue) => {
-                                                setTimeLimit(currentValue)
-                                                setOpen(false)
-
+                                            onSelect={async (currentValue) => {
+                                                setTimeLimit(currentValue);
+                                                setOpen(false);
+                                                await handleSetTime(currentValue); // Call handleSetTime when an option is selected
                                             }}
                                         >
                                             <Check
@@ -432,6 +439,8 @@ const CreateQuiz = () => {
                                 </div>
                             </div>
                         )}
+
+
                     {editingQuestion && (
                         <form onSubmit={() => handleUpdateQuestion(editingQuestion)}>
                             <input

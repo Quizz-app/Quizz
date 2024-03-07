@@ -1,7 +1,7 @@
 import { db } from "../config/firebase-config";
 import { get, set, ref, query, equalTo, orderByChild, update, push, } from "firebase/database";
 
-export const createQuiz = async (creator, title, category, isPublic, time, questionTypes) => {
+export const createQuiz = async (creator, title, category, isPublic,  questionTypes) => {
 
   await set(ref(db, `categories/${category}`), {
     name: category,
@@ -14,7 +14,6 @@ export const createQuiz = async (creator, title, category, isPublic, time, quest
     category,
     isPublic,
     createdOn: new Date().toString(),
-    time,
     questionTypes
   });
 

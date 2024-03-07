@@ -7,13 +7,11 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
     const [editedContent, setEditedContent] = useState(content);
     const [editedAnswers, setEditedAnswers] = useState([...answers]);
     const [editedPoints, setEditedPoints] = useState(points);
-    const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]);
+    const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(Array.isArray(correctAnswer) ? correctAnswer.map(index => answers[index]) : [answers[correctAnswer]]);
 
-    //console.log(questionId);
     const handleEdit = () => {
         setEditing(true);
     };
-
 
     const handleSave = async () => {
         const updatedQuestion = {
@@ -21,7 +19,7 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
             content: editedContent,
             answers: editedAnswers,
             points: editedPoints,
-            correctAnswer: editedCorrectAnswer.filter(i => i !== undefined), // a bug with the undefines
+            correctAnswer: editedCorrectAnswer.map(answer => editedAnswers.indexOf(answer)).filter(i => i !== -1), // Map the answers back to their indices
         };
 
         handleUpdateQuestion(updatedQuestion);
@@ -29,6 +27,7 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
         await updateQuestion(quizId, questionId, updatedQuestion.content, updatedQuestion.answers, updatedQuestion.points, updatedQuestion.correctAnswer);
         setEditing(false);
     };
+
     return (
         <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
@@ -48,12 +47,12 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
                                 />
                                 <input
                                     type="checkbox"
-                                    checked={editedCorrectAnswer.includes(index)}
+                                    checked={editedCorrectAnswer.includes(editedAnswers[index])}
                                     onChange={() => {
-                                        if (editedCorrectAnswer.includes(index)) {
-                                            setEditedCorrectAnswer(editedCorrectAnswer.filter(i => i !== index));
+                                        if (editedCorrectAnswer.includes(editedAnswers[index])) {
+                                            setEditedCorrectAnswer(editedCorrectAnswer.filter(answer => answer !== editedAnswers[index]));
                                         } else {
-                                            setEditedCorrectAnswer([...editedCorrectAnswer, index]);
+                                            setEditedCorrectAnswer([...editedCorrectAnswer, editedAnswers[index]]);
                                         }
                                     }}
                                 />
@@ -85,12 +84,10 @@ export default QuestionCard;
 QuestionCard.propTypes = {
     content: PropTypes.string.isRequired,
     answers: PropTypes.array.isRequired,
-
     points: PropTypes.number.isRequired,
     handleUpdateQuestion: PropTypes.func.isRequired,
     quizId: PropTypes.string.isRequired,
     questionId: PropTypes.string.isRequired,
     correctAnswer: PropTypes.array,
     onDelete: PropTypes.func.isRequired,
-
 };

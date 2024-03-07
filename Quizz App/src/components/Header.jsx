@@ -51,7 +51,7 @@ const Header = ({ theme, onThemeChange }) => {
     respondToQuizInvite(userData.username, quizId, accept);
   }
 
-  console.log(quizInvites)
+  //console.log(quizInvites)
   return (
     <div className="navbar bg-base-100 flex justify-between">
       <div className="flex-2">

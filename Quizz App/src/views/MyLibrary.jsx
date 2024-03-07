@@ -41,7 +41,6 @@ const MyLibrary = () => {
         title: "",
         creator: "",
         category: "",
-        time: 0,
         questions: [],
         isPublic: true,
     });
@@ -55,7 +54,7 @@ const MyLibrary = () => {
 
     const quizCreation = async () => {
         try {
-            const id = await createQuiz(userData.username, quiz.title, quiz.category, quiz.isPublic, quiz.time, quiz.questions);
+            const id = await createQuiz(userData.username, quiz.title, quiz.category, quiz.isPublic, quiz.questions);
             await addQuizToCreator(userData.username, id);
             setQuiz({
                 ...quiz,
@@ -76,7 +75,7 @@ const MyLibrary = () => {
         setIsDialogOpen(false);
     };
 
-    console.log(studentQuizzes)
+    //console.log(studentQuizzes)
     
     return (
         <>
