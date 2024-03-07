@@ -18,7 +18,7 @@ import { set } from "date-fns";
 
 const CreateQuiz = () => {
     const { id } = useParams();
-    const [quiz, setQuiz] = useState([]); 
+    const [quiz, setQuiz] = useState([]);
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState(["", ""]);
     const [createMode, setCreateMode] = useState(false);
@@ -34,7 +34,7 @@ const CreateQuiz = () => {
     const [showTeams, setShowTeams] = useState(false);
     const [showUsers, setShowUsers] = useState(false);
     const [students, setStudents] = useState([]);
-       const navigate = useNavigate();
+    const navigate = useNavigate();
     const [grades, setGrades] = useState({
         good: 0,
         bad: 0,
@@ -92,8 +92,8 @@ const CreateQuiz = () => {
                 }
             }
         })();
-    }, [id, refreshQuestions]); 
-    
+    }, [id, refreshQuestions]);
+
 
 
 
@@ -282,8 +282,10 @@ const CreateQuiz = () => {
         <>
 
             <div className="flex flex-row items-center justify-center">
+
                 {/* //quiz title */}
                 {quiz && <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>}
+
 
                 {/* //action buttons */}
                 <div className="flex flex-row items-center justify-center">
@@ -297,11 +299,7 @@ const CreateQuiz = () => {
                         <Button onClick={() => navigate('/my-library')}>See all quizzes</Button>
                     </div>
                     <p>Total points: {totalPoints}</p>
-                    {/* time */}
-                    {/* <Label htmlFor="quizTime">Time limit:</Label>
-                    <Input id="quizTime" type="number" value={quizTime} placeholder="Enter quiz time" onChange={handleSetTime} /> */}
-
-
+                   
                     <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
                             <Button
@@ -344,12 +342,11 @@ const CreateQuiz = () => {
                             </Command>
                         </PopoverContent>
                     </Popover>
-
-
-
                 </div>
 
             </div>
+
+
             {/* Here we can see all the teams that the current user is in*/}
             {showTeams && filteredTeams.length > 0 && (
                 <div>
@@ -362,6 +359,8 @@ const CreateQuiz = () => {
                     ))}
                 </div>
             )}
+
+            
             {/* Here we can see all the students that are in the system*/}
             {showUsers && students.length > 0 && (
                 <div>
@@ -376,6 +375,8 @@ const CreateQuiz = () => {
             )}
             <p>Add description:</p>
             <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
+
+
             {/* //questions */}
             <div className="flex flex-row items-start justify-start w-screen">
                 <div className="flex flex-col items-start justify-start ">
@@ -397,6 +398,7 @@ const CreateQuiz = () => {
                         )
                         :
                         (<h1>No questions yet</h1>)}
+
                     {createMode &&
                         (
                             <div className=" border rounded-md w-1000px">
@@ -453,12 +455,10 @@ const CreateQuiz = () => {
                             <button type="submit">Update Question</button>
                         </form>
                     )}
-
-
                 </div>
-
                 <button className="btn btn-outline btn-primary" onClick={questionCreation}>Add +</button>
             </div>
+
 
             <div className="flex flex-col items-center justify-center">
                 <p>Set grades (optional):</p>
@@ -471,6 +471,12 @@ const CreateQuiz = () => {
                 <Button onClick={handleSetGrades}>Set Grades</Button>
             </div>
 
+
+            <label className="swap">
+                <input type="checkbox" />
+                <div className="swap-on">ON</div>
+                <div className="swap-off">OFF</div>
+            </label>
         </>
     );
 
