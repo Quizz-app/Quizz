@@ -122,43 +122,15 @@ export const getAllTeachers = async () => {
   }
 };
 
-export const getUserQuizzes = async (username) => {
-  try {
-    const snapshot = await get(query(ref(db, `users/${username}/quizzes`)));
 
-    if (!snapshot.val()) {
-      console.log("No quizzes found for this user");
-      return [];
-    }
+export const getUserQuizzes = (username, callback) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+  
+  const unsubscribe = onValue(userQuizzesRef, (snapshot) => {
+    callback(snapshot.val() || {});
+  });
 
-    const quizzes = Object.keys(snapshot.val()).map((key) => {
-      return {
-        id: key,
-        ...snapshot.val()[key],
-      };
-    });
-
-    const quizzesData = [];
-    for (const quiz of quizzes) {
-      if (quiz.id) {
-        const quizData = await getQuizById(quiz.id.trim());
-        if (quizData) {
-          quizzesData.push({
-            ...quizData,
-            isCompleted: quiz.isCompleted,
-          });
-        } else {
-          console.log(`No quiz found with id ${quiz.id}`);
-        }
-      } else {
-        console.log("No valid quiz id found");
-      }
-    }
-
-    return quizzesData;
-  } catch (error) {
-    console.error("Error getting user quizzes:", error);
-  }
+  return () => unsubscribe();
 };
 
 export const getUserQuizById = async (username, quizId) => {
@@ -231,7 +203,7 @@ export const addUserAnswer = async (username, quizId, questionId, answer) => {
   if (!quizData.userAnswers) {
     quizData.userAnswers = {};
   }
-  console.log(answer);
+  
   // Set the answer directly instead of pushing it to an array
   quizData.userAnswers[questionId] = answer;
 

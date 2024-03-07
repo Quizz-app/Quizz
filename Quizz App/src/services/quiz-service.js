@@ -1,5 +1,5 @@
 import { db } from "../config/firebase-config";
-import { get, set, ref, query, equalTo, orderByChild, update, push, } from "firebase/database";
+import { get, set, ref, query, equalTo, orderByChild, update, push, onValue } from "firebase/database";
 
 export const createQuiz = async (creator, title, category, isPublic,  questionTypes) => {
 
@@ -35,25 +35,29 @@ export const getAllQuizzes = async () => {
   return quizzes;
 };
 
-export const getQuizByCreator = async (creator) => {
-
+export const getQuizByCreator = (creator, callback) => {
   if (!creator) {
     console.error('Creator is undefined');
-    return [];
+    return;
   }
 
-  const snapShot = await get(query(ref(db, "quizzes"), orderByChild("creator"), equalTo(creator)));
+  const quizRef = query(ref(db, "quizzes"), orderByChild("creator"), equalTo(creator));
 
-  if (!snapShot.exists()) {
-    return [];
-  }
+  const unsubscribe = onValue(quizRef, (snapShot) => {
+    if (!snapShot.exists()) {
+      callback([]);
+      return;
+    }
 
-  const quizzes = Object.keys(snapShot.val()).map((key) => ({
-    id: key,
-    ...snapShot.val()[key],
-  }));
+    const quizzes = Object.keys(snapShot.val()).map((key) => ({
+      id: key,
+      ...snapShot.val()[key],
+    }));
 
-  return quizzes;
+    callback(quizzes);
+  });
+
+  return unsubscribe;
 }
 
 
