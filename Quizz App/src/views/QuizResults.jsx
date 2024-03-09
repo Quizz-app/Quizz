@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { getQuizById } from "../services/quiz-service";
 import { AppContext } from "../context/AppContext";
 import { useContext } from "react";
-import { getUserQuizById } from "../services/users-service";
+import { getUserQuizById, setGradeToUser, setScoreToUser } from "../services/users-service";
 import { set } from "date-fns";
 import QuestionResultsCard from "./QuestionResultsCard";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,7 @@ const QuizResults = () => {
     const [points, setPoints] = useState([]);
     const [userQuestions, setUserQuestions] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [retakeOption, setRetakeOption] = useState(false);
     const [grades, setGrades] = useState({});
     const navigate = useNavigate();
 
@@ -31,11 +32,13 @@ const QuizResults = () => {
     useEffect(() => {
         (async () => {
             const quiz = await getUserQuizById(userData?.username, id);
+            console.log(quiz);
             setQuiz(quiz);
             setLoading(false);
 
             if (quiz) {
                 const questionsArray = Object.values(quiz.questions);
+                const retake = quiz.retakeOption;
                 const userAnswersObject = quiz.userAnswers;
                 const grades = quiz.grades;
 
@@ -50,6 +53,7 @@ const QuizResults = () => {
                 setTotalPoints(questionsArray.reduce((total, question) => total + Number(question.points), 0));
                 setPoints(questionsArray.map(question => question.points));
                 setGrades(grades);
+                setRetakeOption(retake);
 
 
             }
@@ -58,27 +62,59 @@ const QuizResults = () => {
     }, [id, userData]);
 
 
+    const writeScoreToDatabase = async (score) => {
+        if (userData.role === 'student') {
+            await setScoreToUser(userData.username, id, score);
+        }
+    }
+
+    const writeGradeToDatabase = async (score) => {
+        if(quiz){
+            if(score >= Number(grades.good)){
+                await setGradeToUser(userData.username, id, "good");
+            }
+            if(score > Number(grades.bad) && score < Number(grades.good)){
+                await setGradeToUser(userData.username, id, "satisfactory");
+            }
+            if(score <= Number(grades.bad)){
+                await setGradeToUser(userData.username, id, "bad");
+            }
+        }
+    }
+
     //an algorith which calculates the total score of the user based on his answers
     useEffect(() => {
         let totalScore = 0;
         for (let i = 0; i < answers.length; i++) {
             if (correctAnswers[i] && quiz) {
                 const totalPoints = correctAnswers[i].reduce((total, _, index) => {
-
                     if (userAnswers[i][0] === 'null') {
-                        // If no answer was selected, subtract total points for the question
                         return total - total;
+                    }
+
+                    if (correctAnswers[i].length === 1) {
+                        if (userAnswers[i].length === 1 && userAnswers[i][0] !== correctAnswers[i][0]) {
+                            return total - total;
+                        }
+                        if (userAnswers[i].length > 1 && !userAnswers[i].includes(index)) {
+                            return total - total;
+                        }
+                        if (userAnswers[i].length === 1 && userAnswers[i][0] === correctAnswers[i][0]) {
+                            return total;
+                        }
                     } else {
-                        // If an answer was selected, subtract points for incorrect answers
                         return total - (userAnswers[i].includes(index) ? 0 : Math.floor(points[i] / answers.length));
                     }
                 }, points[i]);
-            totalScore += totalPoints;
+                totalScore += totalPoints;
             }
-
         }
-
         setScore(totalScore);
+
+
+        writeScoreToDatabase(totalScore);
+        writeGradeToDatabase(totalScore);
+
     }, [answers, correctAnswers, userAnswers, points]);
 
 
@@ -86,6 +122,9 @@ const QuizResults = () => {
     if (loading) {
         return <div>Loading...</div>;
     }
+
+
+
 
     //rendering the questions and the user's answers in a seperate card component
     const quests = answers.map((answer, index) => {
@@ -105,6 +144,7 @@ const QuizResults = () => {
             </div>
         );
     });
+
 
 
     return (
@@ -131,16 +171,18 @@ const QuizResults = () => {
                     {/* grades */}
                     <div className="flex flex-row items-center justify-center">
                         <h2 className="text-2xl font-bold mb-4">Overall grade:
-                            {quiz &&
+                        {quiz &&
                                 score >= Number(grades.good) ? "Good" :
-                                    (score > Number(grades.bad) && score < Number(grades.good)) ? "Satisfactory" :
-                                        (score <= Number(grades.bad)) ? "Bad" : ''
+                                (score > Number(grades.bad) && score < Number(grades.good)) ? "Satisfactory" :
+                                    (score <= Number(grades.bad)) ? "Bad" : ''
                             }
                         </h2>
                     </div>
 
                     {/* Feedback */}
-                    <button className="btn btn-primary" onClick={() => navigate('/my-library')}>Feedback</button>
+                    <button className="btn btn-primary" onClick={() => navigate('/my-library')}>Finish</button>
+                    {retakeOption &&
+                        <button className="btn btn-primary" onClick={() => navigate(`/quiz-solve/${id}`)}>Retake Quiz</button>}
 
                 </>
             )}

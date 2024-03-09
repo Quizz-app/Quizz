@@ -63,8 +63,6 @@ module.exports = {
         'lg': '0.5rem',
         'full': '9999px',
       },
-
-
       // borderRadius: {
       //   lg: "var(--radius)",
       //   md: "calc(var(--radius) - 2px)",
@@ -145,3 +143,4 @@ module.exports = {
 
   plugins: [daisyui],
 }
+

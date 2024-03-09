@@ -203,6 +203,17 @@ const CreateQuiz = () => {
         }
     };
 
+    const handleRetakeSwap = async () => {
+        const updatedQuiz = { ...quiz, retakeOption:  !quiz.retakeOption };
+        try {
+            await updateQuiz(id, updatedQuiz);
+            setQuiz(updatedQuiz);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
 
 
     //STATE HANDLERS
@@ -242,6 +253,8 @@ const CreateQuiz = () => {
         setAnswers(newAnswers);
         setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
     };
+
+  
 
     const timeRanges = [
         {
@@ -474,7 +487,7 @@ const CreateQuiz = () => {
 
             <h1>Retake quiz permission </h1>
             <label className="swap">
-                <input type="checkbox" />
+                <input type="checkbox" onChange={handleRetakeSwap}/>
                 <div className="swap-on">YES</div>      {/* disable */}
                 <div className="swap-off">NO</div>       {/* enable */}
             </label>

@@ -30,7 +30,7 @@ const QuizSolve = () => {
     const [answeredQuestionsCount, setAnsweredQuestionsCount] = useState(0);
     const [countdownTime, setCountdownTime] = useState(0);
     const [isCountdownFinished, setIsCountdownFinished] = useState(false);
- 
+
 
 
     const navigate = useNavigate();
@@ -61,6 +61,7 @@ const QuizSolve = () => {
 
         fetchData();
     }, [id, countdownTime]);
+
 
     // useEffect(() => {
     //     const fetchData = async () => {
@@ -99,7 +100,7 @@ const QuizSolve = () => {
     //     }
     // }, [userData]);
 
-    
+ 
 
     const handleCountdownEnd = async () => {
         setIsCountdownFinished(true);
@@ -108,6 +109,9 @@ const QuizSolve = () => {
 
         navigate(`/results/${id}`);
     };
+
+
+
 
     return (
         <>
@@ -159,7 +163,7 @@ const QuizSolve = () => {
                         {/* <h2>Your score is: {user.score}</h2> */}
                         <h2>You answered {answeredQuestionsCount} question out of {questions.length}</h2>
                         <button className="btn btn-primary" onClick={() => navigate(`/results/${id}`)}>See Results</button>
-                        <button className="btn btn-primary" onClick={() => navigate(`/my-library`)}>Skip</button>
+                        {/* <button className="btn btn-primary" onClick={() => navigate(`/my-library`)}>Skip</button> */}
                     </div>
                 )}
             </div >

@@ -412,3 +412,50 @@ export const updateAdminStatus = async (username) => {
   console.log(isAdmin.val());
   return update(ref(db), updateUser);
 };
+
+export const setScoreToUser = async (username, quizId, score) => {
+  const userQuizRef = ref(db, `users/${username}/quizzes/${quizId}`);
+  const snapshot = await get(userQuizRef);
+
+  let quizData;
+  if (snapshot.val()) {
+    quizData = snapshot.val();
+  } else {
+    quizData = {};
+  }
+
+  quizData.score = score;
+
+  await update(userQuizRef, quizData);
+};
+
+export const setGradeToUser = async (username, quizId, grade) => {
+  const userQuizRef = ref(db, `users/${username}/quizzes/${quizId}`);
+  const snapshot = await get(userQuizRef);
+
+  let quizData;
+  if (snapshot.val()) {
+    quizData = snapshot.val();
+  } else {
+    quizData = {};
+  }
+
+  quizData.grade = grade;
+
+  await update(userQuizRef, quizData);
+}
+
+export const userQuizzesSolved = async (username) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+  const snapshot = await get(userQuizzesRef);
+  const data = snapshot.val();
+  return data ? Object.values(data).filter((quiz) => quiz.isCompleted === true).length : 0;
+}
+
+export const userQuizzesCreated = async (username) => {
+  const userQuizzesRef = ref(db, `users/${username}/createdQuizzes`);
+  const snapshot = await get(userQuizzesRef);
+  const data = snapshot.val();
+  console.log(data);
+  return data ? Object.values(data).length : 0;
+}
