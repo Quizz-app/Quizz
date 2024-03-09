@@ -66,7 +66,7 @@ const MyClassesView = () => {
                     <DialogHeader>
                         <DialogTitle>Create class</DialogTitle>
                         <DialogDescription>
-                            {`Create your own class of educators.`}
+                            {`Create your own class of students.`}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">

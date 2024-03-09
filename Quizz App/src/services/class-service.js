@@ -1,5 +1,5 @@
 import { db } from "../config/firebase-config";
-import { get, remove, set, ref, query, equalTo, orderByChild, update, push, onValue } from "firebase/database";
+import { get, remove, set, ref, query, equalTo, orderByChild, update, push, onValue, off } from "firebase/database";
 
 
 export const createClass = async (name, description, creatorUsername) => {
@@ -86,12 +86,15 @@ export const removeMemberFromClass = async (classId, student) => {
 
 export const onClassMembersChange = (teamId, callback) => {
     const teamRef = ref(db, `classes/${teamId}/members`);
-    onValue(teamRef, (snapshot) => {
+    const unsubscribe = onValue(teamRef, (snapshot) => {
         const members = snapshot.val();
         const membersArray = Object.keys(members || {}).map(key => members[key]);
         callback(membersArray);
     });
-}
+
+    // Return the unsubscribe function
+    return () => off(teamRef, unsubscribe);
+};
 
 export const inviteUserToClass = async (classId, user,  inviter) => {
     const userRef = ref(db, `users/${user.username}`);
@@ -145,15 +148,19 @@ export const getAllClassQuizzes = (classId, callback) => {
         callback(quizzesArray);
     });
 
-    return unsubscribe;
-}
+    // Return the unsubscribe function
+    return () => off(classRef, unsubscribe);
+};
 
-export const getClassesByCreator = (creatorUsername, callback) => {
-    const classesRef = ref(db, `classes`);
-    const classesQuery = query(classesRef, orderByChild('creator/username'), equalTo(creatorUsername));
-    onValue(classesQuery, (snapshot) => {
-        const classes = snapshot.val();
-        callback(classes);
+export const getClassesByCreator = (creatorUsername) => {
+    return new Promise((resolve, reject) => {
+        const classesRef = ref(db, `classes`);
+        const classesQuery = query(classesRef, orderByChild('creator/username'), equalTo(creatorUsername));
+        onValue(classesQuery, (snapshot) => {
+            const classes = snapshot.val();
+            resolve(classes);
+        }, (error) => {
+            reject(error);
+        });
     });
 }
-
