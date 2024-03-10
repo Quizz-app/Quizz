@@ -36,14 +36,24 @@ export const addMemberToClass = async (teamId, user) => {
     if (!teamData.members) {
         teamData.members = {};
     }
-    user.averageScore = userOverallScore;
-    teamData.members[user.username] = user;
 
+    if(user.averageScore === undefined){
+        user.averageScore = 0;
+    }
+    //Check if userOverallScore is defined
+    if (typeof userOverallScore !== 'undefined') {   //to be tested
+        user.averageScore = userOverallScore;
+    } else {
+        console.error('userOverallScore is undefined');
+    }
+
+    teamData.members[user.username] = user;
     await set(teamRef, teamData);
 
     const userTeamsRef = ref(db, `users/${user.username}/classes`);
+    const { averageScore, ...userWithoutAverageScore } = user;
     await set(userTeamsRef, {
-        ...user.classes,
+        ...userWithoutAverageScore.classes,
         [teamId]: true
     });
 };
@@ -193,7 +203,7 @@ export const getUserClasses = (username, callback) => {
                         ...snapshot.val(),
                     }
                 });
-                callback(classes);
+                callback(Object.values(classes));
             })
     });
 

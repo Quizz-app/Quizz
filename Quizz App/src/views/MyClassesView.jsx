@@ -12,7 +12,7 @@ const MyClassesView = () => {
 
     const { userData } = useContext(AppContext)
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [classes, setClasses] = useState([]);
+    const [classes, setClasses] = useState({});
 
     const [classData, setClassData] = useState({
         name: "",
@@ -31,11 +31,12 @@ const MyClassesView = () => {
     useEffect(() => {
         if (userData) {
             getUserClasses(userData.username, setClasses);
+          
         }
 
     }, [userData])
 
-    console.log(classes[0]);
+     console.log(Object.values(classes));
 
     const handleCreateClass = async () => {
         try {

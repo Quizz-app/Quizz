@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/auth-service";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { getUserClassInvites, getUserQuizInvites, getUserTeamInvites, respondToQuizInvite, respondToTeamInvite } from "../services/users-service";
+import { getUserClassInvites, getUserQuizInvites, getUserTeamInvites, respondToClassInvite, respondToQuizInvite, respondToTeamInvite } from "../services/users-service";
 import PropTypes from 'prop-types';
 
 const Header = ({ theme, onThemeChange }) => {
@@ -57,6 +57,10 @@ const Header = ({ theme, onThemeChange }) => {
     respondToQuizInvite(userData.username, quizId, accept);
   }
 
+  const handleClassInviteResponse = async (classId, accept) => {
+    respondToClassInvite(userData.username, classId, accept);
+  }
+
 
   //console.log(quizInvites)
   return (
@@ -89,6 +93,7 @@ const Header = ({ theme, onThemeChange }) => {
           </>
         ) : (
           <>
+
             {userData?.role === 'teacher' && teamInvites.length > 0 && (
               <div className="indicator">
                 <span className="indicator-item badge badge-secondary">
@@ -115,6 +120,8 @@ const Header = ({ theme, onThemeChange }) => {
                 </div>
               </div>
             )}
+
+
             {userData?.role === 'student' && quizInvites.length > 0 && (
               <div className="indicator">
                 <span className="indicator-item badge badge-secondary">
@@ -141,6 +148,34 @@ const Header = ({ theme, onThemeChange }) => {
                 </div>
               </div>
             )}
+
+            {userData?.role === 'student' && classInvites.length > 0 && (
+              <div className="indicator">
+                <span className="indicator-item badge badge-secondary">
+                  {classInvites.length}
+                </span>
+                <div className="dropdown dropdown-bottom dropdown-end">
+                  <div tabIndex={0} role="button" className="btn m-1">Notifications
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                      {classInvites.map((invite, index) => (
+                        <li key={index}>
+                          <div className="flex flex-col">
+                            <p>
+                              You have an invitation from {invite.inviter} for class {invite.className}
+                            </p>
+                            <div className="flex flex-row justify-between">
+                              <button className="btn btn-xs mr-3" onClick={() => handleClassInviteResponse(invite.classId, true)}>Accept</button>
+                              <button className="btn btn-xs ml-3" onClick={() => handleClassInviteResponse(invite.classId, false)}>Decline</button>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">

@@ -7,6 +7,7 @@ import { addMemberToTeam } from "./teams-service.js";
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
 import { serverTimestamp } from "firebase/database";
+import { addMemberToClass } from "./class-service.js";
 
 export const createUsername = (
   firstName,
@@ -248,6 +249,32 @@ export const respondToTeamInvite = async (username, teamId, accept) => {
   delete userData.invitesForTeam[teamId];
   await set(userRef, userData);
 };
+
+export const respondToClassInvite = async (username, classId, accept) => {
+  const userRef = ref(db, `users/${username}`);
+  const userSnapshot = await get(userRef);
+  const userData = userSnapshot.val();
+
+  if (!userData.invitesForClass || !userData.invitesForClass[classId]) {
+    throw new Error("No such invite");
+  }
+
+  if (accept) {
+    await addMemberToClass(classId, userData);
+    userData.invitesForClass[classId].status = "accepted";
+
+    if (!userData.classes) {
+      userData.classes = {};
+    }
+
+    userData.classes[classId] = true;
+  } else {
+    userData.invitesForClass[classId].status = "declined";
+  }
+  delete userData.invitesForClass[classId];
+  await set(userRef, userData);
+};
+
 
 export const respondToQuizInvite = async (username, quizId, accept) => {
   const userRef = ref(db, `users/${username}`);
