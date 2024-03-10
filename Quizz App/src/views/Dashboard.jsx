@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { userQuizzesCreated, userQuizzesSolved } from "../services/users-service";
+import { userQuizzesCreated, userQuizzesMostOccurringGrade, userQuizzesSolved } from "../services/users-service";
 import { useState } from "react";
 import BarChart from "../components/barChart";
 import { BackgroundGradient } from "../components/ui/background-gradient";
@@ -10,6 +10,7 @@ const Dashboard = () => {
     const { userData } = useContext(AppContext);
     const [quizzesSolved, setQuizzesSolved] = useState(0);
     const [quizzesCreated, setQuizzesCreated] = useState(0);
+    const [quizzesGrades, setQuizzesGrades] = useState([]);
 
     const experimentalData = [36, 78, 56, 78];
 
@@ -18,7 +19,10 @@ const Dashboard = () => {
             try {
                 if (userData && userData.role === 'student') {
                     const quizzesSolved = await userQuizzesSolved(userData.username);
+                    const overallGrade = await userQuizzesMostOccurringGrade(userData.username);
+                   
                     setQuizzesSolved(quizzesSolved);
+                    setQuizzesGrades(overallGrade || []);
                 } else {
                     const quizzesCreated = await userQuizzesCreated(userData.username);
                     setQuizzesCreated(quizzesCreated);
@@ -79,7 +83,7 @@ const Dashboard = () => {
                         <div className="stats shadow border round-md">
                             <div className="stat">
                                 <div className="stat-title">Overall grade</div>
-                                <div className="stat-value">Good</div>
+                                <div className="stat-value">{quizzesGrades}</div>
                                 <div className="stat-title">21% more than last month</div>
                             </div>
                         </div>

@@ -29,11 +29,11 @@ const CreateClass = () => {
         return () => unsubscribe();
     }, [id]);
 
-    const handleInviteMember = (student) => {
+    const handleInviteMember = async(student) => {
         if (members.some(member => member.username === student.username)) {
             alert('This student is already in the class');
         } else {
-            inviteUserToClass(id, student, userData.username);
+           await  inviteUserToClass(id, student, userData.username);
         }
     };
 

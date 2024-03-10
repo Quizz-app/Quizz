@@ -1,5 +1,6 @@
 import { db } from "../config/firebase-config";
-import { get, remove, set, ref, query, equalTo, orderByChild, update, push, onValue, off } from "firebase/database";
+import { get, remove, set, ref, query, equalTo, orderByChild, update, push, onValue, off, serverTimestamp } from "firebase/database";
+import { userQuizzesScoreAverage } from "./users-service";
 
 
 export const createClass = async (name, description, creatorUsername) => {
@@ -11,7 +12,7 @@ export const createClass = async (name, description, creatorUsername) => {
         name,
         description,
         creator,
-        createdOn: new Date().toString(),
+        createdOn: serverTimestamp(),
         members: {
             [creator.username]: creator // Add the creator as a member of the team
         }
@@ -29,11 +30,13 @@ export const createClass = async (name, description, creatorUsername) => {
 export const addMemberToClass = async (teamId, user) => {
     const teamRef = ref(db, `classes/${teamId}`);
     const teamSnapshot = await get(teamRef);
+    const userOverallScore = await userQuizzesScoreAverage(user.username);
     const teamData = teamSnapshot.val();
 
     if (!teamData.members) {
         teamData.members = {};
     }
+    user.averageScore = userOverallScore;
     teamData.members[user.username] = user;
 
     await set(teamRef, teamData);
@@ -47,8 +50,8 @@ export const addMemberToClass = async (teamId, user) => {
 
 export const getClassById = async (id) => {
     const classRef = await get(ref(db, `classes/${id}`));
-  
-    if(!classRef.exists()){
+
+    if (!classRef.exists()) {
         console.error(`Class with id ${id} does not exist`);
         return null;
     }
@@ -62,7 +65,7 @@ export const getAllClassMembers = async (classId) => {
     const classSnapshot = await get(classRef);
     const classData = classSnapshot.val();
 
-    if(!classSnapshot.exists()){
+    if (!classSnapshot.exists()) {
         console.error(`Class with id ${classId} does not exist`);
         return null;
     }
@@ -96,7 +99,7 @@ export const onClassMembersChange = (teamId, callback) => {
     return () => off(teamRef, unsubscribe);
 };
 
-export const inviteUserToClass = async (classId, user,  inviter) => {
+export const inviteUserToClass = async (classId, user, inviter) => {
     const userRef = ref(db, `users/${user.username}`);
     const userSnapshot = await get(userRef);
     const userData = userSnapshot.val();
@@ -109,7 +112,7 @@ export const inviteUserToClass = async (classId, user,  inviter) => {
     if (!userData.invitations) {
         userData.invitations = {};
     }
-    
+
     userData.invitesForClass[classId] = {
         classId,
         className: classData.name,
@@ -163,4 +166,33 @@ export const getClassesByCreator = (creatorUsername) => {
             reject(error);
         });
     });
+}
+
+export const getUserClasses = (username, callback) => {
+    const userClassesRef = ref(db, `users/${username}/classes`);  //get the ref
+
+    const unsubscribe = onValue(userClassesRef, (snapshot) => {
+        const classes = snapshot.val() || {};   //get the data in an onvalue
+        const classesIds = Object.keys(classes); //get the keys of the data(ids)
+
+        const classPromises = classesIds.map(async (classId) => {
+            const classRef = ref(db, `classes/${classId}`);  //get the ref of the class
+            return get(classRef);
+        });
+
+        Promise.all(classPromises)  //get the data of the classes
+            .then((snapshots) => {
+                const classes = snapshots.map((snapshot, index) => {
+                    return {
+                        id: classesIds[index],
+                        ...snapshot.val(),
+                    }
+                });
+                callback(classes);
+            })
+    });
+
+    // Return the unsubscribe function
+
+    return () => off(userClassesRef, unsubscribe);
 }

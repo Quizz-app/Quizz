@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { createClass, getClassesByCreator } from "../services/class-service";
+import { createClass, getClassesByCreator, getUserClasses } from "../services/class-service";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
@@ -30,10 +30,12 @@ const MyClassesView = () => {
 
     useEffect(() => {
         if (userData) {
-            getClassesByCreator(userData.username).then(classes => setClasses(classes || []));
+            getUserClasses(userData.username, setClasses);
         }
 
     }, [userData])
+
+    console.log(classes[0]);
 
     const handleCreateClass = async () => {
         try {
@@ -96,7 +98,7 @@ const MyClassesView = () => {
                     {classes.map((classItem, index) => (
                         classItem && classItem.name && classItem.description ? (
                             <div key={index} className="card w-96 bg-base-100 shadow-xl image-full">
-                                <figure><img src="https://daisyui.com/images/stock.jpg" alt="class image" /></figure>
+                               
                                 <div className="justify-end card-body">
                                     <h2 className="card-title">{classItem.name}</h2> 
                                     <p>{classItem.description}</p>

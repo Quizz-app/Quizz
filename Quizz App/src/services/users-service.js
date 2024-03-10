@@ -1,18 +1,11 @@
-import {
-  get,
-  set,
-  ref,
-  query,
-  equalTo,
-  orderByChild,
-  update,
-  onValue,
+import {get, set, ref, query, equalTo, orderByChild, update, onValue,
 } from "firebase/database";
 import { db } from "../config/firebase-config.js";
 import { addQuizToTheUser, getQuizById } from "./quiz-service.js";
 import { addMemberToTeam } from "./teams-service.js";
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
+import { serverTimestamp } from "firebase/database";
 
 export const createUsername = (
   firstName,
@@ -28,7 +21,7 @@ export const createUsername = (
     username: username,
     uid,
     email,
-    createdOn: new Date().toString(),
+    createdOn: serverTimestamp(),
     likedPosts: {},
     isAdmin: false,
     isBlocked: false,
@@ -459,3 +452,55 @@ export const userQuizzesCreated = async (username) => {
   console.log(data);
   return data ? Object.values(data).length : 0;
 }
+
+export const userQuizzesScoreAverage = async (username) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+
+  onValue(userQuizzesRef, async(snapshot) => {
+    const data = snapshot.val();
+    const quizzes = Object.values(data);
+    const totalScore = quizzes.reduce((acc, quiz) => acc + quiz.score, 0);
+
+    await updateAverageScoreInClass(username, totalScore / quizzes.length);
+  });
+ 
+};
+
+export const updateAverageScoreInClass = async (username, score) => {
+  const userClassesSnapshot= await get(ref(db, `users/${username}/classes`));
+  const userClasses = userClassesSnapshot.val();
+
+  for (const classId in userClasses){
+    const classSnapshot = await get(ref(db, `classes/${classId}`));
+    const classData = classSnapshot.val();
+
+    if(classData.members && classData.members[username]){
+      classData.members[username].averageScore = score;
+      await set(ref(db, `classes/${classId}`), classData);
+    }
+  }
+
+}
+
+export const userQuizzesMostOccurringGrade = async (username) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+  const snapshot = await get(userQuizzesRef);
+  const data = snapshot.val();
+  const quizzes = Object.values(data);
+
+  const gradeCounts = quizzes.reduce((acc, quiz) => {
+    acc[quiz.grade] = (acc[quiz.grade] || 0) + 1;
+    return acc;
+  }, {});
+
+  let mostOccurringGrade = null;
+  let maxCount = 0;
+  for (const grade in gradeCounts) {
+    if (gradeCounts[grade] > maxCount) {
+      maxCount = gradeCounts[grade];
+      mostOccurringGrade = grade;
+    }
+  }
+
+  return mostOccurringGrade;
+};
