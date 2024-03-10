@@ -1,11 +1,32 @@
 import PropTypes from 'prop-types';
 
-const QuestionResultsCard = ({ question, answers, userAnswers, correctAnswers, points }) => {
+const QuestionResultsCard = ({ question, answers, userAnswers = [], correctAnswers, points }) => {
     const totalPoints = correctAnswers.reduce((total, _, index) => {
-        return total - (userAnswers.includes(index) ? 0 : points / answers.length);
+        if (userAnswers[0] === 'null') {
+            return total - total;
+        }
+
+        if (correctAnswers.length === 1) {
+            // If an answer was selected, subtract points for incorrect answers
+            if (userAnswers.length === 1 && userAnswers !== correctAnswers) {
+                return total - total;
+            }
+            if (userAnswers.length > 1 && !userAnswers.includes(index)) {
+                return total - total;
+            }
+        }
+
+        else {
+            return total - (userAnswers.includes(index) ? 0 : Math.floor(points / answers.length));
+        }
+        
     }, points);
 
-//
+
+
+
+
+    //
     return (
         <div className="card bg-white shadow-md w-screen rounded-lg p-6">
             <div className="card-body border rounded-md w-2/4">
@@ -16,10 +37,10 @@ const QuestionResultsCard = ({ question, answers, userAnswers, correctAnswers, p
                             key={index}
                             className={`p-2 rounded-md mb-2 
                             ${correctAnswers.includes(index) ?
-                            "bg-green-500 text-white" :
-                            (userAnswers.includes(index) ? "bg-red-500 text-white" : "bg-gray-200")} 
+                                    "bg-green-500 text-white" :
+                                    (userAnswers.includes(index) ? "bg-red-500 text-white" : "bg-gray-200")} 
 
-                            ${userAnswers.includes(index)? "border-2 border-black" : ""}`}
+                            ${userAnswers.includes(index) ? "border-2 border-black" : ""}`}
                         >
                             {answer}
                         </li>

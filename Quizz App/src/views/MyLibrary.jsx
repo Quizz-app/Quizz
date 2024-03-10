@@ -21,27 +21,36 @@ const MyLibrary = () => {
     const [studentQuizzes, setStudentQuizzes] = useState([]);
     const navigate = useNavigate();
 
+    
     useEffect(() => {
-        const fetchData = async () => {
-            if (userData && (userData.role === 'teacher' || userData.isAdmin === true)) {
-                getQuizByCreator(userData.username).then(quizzes => setMyQuizzes(quizzes))
-            }
-            if (userData && user && userData.role === 'student' && user.uid) {
-                const userQuizzes = await getUserQuizzes(userData.username);
-                const completedQuizzes = userQuizzes.filter(quiz => quiz.isCompleted);
-                const nonCompletedQuizzes = userQuizzes.filter(quiz => !quiz.isCompleted);
-                setStudentQuizzes({ completed: completedQuizzes, nonCompleted: nonCompletedQuizzes });
+        let unsubscribeQuizByCreator;
+        if (userData && (userData.role === 'teacher' || userData.isAdmin === true)) {
+            unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => setMyQuizzes(quizzes));
+        }
+        const unsubscribeUserQuizzes = getUserQuizzes(userData?.username, async (quizzes) => {
+            const quizzesArray = await Promise.all(Object.entries(quizzes).map(async ([id, quiz]) => {
+                const fullQuiz = await getQuizById(id);
+                return { ...fullQuiz, ...quiz };
+            }));
+            const completedQuizzes = quizzesArray.filter(quiz => quiz.isCompleted);
+            const nonCompletedQuizzes = quizzesArray.filter(quiz => !quiz.isCompleted);
+            setStudentQuizzes({ completed: completedQuizzes, nonCompleted: nonCompletedQuizzes });
+        });
+    
+        return () => {
+            unsubscribeUserQuizzes();
+            if (unsubscribeQuizByCreator) {
+                unsubscribeQuizByCreator();
             }
         };
+    }, [userData]);
 
-        fetchData();
-    }, [userData, user]);
+    console.log(studentQuizzes)
 
     const [quiz, setQuiz] = useState({
         title: "",
         creator: "",
         category: "",
-        time: 0,
         questions: [],
         isPublic: true,
     });
@@ -55,7 +64,7 @@ const MyLibrary = () => {
 
     const quizCreation = async () => {
         try {
-            const id = await createQuiz(userData.username, quiz.title, quiz.category, quiz.isPublic, quiz.time, quiz.questions);
+            const id = await createQuiz(userData.username, quiz.title, quiz.category, quiz.isPublic, quiz.questions);
             await addQuizToCreator(userData.username, id);
             setQuiz({
                 ...quiz,
@@ -76,8 +85,6 @@ const MyLibrary = () => {
         setIsDialogOpen(false);
     };
 
-    console.log(studentQuizzes)
-    
     return (
         <>
             {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
@@ -140,11 +147,12 @@ const MyLibrary = () => {
                     </Dialog>
                 </div>
             ) : (
+
                 <div className="flex flex-col h-full items-start justify-start p-6">
                     <h2 className="text-4xl font-bold mb-4">Completed</h2>
                     {studentQuizzes.completed && studentQuizzes.completed.length > 0 ? (
                         studentQuizzes.completed.map(quiz => (
-                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true}/>
+                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
                         ))
                     ) : (
                         <p>No completed quizzes yet.</p>
@@ -152,13 +160,14 @@ const MyLibrary = () => {
                     <h2 className="text-4xl font-bold mb-4">Todo</h2>
                     {studentQuizzes.nonCompleted && studentQuizzes.nonCompleted.length > 0 ? (
                         studentQuizzes.nonCompleted.map(quiz => (
-                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false}/>
+                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
                         ))
                     ) : (
                         <p>No quizzes to do yet.</p>
                     )}
                 </div>
             )}
+
         </>
     );
 }

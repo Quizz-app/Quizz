@@ -57,5 +57,5 @@ QuizCard.propTypes = {
     content: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     quiz: PropTypes.object.isRequired,
-    isCompleted: PropTypes.bool.isRequired,
+    isCompleted: PropTypes.bool
 }

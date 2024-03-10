@@ -4,7 +4,7 @@ import { AppContext } from '../context/AppContext';
 import { addUserAnswer } from '../services/users-service';
 
 
-const QuizSolveCard = ({ question, quizId, onAnswerSelect }) => {
+const QuizSolveCard = ({ question, quizId, }) => {
     const {userData} = useContext(AppContext);
     //const history = useHistory();
 
@@ -21,12 +21,10 @@ const QuizSolveCard = ({ question, quizId, onAnswerSelect }) => {
 
 
     useEffect(() => {
-        if (selectedAnswers.length > 0) { // Only call addUserAnswer if selectedAnswers is not empty
-            (async () => {
-                await addUserAnswer(userData.username, quizId, question.id, selectedAnswers);
-                onAnswerSelect();
-            })();
-        }
+        (async () => {
+            const answer = selectedAnswers.length > 0 ? selectedAnswers : ['null'];
+            await addUserAnswer(userData.username, quizId, question.id, answer);
+        })();
     }, [selectedAnswers]);
 
     const handleCheckboxChange = (index) => {
@@ -79,5 +77,5 @@ export default QuizSolveCard;
 QuizSolveCard.propTypes = {
     question: PropTypes.object.isRequired,
     quizId: PropTypes.string.isRequired,
-    onAnswerSelect: PropTypes.func.isRequired,
+    
 };

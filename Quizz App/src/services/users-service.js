@@ -1,18 +1,12 @@
 import {
-  get,
-  set,
-  ref,
-  query,
-  equalTo,
-  orderByChild,
-  update,
-  onValue,
+  get, set, ref, query, equalTo, orderByChild, update, onValue,
 } from "firebase/database";
 import { db } from "../config/firebase-config.js";
 import { addQuizToTheUser, getQuizById } from "./quiz-service.js";
 import { addMemberToTeam } from "./teams-service.js";
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
+import { serverTimestamp } from "firebase/database";
 
 export const createUsername = (
   firstName,
@@ -28,7 +22,7 @@ export const createUsername = (
     username: username,
     uid,
     email,
-    createdOn: new Date().toString(),
+    createdOn: serverTimestamp(),
     likedPosts: {},
     isAdmin: false,
     isBlocked: false,
@@ -122,43 +116,15 @@ export const getAllTeachers = async () => {
   }
 };
 
-export const getUserQuizzes = async (username) => {
-  try {
-    const snapshot = await get(query(ref(db, `users/${username}/quizzes`)));
 
-    if (!snapshot.val()) {
-      console.log("No quizzes found for this user");
-      return [];
-    }
+export const getUserQuizzes = (username, callback) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
 
-    const quizzes = Object.keys(snapshot.val()).map((key) => {
-      return {
-        id: key,
-        ...snapshot.val()[key],
-      };
-    });
+  const unsubscribe = onValue(userQuizzesRef, (snapshot) => {
+    callback(snapshot.val() || {});
+  });
 
-    const quizzesData = [];
-    for (const quiz of quizzes) {
-      if (quiz.id) {
-        const quizData = await getQuizById(quiz.id.trim());
-        if (quizData) {
-          quizzesData.push({
-            ...quizData,
-            isCompleted: quiz.isCompleted,
-          });
-        } else {
-          console.log(`No quiz found with id ${quiz.id}`);
-        }
-      } else {
-        console.log("No valid quiz id found");
-      }
-    }
-
-    return quizzesData;
-  } catch (error) {
-    console.error("Error getting user quizzes:", error);
-  }
+  return () => unsubscribe();
 };
 
 export const getUserQuizById = async (username, quizId) => {
@@ -409,6 +375,17 @@ export const getUserQuizInvites = (username, callback) => {
   return () => unsubscribe();
 };
 
+
+export const getUserClassInvites = (username, callback) => {
+  const userInviteRef = ref(db, `users/${username}/invitesForClass`);
+
+  const unsubscribe = onValue(userInviteRef, (snapshot) => {
+    callback(snapshot.val() || {});
+  });
+
+  return () => unsubscribe();
+};
+
 export const verifyUser = async (user) => {
   try {
     await sendEmailVerification(user);
@@ -439,4 +416,103 @@ export const updateAdminStatus = async (username) => {
   updateUser[`/users/${username}/isAdmin`] = !isAdmin.val();
   console.log(isAdmin.val());
   return update(ref(db), updateUser);
+};
+
+export const setScoreToUser = async (username, quizId, score) => {
+  const userQuizRef = ref(db, `users/${username}/quizzes/${quizId}`);
+  const snapshot = await get(userQuizRef);
+
+  let quizData;
+  if (snapshot.val()) {
+    quizData = snapshot.val();
+  } else {
+    quizData = {};
+  }
+
+  quizData.score = score;
+
+  await update(userQuizRef, quizData);
+};
+
+export const setGradeToUser = async (username, quizId, grade) => {
+  const userQuizRef = ref(db, `users/${username}/quizzes/${quizId}`);
+  const snapshot = await get(userQuizRef);
+
+  let quizData;
+  if (snapshot.val()) {
+    quizData = snapshot.val();
+  } else {
+    quizData = {};
+  }
+
+  quizData.grade = grade;
+
+  await update(userQuizRef, quizData);
+}
+
+export const userQuizzesSolved = async (username) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+  const snapshot = await get(userQuizzesRef);
+  const data = snapshot.val();
+  return data ? Object.values(data).filter((quiz) => quiz.isCompleted === true).length : 0;
+}
+
+export const userQuizzesCreated = async (username) => {
+  const userQuizzesRef = ref(db, `users/${username}/createdQuizzes`);
+  const snapshot = await get(userQuizzesRef);
+  const data = snapshot.val();
+  console.log(data);
+  return data ? Object.values(data).length : 0;
+}
+
+export const userQuizzesScoreAverage = async (username) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+
+  onValue(userQuizzesRef, async (snapshot) => {
+    const data = snapshot.val();
+    const quizzes = Object.values(data);
+    const totalScore = quizzes.reduce((acc, quiz) => acc + quiz.score, 0);
+
+    await updateAverageScoreInClass(username, totalScore / quizzes.length);
+  });
+
+};
+
+export const updateAverageScoreInClass = async (username, score) => {
+  const userClassesSnapshot = await get(ref(db, `users/${username}/classes`));
+  const userClasses = userClassesSnapshot.val();
+
+  for (const classId in userClasses) {
+    const classSnapshot = await get(ref(db, `classes/${classId}`));
+    const classData = classSnapshot.val();
+
+    if (classData.members && classData.members[username]) {
+      classData.members[username].averageScore = score;
+      await set(ref(db, `classes/${classId}`), classData);
+    }
+  }
+
+}
+
+export const userQuizzesMostOccurringGrade = async (username) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+  const snapshot = await get(userQuizzesRef);
+  const data = snapshot.val();
+  const quizzes = Object.values(data);
+
+  const gradeCounts = quizzes.reduce((acc, quiz) => {
+    acc[quiz.grade] = (acc[quiz.grade] || 0) + 1;
+    return acc;
+  }, {});
+
+  let mostOccurringGrade = null;
+  let maxCount = 0;
+  for (const grade in gradeCounts) {
+    if (gradeCounts[grade] > maxCount) {
+      maxCount = gradeCounts[grade];
+      mostOccurringGrade = grade;
+    }
+  }
+
+  return mostOccurringGrade;
 };

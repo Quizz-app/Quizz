@@ -24,6 +24,9 @@ import QuizResults from "./views/QuizResults";
 import MyTeamsView from "./views/MyTeamsView";
 import Assistant from "./views/Assistant";
 import Admin from "./views/Admin/Admin";
+import Dashboard from "./views/Dashboard";
+import CreateClass from "./views/CreateClass";
+import MyClassesView from "./views/MyClassesView";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -37,12 +40,14 @@ const App = () => {
     if (user) {
       getUserData(user.uid).then((snapshot) => {
         if (snapshot.exists()) {
+
           setContext({
             user,
             userData: snapshot.val()[Object.keys(snapshot.val())[0]],
           });
         }
       });
+ 
     }
   }, [user, loading, error]);
 
@@ -61,12 +66,19 @@ const App = () => {
         >
           <ResizablePanel defaultSize={25}>
             <div className="flex h-full items-start justify-start p-6 flex-col">
+              <Link to="/dashboard" className="font-semibold mb-2">
+                Dashboard
+              </Link>
               <Link to="/my-library" className="font-semibold mb-2">
                 Library
               </Link>
               <Link to="/my-teams" className="font-semibold mb-2">
                 Teams
               </Link>
+              <Link to="/my-classes" className="font-semibold mb-2">
+                Classes
+              </Link>
+
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />
@@ -79,18 +91,17 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/my-library" element={<MyLibrary />} />
                 <Route path="/my-teams" element={<MyTeamsView />} />
-                <Route
-                  path="/quiz-preview/:id"
-                  element={<QuizPreview />}
-                />{" "}
-                {/* change this */}
+                <Route path="/quiz-preview/:id"element={<QuizPreview />}/>
+                <Route path="/my-classes" element={<MyClassesView />} />
                 <Route path="/quiz-solve/:id" element={<QuizSolve />} />
                 <Route path="/team/:id" element={<CreateTeam />} />
+                <Route path="/class/:id" element={<CreateClass />} />
                 <Route path="/quiz/:id" element={<CreateQuiz />} />
                 <Route path="/results/:id" element={<QuizResults />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/assistant" element={<Assistant />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 {/* Add more routes as needed */}
               </Routes>
             </div>

@@ -2,32 +2,19 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/auth-service";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { getUserQuizInvites, getUserTeamInvites, respondToQuizInvite, respondToTeamInvite } from "../services/users-service";
+import { getUserClassInvites, getUserQuizInvites, getUserTeamInvites, respondToQuizInvite, respondToTeamInvite } from "../services/users-service";
+import PropTypes from 'prop-types';
 
 const Header = ({ theme, onThemeChange }) => {
   const { user, setContext, userData } = useContext(AppContext);
-
   const [teamInvites, setTeamInvites] = useState([]);
   const [quizInvites, setQuizInvites] = useState([]);
-
+  const [classInvites, setClassInvites] = useState([]); // [ { inviter: "username", classId: "id", className: "name" }
   const navigate = useNavigate();
-
-  const logOut = async () => {
-    await logoutUser();
-    setContext({ user: null, userData: null });
-    navigate("/");
-  };
-
   const isChecked = theme === "synthwave";
-
-  const handleClick = () => {
-    onThemeChange({ target: { checked: !isChecked } });
-  };
-
 
 
   useEffect(() => {
-
     if (userData && userData.username) {
       getUserTeamInvites(userData.username, (invites) => {
         setTeamInvites(Object.values(invites));
@@ -43,6 +30,25 @@ const Header = ({ theme, onThemeChange }) => {
     }
   }, [userData]);
 
+  useEffect(() => { 
+    if (userData && userData.username) {
+      getUserClassInvites(userData.username, (invites) => {
+        setClassInvites(Object.values(invites));
+      });
+    }
+  }, [userData])
+
+
+
+  const logOut = async () => {
+    await logoutUser();
+    setContext({ user: null, userData: null });
+    navigate("/");
+  };
+  const handleClick = () => {
+    onThemeChange({ target: { checked: !isChecked } });
+  };
+
   const handleInviteResponse = async (teamId, accept) => {
     respondToTeamInvite(userData.username, teamId, accept);
   }
@@ -51,7 +57,8 @@ const Header = ({ theme, onThemeChange }) => {
     respondToQuizInvite(userData.username, quizId, accept);
   }
 
-  console.log(quizInvites)
+
+  //console.log(quizInvites)
   return (
     <div className="navbar bg-base-100 flex justify-between">
       <div className="flex-2">
@@ -157,3 +164,8 @@ const Header = ({ theme, onThemeChange }) => {
 };
 
 export default Header;
+
+Header.propTypes = {
+  theme: PropTypes.string,
+  onThemeChange: PropTypes.func
+};

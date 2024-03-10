@@ -29,11 +29,11 @@ const CreateTeam = () => {
         return () => unsubscribe();
     }, [id]);
 
-    const handleInviteMember = (teacher) => {
+    const handleInviteMember =async (teacher) => {
         if (members.some(member => member.username === teacher.username)) {
             alert('This member is already in the team');
         } else {
-            inviteUserToTeam(id, teacher, userData.username);
+            await inviteUserToTeam(id, teacher, userData.username);
         }
     };
 
