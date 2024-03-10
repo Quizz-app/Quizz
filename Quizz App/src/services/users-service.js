@@ -1,4 +1,5 @@
-import {get, set, ref, query, equalTo, orderByChild, update, onValue,
+import {
+  get, set, ref, query, equalTo, orderByChild, update, onValue,
 } from "firebase/database";
 import { db } from "../config/firebase-config.js";
 import { addQuizToTheUser, getQuizById } from "./quiz-service.js";
@@ -118,7 +119,7 @@ export const getAllTeachers = async () => {
 
 export const getUserQuizzes = (username, callback) => {
   const userQuizzesRef = ref(db, `users/${username}/quizzes`);
-  
+
   const unsubscribe = onValue(userQuizzesRef, (snapshot) => {
     callback(snapshot.val() || {});
   });
@@ -196,7 +197,7 @@ export const addUserAnswer = async (username, quizId, questionId, answer) => {
   if (!quizData.userAnswers) {
     quizData.userAnswers = {};
   }
-  
+
   // Set the answer directly instead of pushing it to an array
   quizData.userAnswers[questionId] = answer;
 
@@ -374,6 +375,17 @@ export const getUserQuizInvites = (username, callback) => {
   return () => unsubscribe();
 };
 
+
+export const getUserClassInvites = (username, callback) => {
+  const userInviteRef = ref(db, `users/${username}/invitesForClass`);
+
+  const unsubscribe = onValue(userInviteRef, (snapshot) => {
+    callback(snapshot.val() || {});
+  });
+
+  return () => unsubscribe();
+};
+
 export const verifyUser = async (user) => {
   try {
     await sendEmailVerification(user);
@@ -456,25 +468,25 @@ export const userQuizzesCreated = async (username) => {
 export const userQuizzesScoreAverage = async (username) => {
   const userQuizzesRef = ref(db, `users/${username}/quizzes`);
 
-  onValue(userQuizzesRef, async(snapshot) => {
+  onValue(userQuizzesRef, async (snapshot) => {
     const data = snapshot.val();
     const quizzes = Object.values(data);
     const totalScore = quizzes.reduce((acc, quiz) => acc + quiz.score, 0);
 
     await updateAverageScoreInClass(username, totalScore / quizzes.length);
   });
- 
+
 };
 
 export const updateAverageScoreInClass = async (username, score) => {
-  const userClassesSnapshot= await get(ref(db, `users/${username}/classes`));
+  const userClassesSnapshot = await get(ref(db, `users/${username}/classes`));
   const userClasses = userClassesSnapshot.val();
 
-  for (const classId in userClasses){
+  for (const classId in userClasses) {
     const classSnapshot = await get(ref(db, `classes/${classId}`));
     const classData = classSnapshot.val();
 
-    if(classData.members && classData.members[username]){
+    if (classData.members && classData.members[username]) {
       classData.members[username].averageScore = score;
       await set(ref(db, `classes/${classId}`), classData);
     }

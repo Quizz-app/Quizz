@@ -29,11 +29,15 @@ const CreateClass = () => {
         return () => unsubscribe();
     }, [id]);
 
-    const handleInviteMember = async(student) => {
+    const handleInviteMember = async (student) => {
         if (members.some(member => member.username === student.username)) {
             alert('This student is already in the class');
         } else {
-           await  inviteUserToClass(id, student, userData.username);
+            if (userData) {
+                //console.log(id, student, userData.username);
+                await inviteUserToClass(id, student, userData.username);
+            }
+
         }
     };
 
@@ -109,7 +113,7 @@ const CreateClass = () => {
                 <h1>Class Quizzes</h1>
 
                 {classQuizzes.map((quiz, index) => (
-                    <div  className="border flex flex-row justify-between"key={index}>
+                    <div className="border flex flex-row justify-between" key={index}>
                         <h2>{quiz.title}</h2>
                         <p>{quiz.description}</p>
                         <p>{quiz.creator}</p>

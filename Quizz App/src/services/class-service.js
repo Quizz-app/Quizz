@@ -100,6 +100,9 @@ export const onClassMembersChange = (teamId, callback) => {
 };
 
 export const inviteUserToClass = async (classId, user, inviter) => {
+    // console.log(classId);
+    // console.log(user.username);
+    // console.log(inviter);
     const userRef = ref(db, `users/${user.username}`);
     const userSnapshot = await get(userRef);
     const userData = userSnapshot.val();
@@ -109,8 +112,10 @@ export const inviteUserToClass = async (classId, user, inviter) => {
     const classSnapshot = await get(classRef);
     const classData = classSnapshot.val();
 
-    if (!userData.invitations) {
-        userData.invitations = {};
+    // console.log(userData);
+
+    if (!userData.invitesForClass) {
+        userData.invitesForClass = {};
     }
 
     userData.invitesForClass[classId] = {
@@ -120,7 +125,7 @@ export const inviteUserToClass = async (classId, user, inviter) => {
         status: 'pending',
     };
 
-    await set(classRef, classData);
+    await set(userRef, userData);
 }
 
 export const deleteClass = async (classId) => {
@@ -196,3 +201,4 @@ export const getUserClasses = (username, callback) => {
 
     return () => off(userClassesRef, unsubscribe);
 }
+
