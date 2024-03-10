@@ -2,13 +2,29 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { loginUser } from "../services/auth-service";
+import { toast } from "react-hot-toast";
+import { emailPattern } from "../constants/constants";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../config/firebase-config";
 
 const Login = () => {
-  const { user, userData ,setContext } = useContext(AppContext);
+  const { user, userData, setContext } = useContext(AppContext);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  const forgotPassword = async () => {
+    try {
+      await sendPasswordResetEmail(auth, form.email);
+      return toast.success(
+        "A password reset link has been sent to your email."
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send password reset email. Please try again.");
+    }
+  };
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,26 +33,43 @@ const Login = () => {
     setForm({ ...form, [prop]: e.target.value });
   };
 
-useEffect(() => {
-  if (user && userData) {
-    if (userData.role === 'student') {
-      navigate('/my-library');
-    } else {
-      navigate(location.state?.from.pathname || "/");
+  useEffect(() => {
+    if (user && userData) {
+      if (userData.role === "student") {
+        navigate("/my-library");
+      } else {
+        navigate(location.state?.from.pathname || "/");
+      }
     }
-  }
-}, [user, userData]);
+  }, [user, userData]);
 
   const login = async () => {
+    if (!form.email) {
+      return toast.error(`Email is required!`);
+    } else if (!emailPattern.test(form.email)) {
+      return toast.error(`Email does not match the required format!`);
+    }
+
+    if (!form.password) {
+      return toast.error(`Password is required!`);
+    } else if (!emailPattern.test(form.email)) {
+      return toast.error(`Email does not match the required format!`);
+    } else if (form.password.length < 6) {
+      return toast.error("Password must be at least 8 characters long!");
+    }
+
     try {
       const credentials = await loginUser(form.email, form.password);
       setContext({ user: credentials.user, userData: null });
     } catch (err) {
       console.log(err.message);
+      if (err.code === "auth/user-not-found") {
+        return toast.error("Wrong email or password.");
+      }
+      return toast.error("Please enter the correct password.");
     }
   };
 
-  
   return (
     <div>
       {/* <h1>Login</h1>
@@ -72,7 +105,11 @@ useEffect(() => {
                   className="input input-bordered"
                 />
                 <label className="label">
-                  <a href="#" className="label-text-alt link link-hover">
+                  <a
+                    href="#"
+                    className="label-text-alt link link-hover"
+                    onClick={forgotPassword}
+                  >
                     Forgot password?
                   </a>
                 </label>
