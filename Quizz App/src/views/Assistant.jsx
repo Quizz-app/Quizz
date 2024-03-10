@@ -12,7 +12,7 @@ const Assistant = () => {
 
   const handleClose = () => {
     document.getElementById("my_modal_1").close();
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,9 +20,11 @@ const Assistant = () => {
     const res = await axios.post("http://localhost:3000/chat", {
       prompt: prompt,
     });
+
     setResponse(res.data); // Assuming res.data is the object you want
     setLoading(false);
-    console.log(res.data);
+    // console.log(JSON.parse(res.data.message));
+    // console.log(res);
   };
 
   return (
@@ -35,21 +37,26 @@ const Assistant = () => {
         Click me!
       </button>
       <dialog id="my_modal_1" className="modal">
-      <div className="modal-box w-3/4 h-3/4">
+        <div className="modal-box w-3/4 h-3/4">
           <h3 className="font-bold text-lg">Hello, {userData?.username}</h3>
           <p className="py-4">Ask me anything, please.</p>
-          <input className="w-64 h-10"  value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+          <input
+            className="w-64 h-10"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
           <button onClick={handleSubmit} className="btn">
             Ask
           </button>
-          <button className="btn" onClick={handleClose}>Close</button>
+          <button className="btn" onClick={handleClose}>
+            Close
+          </button>
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
             </form>
 
             {response && <AIResponse response={response.message} />}
-            
           </div>
         </div>
       </dialog>

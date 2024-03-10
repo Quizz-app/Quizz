@@ -89,7 +89,6 @@ const Profile = () => {
         console.log("Download URL:", url);
         // Here you can save the URL to your database
         updateUserInfo(userData?.username, "avatar", url);
-
       })
       .catch((error) => {
         toast.error("Failed to upload the image");

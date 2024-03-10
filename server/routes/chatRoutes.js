@@ -1,16 +1,20 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const OpenAI = require("openai");
-const { json } = require("body-parser");
 
 dotenv.config();
 
 const router = express.Router();
+// console.log(router);
+
 
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
+// console.log(openai);
+
 
 router.post("/chat", async (req, res) => {
   const { prompt } = req.body;
+  console.log(prompt);
 
   try {
     const response = await openai.chat.completions.create({
@@ -18,14 +22,21 @@ router.post("/chat", async (req, res) => {
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: `Generate twenty multiple-choice questions about ${prompt}.Organize the results as a JSON array as follows:
+          {
+            questions: [
+              {
+                "question": "...",
+                "answers": [...],
+                "correctAnswers": [index, index, ...]  
+             },
+              {...},  
+            ]
+          }
+        `,
         },
       ],
-      temperature: 1,
-      max_tokens: 256,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
+      response_format: { type: "json_object" },
     });
 
     if (response.choices && response.choices.length > 0) {
