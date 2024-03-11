@@ -2,6 +2,8 @@ import { db } from "../config/firebase-config";
 import { get, set, ref, query, equalTo, orderByChild, update, push, onValue } from "firebase/database";
 
 export const createQuiz = async (creator, title, category, isPublic,  questionTypes) => {
+  
+  category = category.charAt(0).toUpperCase() + category.slice(1);
 
   await set(ref(db, `categories/${category}`), {
     name: category,
@@ -171,3 +173,14 @@ export const addQuizToTheUser = async (username, quizId) => {
 
   await set(userRef, userData);
 }
+
+export const listenForCategories = (callback) => {
+  
+  const categoriesRef = ref(db, 'categories');
+
+  onValue(categoriesRef, (snapshot) => {
+    const data = snapshot.val();
+    const categories = Object.keys(data).map(key => data[key].name);
+    callback(categories);
+  });
+};

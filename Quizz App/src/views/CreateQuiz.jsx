@@ -130,9 +130,6 @@ const CreateQuiz = () => {
         inviteUserToQuiz(id, studentId, userData.username);
     };
 
-
-
-
     //ASYNCHRONOUS FUNCTIONS DO NOT TOUCH AT ANY COST
     const handleAddQuestion = async () => {
         try {
@@ -363,7 +360,7 @@ const CreateQuiz = () => {
             {/* Here we can see all the teams that the current user is in*/}
             {showTeams && filteredTeams.length > 0 && (
                 <div>
-                    <h1>TOUK SE POKAZVAT OTBORITE V KOITO UCHSTVA SLED KATO E NATISNAL Assign to group </h1>
+                    <h1>TUK SE POKAZVAT OTBORITE V KOITO UCHSTVA SLED KATO E NATISNAL Assign to group </h1>
                     {filteredTeams.map((team) => (
                         <div key={team.id}>
                             <p>{team.name}</p>
@@ -414,7 +411,7 @@ const CreateQuiz = () => {
 
                     {createMode &&
                         (
-                            <div className=" border rounded-md w-1000px">
+                            <div className=" border rounded-md">
                                 <div className="p-3">
                                     <div className="flex flex-col items-start justify-start w-800px ">
 
