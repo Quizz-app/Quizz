@@ -1,8 +1,8 @@
 import { db } from "../config/firebase-config";
 import { get, set, ref, query, equalTo, orderByChild, update, push, onValue } from "firebase/database";
 
-export const createQuiz = async (creator, title, category, isPublic,  questionTypes) => {
-  
+export const createQuiz = async (creator, title, category, isPublic, questionTypes,) => {
+
   category = category.charAt(0).toUpperCase() + category.slice(1);
 
   await set(ref(db, `categories/${category}`), {
@@ -17,7 +17,10 @@ export const createQuiz = async (creator, title, category, isPublic,  questionTy
     isPublic,
     createdOn: new Date().toString(),
     retakeOption: false,
-    questionTypes
+    questionTypes,
+    onGoing: true,
+    endsOn: null,
+
   });
 
   return newQuizRef.key;
@@ -124,7 +127,7 @@ export const addQuizToTeam = async (teamId, quizId) => {
 
 
 export const inviteUserToQuiz = async (quizId, user, inviter) => {
-  
+
   const userRef = ref(db, `users/${user.username}`);
   const userSnapshot = await get(userRef);
   const userData = userSnapshot.val();
@@ -175,7 +178,7 @@ export const addQuizToTheUser = async (username, quizId) => {
 }
 
 export const listenForCategories = (callback) => {
-  
+
   const categoriesRef = ref(db, 'categories');
 
   onValue(categoriesRef, (snapshot) => {
@@ -184,3 +187,11 @@ export const listenForCategories = (callback) => {
     callback(categories);
   });
 };
+
+
+export const setEndOn = async (quizId, endsOn) => {
+  const quizRef = ref(db, `quizzes/${quizId}`);
+  await update(quizRef, { endsOn });
+}
+
+

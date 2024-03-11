@@ -1,23 +1,23 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { addQuizToTeam, createQuiz, getQuizById, inviteUserToQuiz, updateQuiz } from "../services/quiz-service";
+import { addQuizToTeam, getQuizById, inviteUserToQuiz, setEndOn, updateQuiz } from "../services/quiz-service";
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useNavigate, useParams } from "react-router-dom";
 import { addQuestion, deleteQuestion, getQuestionsByQuizId, updateQuestion } from "../services/questions-service";
 import QuestionCard from "./QuestionCard";
 import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
+import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getAllStudents, getUserTeams } from "../services/users-service";
-import { set } from "date-fns";
+import { Calendar } from "@/components/ui/calendar"
+
 
 const CreateQuiz = () => {
     const { id } = useParams();
+    const [date, setDate] = useState(new Date());
     const [quiz, setQuiz] = useState([]);
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState(["", ""]);
@@ -93,9 +93,6 @@ const CreateQuiz = () => {
             }
         })();
     }, [id, refreshQuestions]);
-
-
-
 
 
     //USE EFFECTS FOR THE TEAMS
@@ -201,7 +198,7 @@ const CreateQuiz = () => {
     };
 
     const handleRetakeSwap = async () => {
-        const updatedQuiz = { ...quiz, retakeOption:  !quiz.retakeOption };
+        const updatedQuiz = { ...quiz, retakeOption: !quiz.retakeOption };
         try {
             await updateQuiz(id, updatedQuiz);
             setQuiz(updatedQuiz);
@@ -251,7 +248,7 @@ const CreateQuiz = () => {
         setCorrectAnswerIndices(correctAnswerIndices.filter(i => i !== index));
     };
 
-  
+
 
     const timeRanges = [
         {
@@ -287,6 +284,31 @@ const CreateQuiz = () => {
             label: "50m",
         },
     ]
+    //TODO: Tova trqbva da se dovyrshi
+    const [remainingTime, setRemainingTime] = useState(null);
+
+    useEffect(() => {
+        
+        const timer = setInterval(() => {
+            setRemainingTime(new Date(quiz?.endsOn).getTime() - new Date().getTime());
+        }, 1000);
+
+        return () => clearInterval(timer); 
+    }, [quiz]);
+
+    function msToTime(duration) {
+        let minutes = Math.floor((duration / (1000 * 60)) % 60),
+            hours = Math.floor((duration / (1000 * 60 * 60)) % 24),
+            days = Math.floor(duration / (1000 * 60 * 60 * 24));
+
+        days = (days < 10) ? "0" + days : days;
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        
+
+        return days + "d " + hours + "h " + minutes + "m " 
+    }
+
 
     return (
         <>
@@ -353,9 +375,7 @@ const CreateQuiz = () => {
                         </PopoverContent>
                     </Popover>
                 </div>
-
             </div>
-
 
             {/* Here we can see all the teams that the current user is in*/}
             {showTeams && filteredTeams.length > 0 && (
@@ -369,7 +389,6 @@ const CreateQuiz = () => {
                     ))}
                 </div>
             )}
-
 
             {/* Here we can see all the students that are in the system*/}
             {showUsers && students.length > 0 && (
@@ -385,7 +404,6 @@ const CreateQuiz = () => {
             )}
             <p>Add description:</p>
             <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
-
 
             {/* //questions */}
             <div className="flex flex-row items-start justify-start w-screen">
@@ -469,7 +487,7 @@ const CreateQuiz = () => {
                 <button className="btn btn-outline btn-primary" onClick={questionCreation}>Add +</button>
             </div>
 
-            
+
             {/* grading */}
             <div className="flex flex-col items-center justify-center">
                 <p>Set grades (optional):</p>
@@ -484,10 +502,23 @@ const CreateQuiz = () => {
 
             <h1>Retake quiz permission </h1>
             <label className="swap">
-                <input type="checkbox" onChange={handleRetakeSwap}/>
+                <input type="checkbox" onChange={handleRetakeSwap} />
                 <div className="swap-on">YES</div>      {/* disable */}
                 <div className="swap-off">NO</div>       {/* enable */}
             </label>
+
+            <div className="">
+            { remainingTime && <p>Time left: {msToTime(remainingTime)}</p> }
+                
+                <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    className="rounded-md border"
+                />
+                
+                <button onClick={() => setEndOn(id, date)}>Save</button>
+            </div>
         </>
     );
 
