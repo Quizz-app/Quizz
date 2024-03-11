@@ -13,11 +13,13 @@ import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/u
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getAllStudents, getUserTeams } from "../services/users-service";
 import { Calendar } from "@/components/ui/calendar"
+import { set } from "firebase/database";
 
 
 const CreateQuiz = () => {
     const { id } = useParams();
     const [date, setDate] = useState(new Date());
+    const [searchTerm, setSearchTerm] = useState('');
     const [quiz, setQuiz] = useState([]);
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState(["", ""]);
@@ -109,7 +111,7 @@ const CreateQuiz = () => {
         getAllStudents().then(setStudents);
         setLoading(false);
     }, []);
-
+    const filteredStudents = students.filter(student => student.email.toLowerCase().includes(searchTerm.toLowerCase()))
     //Handle the click event to show the teams
     const handleAssignTeamClick = () => {
         setShowTeams(!showTeams);
@@ -292,8 +294,9 @@ const CreateQuiz = () => {
         const timer = setInterval(() => {
             setRemainingTime(new Date(quiz?.endsOn).getTime() - new Date().getTime());
         }, 1000);
-
-        return () => clearInterval(timer); 
+        
+        return () => clearInterval(timer);
+        
     }, [quiz]);
 
     function msToTime(duration) {
@@ -304,9 +307,9 @@ const CreateQuiz = () => {
         days = (days < 10) ? "0" + days : days;
         hours = (hours < 10) ? "0" + hours : hours;
         minutes = (minutes < 10) ? "0" + minutes : minutes;
-        
 
-        return days + "d " + hours + "h " + minutes + "m " 
+
+        return days + "d " + hours + "h " + minutes + "m "
     }
 
 
@@ -325,7 +328,7 @@ const CreateQuiz = () => {
                         <Button onClick={handleAssignTeamClick}>Assign to group</Button>
                     </div>
                     <div className="flex flex-col items-center justify-center">
-                        <Button onClick={handleAssignUserClick}>Assign to user</Button>
+                        <Button onClick={handleAssignUserClick}>Assign to student</Button>
                     </div>
                     <div className="flex flex-col items-center justify-center">
                         <Button onClick={() => navigate('/my-library')}>See all quizzes</Button>
@@ -393,8 +396,8 @@ const CreateQuiz = () => {
             {/* Here we can see all the students that are in the system*/}
             {showUsers && students.length > 0 && (
                 <div>
-                    <h1>TOUK SE POKAZVAT UCHENICITE KOITO UCHASTVAT SLED KATO E NATISNAL Assign to user</h1>
-                    {students.map((student, index) => (
+                    <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
+                    {searchTerm.length > 2 && filteredStudents.map((student, index) => (
                         <div key={index}>
                             <p>{student.username}</p>
                             <button onClick={() => handleAddQuizToStudent(student)}>Add quiz to student</button>
@@ -508,15 +511,15 @@ const CreateQuiz = () => {
             </label>
 
             <div className="">
-            { remainingTime && <p>Time left: {msToTime(remainingTime)}</p> }
-                
+                {remainingTime && <p>Time left: {msToTime(remainingTime)}</p>}
+
                 <Calendar
                     mode="single"
                     selected={date}
                     onSelect={setDate}
                     className="rounded-md border"
                 />
-                
+
                 <button onClick={() => setEndOn(id, date)}>Save</button>
             </div>
         </>
