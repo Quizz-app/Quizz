@@ -340,6 +340,34 @@ export const getUserTeams = (username, callback) => {
   return () => unsubscribe();
 };
 
+export const getUserClasses = async (username, callback) => {
+  const userClassesRef = ref(db, `users/${username}/classes`);
+
+  const unsubscribe = onValue(userClassesRef, (snapshot) => {
+    const userClasses = snapshot.val() || {};
+    const classIds = Object.keys(userClasses);
+
+    const classPromises = classIds.map((classId) => {
+      const classRef = ref(db, `classes/${classId}`);
+      return get(classRef);
+    });
+
+    Promise.all(classPromises).then((classSnapshots) => {
+      const classes = classSnapshots.map((classSnapshot, index) => {
+        return {
+          id: classIds[index],
+          ...classSnapshot.val(),
+        };
+      });
+    
+      callback(Object.values(classes));
+    });
+  });
+
+  
+  return () => unsubscribe();
+}
+
 /**
  * Removes a user from a team and removes the team from the user's teams.
  *
@@ -546,3 +574,4 @@ export const userQuizzesMostOccurringGrade = async (username) => {
 
   return mostOccurringGrade;
 };
+
