@@ -42,10 +42,13 @@ const QuizSolve = () => {
             try {
                 const quiz = await getQuizById(id);
                 const questions = await getQuestionsByQuizId(id);
-
+    
+                
+                questions.sort(() => Math.random() - 0.5);
+    
                 setQuiz(quiz);
                 setQuestions(questions);
-
+    
                 const savedCountdownTime = localStorage.getItem(`countdownTime-${id}`)
                 if (savedCountdownTime) {
                     setCountdownTime(Number(savedCountdownTime))
@@ -58,7 +61,7 @@ const QuizSolve = () => {
                 console.error(error);
             }
         };
-
+    
         fetchData();
     }, [id, countdownTime]);
 
@@ -116,7 +119,6 @@ const QuizSolve = () => {
     return (
         <>
             <div>
-
                 {!isCountdownFinished ? (
                     questions[currentQuestionIndex] && (
                         <>
@@ -145,7 +147,6 @@ const QuizSolve = () => {
                                     </AlertDialogContent>
                                 </AlertDialog>
                             )}
-
                             <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex > 0 ? prevIndex - 1 : 0)}>Previous</button>
                         </>
                     )

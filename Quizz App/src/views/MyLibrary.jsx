@@ -93,7 +93,6 @@ const MyLibrary = () => {
                     {myQuizzes.map(quiz => (
                         <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} />
                     ))}
-
                     <Dialog onClose={handleCloseDialog}>
                         <DialogTrigger asChild>
                             <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button>
@@ -144,8 +143,7 @@ const MyLibrary = () => {
                                         <select
                                             className="block appearance-none w-full bg-white border border-black-700 text-black-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-black-500"
                                             value={quiz.isPublic ? 'Public' : 'Private'}
-                                            onChange={event => setQuiz(prevQuiz => ({ ...prevQuiz, isPublic: event.target.value === 'Public' }))}
-                                        >
+                                            onChange={event => setQuiz(prevQuiz => ({ ...prevQuiz, isPublic: event.target.value === 'Public' }))}>
                                             <option value="Public">Public</option>
                                             <option value="Private">Private</option>
                                         </select>
