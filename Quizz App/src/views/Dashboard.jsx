@@ -11,6 +11,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command"
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import RankingTable from "../components/RankingTable";
 
 
 const Dashboard = () => {
@@ -47,19 +48,19 @@ const Dashboard = () => {
         })();
     }, [userData]);
 
-   
-        useEffect(() => {
-            (async () => {
-                if (id || (classes && classes[0])) {
-                    const classMembers = await getClassMemebersByRanking(id || classes[0].id);
-                    setRankedMembers(classMembers);
-              
-                }
-            })();
-        }, [id, classes]);
-          console.log(rankedMembers);
+    useEffect(() => {
+        (async () => {
+            if (id || (classes && classes[0])) {
+                const classMembers = await getClassMemebersByRanking(id || classes[0].id);
+                setRankedMembers(classMembers);
+
+            }
+        })();
+    }, [id, classes]);
+
+
+
     const currentUserPosition = rankedMembers.findIndex(member => member.username === userData.username) + 1;
-    console.log(currentUserPosition);
 
     const classOptions = classes.map((clasz) => {
         return { label: clasz.name, value: clasz.id };
@@ -182,6 +183,12 @@ const Dashboard = () => {
                 </PopoverContent>
             </Popover>
 
+            <div>   
+                 {rankedMembers.length > 0 &&
+                rankedMembers.map((member, index) => {
+                    return <RankingTable key={index} student={member} index={index + 1}/>
+                })}
+                </div>
 
             {/* 
             <div>

@@ -161,7 +161,7 @@ export const deleteClass = async (classId) => {
     }
 }
 
-export const getAllClassQuizzes = async (classId, callback) => {
+export const getAllClassQuizzes = (classId, callback) => {
     const classRef = ref(db, `classes/${classId}/quizzes`);
     const unsubscribe = onValue(classRef, (snapshot) => {
         const quizzesObject = snapshot.val();
@@ -170,7 +170,7 @@ export const getAllClassQuizzes = async (classId, callback) => {
     });
 
     // Return the unsubscribe function
-    return () => off(classRef, unsubscribe);
+    return unsubscribe;
 };
 
 export const getClassesByCreator = async (creatorUsername) => {

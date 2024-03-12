@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
-import { AppContext } from '../context/AppContext';
 /**
  * 
  * @param {{teacher: {username: string, email: string, role: string, firstName: string, lastName: string, avatar: string}, handleRemoveMember: function, creator: string}} param0 
  * @returns 
  */
-const TableRow = ({ student,  }) => {
+const RankingTable = ({ student, index }) => {
     const { avatar, firstName, lastName, username } = student;
     //console.log(username)
 
@@ -30,7 +28,7 @@ const TableRow = ({ student,  }) => {
                     <br />
                     {/* <span className="badge badge-ghost badge-sm">{`${role}`}</span> */}
                 </td>
-                {/* <td>{`${email}`}</td> */}
+                <td>{`${index}`}</td>
                 {/* <th>
                     {(userData?.username === creator || userData?.isAdmin || userData?.username === username) &&
                         <button className="btn btn-ghost btn-xs" onClick={handleRemoveMember}>Remove member</button>
@@ -41,10 +39,9 @@ const TableRow = ({ student,  }) => {
     )
 }
 
-TableRow.propTypes = {
+RankingTable.propTypes = {
     student: PropTypes.object,
-    
-
+    index: PropTypes.number
 }
 
-export default TableRow;
+export default RankingTable;
