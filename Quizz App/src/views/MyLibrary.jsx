@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom";
 import QuizCard from "./QuizCard";
 import { addQuizToCreator, getUserQuizzes } from "../services/users-service";
+import { set } from "firebase/database";
 
 const MyLibrary = () => {
     const { user, userData } = useContext(AppContext);
@@ -21,10 +22,13 @@ const MyLibrary = () => {
 
 
     useEffect(() => {
-        let unsubscribeQuizByCreator;
-        if (userData && (userData.role === 'teacher' || userData.isAdmin === true)) {
-            unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => setMyQuizzes(quizzes));
+        if (userData && userData.username && (userData.role === 'teacher' || userData.isAdmin === true)) {
+            const unsubscribe = getQuizByCreator(userData.username, setMyQuizzes);
+            return () => unsubscribe();
         }
+    }, [userData]);
+
+    useEffect(() => {
         const unsubscribeUserQuizzes = getUserQuizzes(userData?.username, async (quizzes) => {
             const quizzesArray = await Promise.all(Object.entries(quizzes).map(async ([id, quiz]) => {
                 const fullQuiz = await getQuizById(id);
@@ -37,9 +41,6 @@ const MyLibrary = () => {
 
         return () => {
             unsubscribeUserQuizzes();
-            if (unsubscribeQuizByCreator) {
-                unsubscribeQuizByCreator();
-            }
         };
     }, [userData]);
 
@@ -65,7 +66,7 @@ const MyLibrary = () => {
     const quizCreation = async () => {
         try {
             let category = quiz.category.trim() !== '' ? quiz.category : selectedOption;
-            
+
             const id = await createQuiz(userData.username, quiz.title, category, quiz.isPublic, quiz.questions);
             await addQuizToCreator(userData.username, id);
             setQuiz({
@@ -168,7 +169,7 @@ const MyLibrary = () => {
                     <h2 className="text-4xl font-bold mb-4">Completed</h2>
                     {studentQuizzes.completed && studentQuizzes.completed.length > 0 ? (
                         studentQuizzes.completed.map(quiz => (
-                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
+                            <QuizCard key={quiz.id}  quiz={quiz} isCompleted={true} />
                         ))
                     ) : (
                         <p>No completed quizzes yet.</p>
@@ -176,7 +177,7 @@ const MyLibrary = () => {
                     <h2 className="text-4xl font-bold mb-4">Todo</h2>
                     {studentQuizzes.nonCompleted && studentQuizzes.nonCompleted.length > 0 ? (
                         studentQuizzes.nonCompleted.map(quiz => (
-                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
+                            <QuizCard key={quiz.id} quiz={quiz} isCompleted={false} />
                         ))
                     ) : (
                         <p>No quizzes to do yet.</p>
