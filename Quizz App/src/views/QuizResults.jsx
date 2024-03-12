@@ -32,7 +32,6 @@ const QuizResults = () => {
     useEffect(() => {
         (async () => {
             const quiz = await getUserQuizById(userData?.username, id);
-            console.log(quiz);
             setQuiz(quiz);
             setLoading(false);
 
@@ -54,16 +53,15 @@ const QuizResults = () => {
                 setPoints(questionsArray.map(question => question.points));
                 setGrades(grades);
                 setRetakeOption(retake);
-
-
             }
-
         })();
     }, [id, userData]);
 
 
+   
     const writeScoreToDatabase = async (score) => {
-        if (userData.role === 'student') {
+        // console.log(score);
+        if (userData && userData.role === 'student') {
             await setScoreToUser(userData.username, id, score);
         }
     }
@@ -82,16 +80,17 @@ const QuizResults = () => {
         }
     }
 
+
+   
     //an algorith which calculates the total score of the user based on his answers
     useEffect(() => {
         let totalScore = 0;
         for (let i = 0; i < answers.length; i++) {
-            if (correctAnswers[i] && quiz) {
+         
                 const totalPoints = correctAnswers[i].reduce((total, _, index) => {
                     if (userAnswers[i][0] === 'null') {
                         return total - total;
                     }
-
                     if (correctAnswers[i].length === 1) {
                         if (userAnswers[i].length === 1 && userAnswers[i][0] !== correctAnswers[i][0]) {
                             return total - total;
@@ -103,17 +102,24 @@ const QuizResults = () => {
                             return total;
                         }
                     } else {
-                        return total - (userAnswers[i].includes(index) ? 0 : Math.floor(points[i] / answers.length));
+                        // console.log('i am calculated'); 
+                        // console.log(answers.length);
+                        // console.log(points[i] / answers.length);
+                        return total - (userAnswers[i].includes(index) ? 0 : Math.floor(points[i] / answers[i].length));
                     }
                 }, points[i]);
+
                 totalScore += totalPoints;
-            }
+            
         }
         setScore(totalScore);
-
-
-        writeScoreToDatabase(totalScore);
-        writeGradeToDatabase(totalScore);
+        
+    console.log(score);
+        
+        (async () => {
+            await writeScoreToDatabase(totalScore);
+            await writeGradeToDatabase(totalScore);
+        })();
 
     }, [answers, correctAnswers, userAnswers, points]);
 
@@ -129,7 +135,6 @@ const QuizResults = () => {
     //rendering the questions and the user's answers in a seperate card component
     const quests = answers.map((answer, index) => {
         const correctAnswer = correctAnswers[index];
-        console.log(correctAnswer);
         const userAnswer = userAnswers[index];
         const question = questions[index];
         const questionPoints = points[index];
@@ -144,7 +149,6 @@ const QuizResults = () => {
             </div>
         );
     });
-
 
 
     return (
