@@ -29,13 +29,14 @@ const CreateTeam = () => {
         return () => unsubscribe();
     }, [id]);
 
-    const handleInviteMember =async (teacher) => {
+    const handleInviteMember = async (teacher) => {
         if (members.some(member => member.username === teacher.username)) {
             alert('This member is already in the team');
         } else {
             await inviteUserToTeam(id, teacher, userData.username);
         }
     };
+    const filteredTeachers = teachers.filter(teacher => teacher.email.toLowerCase().includes(searchTerm.toLowerCase()));
 
     useEffect(() => {
         if (!isLoading) {
@@ -58,65 +59,87 @@ const CreateTeam = () => {
 
     };
 
-    const filteredTeachers = teachers.filter(teacher => teacher.email.toLowerCase().includes(searchTerm.toLowerCase()));
+
     return (
-        <div>
-            <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
-            <div className="flex flex-col">
-                <div className="ml-10 mr-10">
-                    {searchTerm.length >= 3 && filteredTeachers.map((teacher, index) =>
-                        <div className="border mb-2" key={index}>
-                            <label htmlFor="">Teacher username</label>
-                            <div className="border mb-3">
-                                {teacher.username}
+        <div className="hero min-h-screen flex flex-col bg-base-200 rounded-lg">
+            <div className="hero-content text-center flex flex-col w-full">
+                <div>
+                    <input className="input input-bordered w-full max-w-xs" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
+                </div>
+
+                <div className="w-full">
+                    <div className="ml-10 mr-10">
+                        {searchTerm.length >= 3 &&
+                            <div className="overflow-x-auto">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                            <th>Job</th>
+                                            <th>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredTeachers.map((teacher, index) =>
+                                            <tr key={index}>
+                                                <th>{index + 1}</th>
+                                                <td>{teacher.username}</td>
+                                                <td>{teacher.role}</td>
+                                                <td>{teacher.email}</td>
+                                                <button onClick={() => handleInviteMember(teacher)} className="btn btn-xs">Add to team</button>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
-                            <button onClick={() => handleInviteMember(teacher)} className="ml-5">Add to team</button>
-                        </div>
-                        // <TableRow key={index} teacher={teacher} handleRemoveMember={() => handleRemoveMember(teacher)} />
-                    )}
-                </div>
-                {`Members of team ${team.name}`}
-                <div className="overflow-x-auto">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>First and last name</th>
-                                <th>Email</th>
-
-                            </tr>
-                        </thead>
-                        {members && userData && team.creator && members.map((member, index) => (
-                            <TableRow key={index} teacher={member} creator={team.creator.username} handleRemoveMember={() => handleRemoveMember(member)} />
-                        ))}
-                        <tfoot>
-                            <tr>
-                                <th>Username</th>
-                                <th>First and last name</th>
-                                <th>Email</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            <div>
-                {userData && team.creator && (userData.isAdmin || userData.username === team.creator.username) &&
-                    <button className="border" onClick={() => handleDeleteTeam()}>Delete team</button>
-                }
-            </div>
-            <hr />
-            <div>
-                <h1>Team Quizzes</h1>
-
-                {teamQuizzes.map((quiz, index) => (
-                    <div  className="border flex flex-row justify-between"key={index}>
-                        <h2>{quiz.title}</h2>
-                        <p>{quiz.description}</p>
-                        <p>{quiz.creator}</p>
-                        <button onClick={() => navigate(`/quiz/${quiz.id}`)}>Got to quiz</button>
-                        <button>Remove quiz Trqbva da se opravi</button>
+                        }
                     </div>
-                ))}
+                    <div className="divider"></div>
+                    <h1 className="text-2xl">Team members</h1>
+                    <div className="divider"></div>
+                    <div className="border rounded-xl">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>First and last name</th>
+                                    <th>Email</th>
+
+                                </tr>
+                            </thead>
+                            {members && userData && team.creator && members.map((member, index) => (
+                                <TableRow key={index} teacher={member} creator={team.creator.username} handleRemoveMember={() => handleRemoveMember(member)} />
+                            ))}
+                            <tfoot>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>First and last name</th>
+                                    <th>Email</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    {userData && team.creator && (userData.isAdmin || userData.username === team.creator.username) &&
+                        <button className="btn btn-primary" onClick={() => handleDeleteTeam()}>Delete team</button>
+                    }
+                </div>
+                <hr />
+                <div>
+                    <h1>Team Quizzes</h1>
+
+                    {teamQuizzes.map((quiz, index) => (
+                        <div className="border flex flex-row justify-between" key={index}>
+                            <h2>{quiz.title}</h2>
+                            <p>{quiz.description}</p>
+                            <p>{quiz.creator}</p>
+                            <button onClick={() => navigate(`/quiz/${quiz.id}`)}>Got to quiz</button>
+                            <button>Remove quiz Trqbva da se opravi</button>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
