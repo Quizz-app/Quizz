@@ -20,7 +20,7 @@ export const createQuiz = async (creator, title, category, isPublic, questionTyp
     questionTypes,
     onGoing: true,
     endsOn: null,
-
+    
   });
 
   return newQuizRef.key;
@@ -195,3 +195,7 @@ export const setEndOn = async (quizId, endsOn) => {
 }
 
 
+export const setOnGoing = async (quizId) => {
+  const quizRef = ref(db, `quizzes/${quizId}`);
+  await update(quizRef, { onGoing: false });
+}

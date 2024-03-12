@@ -32,9 +32,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { getAllStudents, getUserTeams } from "../services/users-service";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
 import { set } from "firebase/database";
+
 
 const CreateQuiz = () => {
   const { id } = useParams();
@@ -333,7 +334,7 @@ points: 0
       label: "50m",
     },
   ];
-  //TODO: Tova trqbva da se dovyrshi
+  
   const [remainingTime, setRemainingTime] = useState(null);
 
   useEffect(() => {

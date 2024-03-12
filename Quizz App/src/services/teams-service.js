@@ -133,6 +133,19 @@ export const removeMemberFromTeam = async (teamId, member) => {
     await remove(ref(db, `users/${member.username}/teams/${teamId}`));
 }
 
+
+export const removeQuizFromTeam = async (teamId, quiz) => {
+    const teamRef = ref(db, `teams/${teamId}/quizzes`);
+    const snapShot = await get(teamRef);
+    const quizzesObject = snapShot.val();
+    const quizKey = Object.keys(quizzesObject).find(key => quizzesObject[key].name === quiz.name);
+
+    // Remove the quiz from the team
+    await remove(ref(db, `teams/${teamId}/quizzes/${quizKey}`));
+
+    // Remove the team from the quiz's teams
+}
+
 /**
  * Sets up a listener for changes in the members of a team in the database.
  *
@@ -215,8 +228,6 @@ export const deleteTeam = async (teamId) => {
     }
 };
 
-
-
 export const getAllTeamQuizzes = (teamId, callback) => {
     const teamRef = ref(db, `teams/${teamId}/quizzes`);
     const unsubscribe = onValue(teamRef, (snapshot) => {
@@ -227,3 +238,5 @@ export const getAllTeamQuizzes = (teamId, callback) => {
 
     return unsubscribe;
 }
+
+

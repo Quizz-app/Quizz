@@ -29,8 +29,6 @@ const Assistant = () => {
     const parsedData = JSON.parse(res.data.message);
     console.log(parsedData.questions);
     setData(parsedData);
-
-    setContext((prevContext) => ({ ...prevContext, questionData: parsedData }));
   };
 
   return (
