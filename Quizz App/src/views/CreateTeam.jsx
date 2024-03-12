@@ -4,7 +4,7 @@ import { getAllTeachers } from "../services/users-service";
 import { onTeamMembersChange, getTeamById, removeMemberFromTeam, inviteUserToTeam, deleteTeam, getAllTeamQuizzes, removeQuizFromTeam } from "../services/teams-service";
 import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
-import { BentoGrid, BentoGridItem } from "../components/ui/bento-grid";
+
 
 const CreateTeam = () => {
     const { userData, isLoading } = useContext(AppContext)
@@ -145,20 +145,6 @@ const CreateTeam = () => {
                         </div>
                     ))}
                 </div>
-
-                <BentoGrid className="max-w-4xl mx-auto">
-                    {teamQuizzes.map((quiz, i) => (
-                        <BentoGridItem
-                            key={i}
-                            title={quiz.title}
-                            description={quiz.description}
-                            header={quiz.description}
-                            icon={quiz.icon}
-                            className={i === 3 || i === 6 ? "md:col-span-2" : ""}
-                            remove={() => handleRemoveQuiz(quiz.id)}
-                        />
-                    ))}
-                </BentoGrid>
             </div>
 
         </div>
