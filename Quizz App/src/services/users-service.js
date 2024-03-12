@@ -449,6 +449,7 @@ export const setScoreToUser = async (username, quizId, score) => {
   const userQuizRef = ref(db, `users/${username}/quizzes/${quizId}`);
   const snapshot = await get(userQuizRef);
 
+
   let quizData;
   if (snapshot.val()) {
     quizData = snapshot.val();
@@ -460,6 +461,7 @@ export const setScoreToUser = async (username, quizId, score) => {
   quizData.score = Number(score);
 
   await update(userQuizRef, quizData);
+  await userQuizzesScoreAverage(username);
 };
 
 export const setGradeToUser = async (username, quizId, grade) => {

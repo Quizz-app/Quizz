@@ -12,7 +12,7 @@ export const createClass = async (name, description, creatorUsername) => {
         name,
         description,
         creator,
-        createdOn: serverTimestamp(),
+        createdOn: serverTimestamp(),  
         members: {
             [creator.username]: creator // Add the creator as a member of the team
         }
