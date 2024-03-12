@@ -13,7 +13,8 @@ import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/u
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getAllStudents, getUserTeams } from "../services/users-service";
 import { Calendar } from "@/components/ui/calendar"
-import { set } from "firebase/database";
+import { formatDate, msToTime } from "../services/time-functions";
+
 
 
 const CreateQuiz = () => {
@@ -209,9 +210,6 @@ const CreateQuiz = () => {
         }
     };
 
-
-
-
     //STATE HANDLERS
     const handleQuestionChange = (e) => {
         setQuestion({ ...question, content: e.target.value });
@@ -286,31 +284,24 @@ const CreateQuiz = () => {
             label: "50m",
         },
     ]
-    //TODO: Tova trqbva da se dovyrshi
+    
     const [remainingTime, setRemainingTime] = useState(null);
 
     useEffect(() => {
-        
         const timer = setInterval(() => {
-            setRemainingTime(new Date(quiz?.endsOn).getTime() - new Date().getTime());
+            const endsOnDate = new Date(quiz?.endsOn);
+            const now = new Date();
+
+            
+            const endsOnDateInSofia = new Date(endsOnDate.toLocaleString("en-US", { timeZone: "Europe/Sofia" }));
+            const nowInSofia = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Sofia" }));
+
+            setRemainingTime(endsOnDateInSofia.getTime() - nowInSofia.getTime());
         }, 1000);
-        
+
         return () => clearInterval(timer);
-        
     }, [quiz]);
 
-    function msToTime(duration) {
-        let minutes = Math.floor((duration / (1000 * 60)) % 60),
-            hours = Math.floor((duration / (1000 * 60 * 60)) % 24),
-            days = Math.floor(duration / (1000 * 60 * 60 * 24));
-
-        days = (days < 10) ? "0" + days : days;
-        hours = (hours < 10) ? "0" + hours : hours;
-        minutes = (minutes < 10) ? "0" + minutes : minutes;
-
-
-        return days + "d " + hours + "h " + minutes + "m "
-    }
 
 
     return (
@@ -509,7 +500,7 @@ const CreateQuiz = () => {
             </label>
 
             <div className="">
-                {remainingTime && <p>Time left: {msToTime(remainingTime)}</p>}
+            {quiz?.endsOn && !isNaN(remainingTime) && <p>Ends On: {`${formatDate(quiz?.endsOn)}`} Time left: {msToTime(remainingTime)}</p>}
 
                 <Calendar
                     mode="single"
@@ -518,11 +509,13 @@ const CreateQuiz = () => {
                     className="rounded-md border"
                 />
 
-                <button onClick={() => setEndOn(id, date)}>Save</button>
+                <button onClick={() => {
+                    const dateInSofia = new Date(date).toLocaleString("en-US", { timeZone: "Europe/Sofia", hour12: false });
+                    setEndOn(id, dateInSofia);
+                }}>Save</button>
             </div>
         </>
     );
-
 }
 
 export default CreateQuiz;
