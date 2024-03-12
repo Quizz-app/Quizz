@@ -12,7 +12,7 @@ export const createClass = async (name, description, creatorUsername) => {
         name,
         description,
         creator,
-        createdOn: serverTimestamp(),  
+        createdOn: serverTimestamp(),
         members: {
             [creator.username]: creator // Add the creator as a member of the team
         }
@@ -40,7 +40,7 @@ export const addMemberToClass = async (teamId, user) => {
     // Create a copy of the user object and modify that
     const userCopy = { ...user };
 
-    if(userCopy.averageScore === undefined){
+    if (userCopy.averageScore === undefined) {
         userCopy.averageScore = 0;
     }
     //Check if userOverallScore is defined
@@ -161,7 +161,7 @@ export const deleteClass = async (classId) => {
     }
 }
 
-export const getAllClassQuizzes = (classId, callback) => {
+export const getAllClassQuizzes = async (classId, callback) => {
     const classRef = ref(db, `classes/${classId}/quizzes`);
     const unsubscribe = onValue(classRef, (snapshot) => {
         const quizzesObject = snapshot.val();
@@ -173,7 +173,7 @@ export const getAllClassQuizzes = (classId, callback) => {
     return () => off(classRef, unsubscribe);
 };
 
-export const getClassesByCreator = (creatorUsername) => {
+export const getClassesByCreator = async (creatorUsername) => {
     return new Promise((resolve, reject) => {
         const classesRef = ref(db, `classes`);
         const classesQuery = query(classesRef, orderByChild('creator/username'), equalTo(creatorUsername));
@@ -186,7 +186,7 @@ export const getClassesByCreator = (creatorUsername) => {
     });
 }
 
-export const getUserClasses = (username, callback) => {
+export const getUserClasses = async (username, callback) => {
     const userClassesRef = ref(db, `users/${username}/classes`);  //get the ref
 
     const unsubscribe = onValue(userClassesRef, (snapshot) => {
@@ -215,3 +215,42 @@ export const getUserClasses = (username, callback) => {
     return () => off(userClassesRef, unsubscribe);
 }
 
+export const getClassMemebersByRanking = async (classId) => {
+    console.log(classId);
+    const classRef = ref(db, `classes/${classId}/members`);
+    const classSnapshot = await get(classRef);
+    const classData = classSnapshot.val();
+
+    if (!classSnapshot.exists()) {
+        console.error(`Class with id ${classId} does not exist`);
+        return null;
+    }
+
+    const membersArray = Object.keys(classData)
+        .filter(key => classData[key].role !== 'teacher')
+        .map(key => {
+            const member = classData[key];
+
+            if (member.avatar) {
+                return {
+                   username: member.username,
+                    firstName: member.firstName,
+                    lastName: member.lastName,
+                    avatar: member.avatar, // This will be undefined if the member does not have an avatar
+                    averageScore: member.averageScore
+                };
+            }
+            else {
+                return {
+                    username: member.username,
+                    firstName: member.firstName,
+                    lastName: member.lastName,
+                    averageScore: member.averageScore
+                }
+            }
+        });
+
+    const sortedMembers = membersArray.sort((a, b) => b.averageScore - a.averageScore);
+    console.log(sortedMembers);
+    return Object.values(sortedMembers);
+}

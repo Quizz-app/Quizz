@@ -1,9 +1,16 @@
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { userQuizzesCreated, userQuizzesMostOccurringGrade, userQuizzesSolved } from "../services/users-service";
+import { getUserClasses, userQuizzesCreated, userQuizzesMostOccurringGrade, userQuizzesSolved } from "../services/users-service";
 import { useState } from "react";
 import BarChart from "../components/barChart";
 import { BackgroundGradient } from "../components/ui/background-gradient";
+import { getClassById, getClassMemebersByRanking } from "../services/class-service";
+import { set } from "firebase/database";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command"
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 
 const Dashboard = () => {
@@ -11,19 +18,26 @@ const Dashboard = () => {
     const [quizzesSolved, setQuizzesSolved] = useState(0);
     const [quizzesCreated, setQuizzesCreated] = useState(0);
     const [quizzesGrades, setQuizzesGrades] = useState([]);
+    const [classes, setClasses] = useState([]);
+    const [clasz, setClas] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [id, setId] = useState('');
+    const [rankedMembers, setRankedMembers] = useState([]);
 
     const experimentalData = [36, 78, 56, 78];
 
     useEffect(() => {
         (async () => {
             try {
-                if (userData && userData.role === 'student') {
+                if (userData && userData.username && userData.role === 'student') {
                     const quizzesSolved = await userQuizzesSolved(userData.username);
                     const overallGrade = await userQuizzesMostOccurringGrade(userData.username);
-                   
                     setQuizzesSolved(quizzesSolved);
                     setQuizzesGrades(overallGrade || []);
-                } else {
+
+                    await getUserClasses(userData.username, setClasses);
+
+                } else if (userData && userData.username) {
                     const quizzesCreated = await userQuizzesCreated(userData.username);
                     setQuizzesCreated(quizzesCreated);
                 }
@@ -33,6 +47,23 @@ const Dashboard = () => {
         })();
     }, [userData]);
 
+   
+        useEffect(() => {
+            (async () => {
+                if (id || (classes && classes[0])) {
+                    const classMembers = await getClassMemebersByRanking(id || classes[0].id);
+                    setRankedMembers(classMembers);
+              
+                }
+            })();
+        }, [id, classes]);
+          console.log(rankedMembers);
+    const currentUserPosition = rankedMembers.findIndex(member => member.username === userData.username) + 1;
+    console.log(currentUserPosition);
+
+    const classOptions = classes.map((clasz) => {
+        return { label: clasz.name, value: clasz.id };
+    });
 
     return (
         <div className="flex flex-col h-full items-start justify-start p-6">
@@ -91,7 +122,7 @@ const Dashboard = () => {
                         <div className="stats shadow border round-md">
                             <div className="stat">
                                 <div className="stat-title">Place</div>
-                                <div className="stat-value">16th</div>
+                                <div className="stat-value">{currentUserPosition ? `${currentUserPosition}th` : 'Not ranked'}</div>
                                 <div className="stat-title">in class </div>
                             </div>
                         </div>
@@ -106,19 +137,63 @@ const Dashboard = () => {
                 (<BarChart data={experimentalData} />)}
 
 
+            <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-[200px] justify-between"
+                    >
+                        {clasz
+                            ? classOptions.find((framework) => framework.value === clasz)?.label
+                            : "Choose a class"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                        {/* <CommandInput placeholder="Search framework..." /> */}
+                        <CommandEmpty>No class selected</CommandEmpty>
+                        <CommandGroup>
+                            {classOptions.map((clas, index) => (
+                                <CommandItem
+                                    key={index}
+                                    value={clas.value}
+                                    onSelect={async (currentValue) => {
+                                        // console.log(currentValue);
+                                        // console.log(clas.value);
+                                        setClas(clas.value);
+                                        setId(clas.value);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <Check
+                                        className={cn(
+                                            "mr-2 h-5 w-4",
+                                            clasz === clas.value ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
+                                    {clas.label}
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </Command>
+                </PopoverContent>
+            </Popover>
 
 
-
+            {/* 
             <div>
-                <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900">
-                    {/* <Image
+                <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900"> */}
+            {/* <Image
                         src={`/jordans.webp`}
                         alt="jordans"
                         height="400"
                         width="400"
                         className="object-contain"
                     /> */}
-                    <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200">
+            {/* <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200">
                         Air Jordan 4 Retro Reimagined
                     </p>
 
@@ -134,7 +209,8 @@ const Dashboard = () => {
                         </span>
                     </button>
                 </BackgroundGradient>
-            </div>
+            </div> */}
+
         </div>
 
     );
