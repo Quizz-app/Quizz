@@ -7,10 +7,8 @@ dotenv.config();
 const router = express.Router();
 // console.log(router);
 
-
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 // console.log(openai);
-
 
 router.post("/chat", async (req, res) => {
   const { prompt } = req.body;
@@ -26,9 +24,10 @@ router.post("/chat", async (req, res) => {
           {
             questions: [
               {
-                "question": "...",
+                "content": "...",
                 "answers": [...],
-                "correctAnswers": [index, index, ...]  
+                "correctAnswers": [index, index, ...],
+                "points": number  
              },
               {...},  
             ]
