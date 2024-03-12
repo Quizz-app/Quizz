@@ -134,7 +134,7 @@ export const getUserQuizById = async (username, quizId) => {
       query(ref(db, `users/${username}/quizzes/${quizId}`))
     );
 
-    console.log(snapshot.val());
+    // console.log(snapshot.val());
     if (!snapshot.val()) {
       console.log("No such quiz found for this user");
       return null;
@@ -449,6 +449,7 @@ export const setScoreToUser = async (username, quizId, score) => {
   const userQuizRef = ref(db, `users/${username}/quizzes/${quizId}`);
   const snapshot = await get(userQuizRef);
 
+
   let quizData;
   if (snapshot.val()) {
     quizData = snapshot.val();
@@ -456,9 +457,11 @@ export const setScoreToUser = async (username, quizId, score) => {
     quizData = {};
   }
 
-  quizData.score = score;
+  console.log(score);
+  quizData.score = Number(score);
 
   await update(userQuizRef, quizData);
+  await userQuizzesScoreAverage(username);
 };
 
 export const setGradeToUser = async (username, quizId, grade) => {

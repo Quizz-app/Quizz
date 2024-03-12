@@ -12,7 +12,7 @@ export const createClass = async (name, description, creatorUsername) => {
         name,
         description,
         creator,
-        createdOn: serverTimestamp(),
+        createdOn: serverTimestamp(),  
         members: {
             [creator.username]: creator // Add the creator as a member of the team
         }
@@ -37,21 +37,24 @@ export const addMemberToClass = async (teamId, user) => {
         teamData.members = {};
     }
 
-    if(user.averageScore === undefined){
-        user.averageScore = 0;
+    // Create a copy of the user object and modify that
+    const userCopy = { ...user };
+
+    if(userCopy.averageScore === undefined){
+        userCopy.averageScore = 0;
     }
     //Check if userOverallScore is defined
     if (typeof userOverallScore !== 'undefined') {   //to be tested
-        user.averageScore = userOverallScore;
+        userCopy.averageScore = userOverallScore;
     } else {
         console.error('userOverallScore is undefined');
     }
 
-    teamData.members[user.username] = user;
+    teamData.members[userCopy.username] = userCopy;
     await set(teamRef, teamData);
 
-    const userTeamsRef = ref(db, `users/${user.username}/classes`);
-    const { averageScore, ...userWithoutAverageScore } = user;
+    const userTeamsRef = ref(db, `users/${userCopy.username}/classes`);
+    const { averageScore, ...userWithoutAverageScore } = userCopy;
     await set(userTeamsRef, {
         ...userWithoutAverageScore.classes,
         [teamId]: true
