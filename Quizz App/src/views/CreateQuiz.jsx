@@ -320,8 +320,6 @@ const CreateQuiz = () => {
 
                 {/* //quiz title */}
                 {quiz && <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>}
-
-
                 {/* //action buttons */}
                 <div className="flex flex-row items-center justify-center">
                     <div className="flex flex-col items-center justify-center">

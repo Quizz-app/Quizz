@@ -27,17 +27,16 @@ const QuizSolveCard = ({ question, quizId, }) => {
         })();
     }, [selectedAnswers]);
 
-    const handleCheckboxChange = (index) => {
+    function handleCheckboxChange(index) {
         if (selectedAnswers.includes(index)) {
-            setSelectedAnswers(selectedAnswers.filter(i => i !== index));
-        } else {
+            setSelectedAnswers(selectedAnswers.filter(answerIndex => answerIndex !== index));
+        } else if (selectedAnswers.length < question.correctAnswer.length) {
             setSelectedAnswers([...selectedAnswers, index]);
         }
+    }
 
-    };
 
-
-    //console.log(selectedAnswers);
+    console.log(question.correctAnswer);
 
     return (
         <>
