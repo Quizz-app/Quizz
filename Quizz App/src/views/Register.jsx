@@ -216,7 +216,7 @@ const Register = () => {
                 className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
                 onClick={() => {
                   setForm({ ...form, role: "teacher" });
-                  setStep(4);
+                  setStep(3);
                 }}
               >
                 Teacher
