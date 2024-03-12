@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getQuizById } from '../services/quiz-service';
+import { getQuizById, setOnGoing } from '../services/quiz-service';
 import { getQuestionsByQuizId } from '../services/questions-service';
 import QuestionPreviewCard from '../views/QuestionPreviewCard';
+import { formatDate, msToTime } from '../services/time-functions';
 
 
 const QuizPreview = () => {
@@ -23,7 +24,7 @@ const QuizPreview = () => {
                 setQuiz(quizData);
                 setQuestions(quizQuestions);
 
-              
+
 
                 const totalPoints = quizQuestions.reduce((total, question) => total + Number(question.points), 0);
                 setTotalPoints(totalPoints);
@@ -33,9 +34,27 @@ const QuizPreview = () => {
         };
 
         fetchData();
-    }, [id]);
+    }, []);
+
+
+    const [remainingTime, setRemainingTime] = useState(null);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            const newRemainingTime = new Date(quiz?.endsOn).getTime() - new Date().getTime();
+            setRemainingTime(newRemainingTime);
+            
+            if (newRemainingTime <= 0) {
+                clearInterval(timer);
+                setOnGoing(id);
+            }
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [quiz, id]);
 
     
+
     return (
         <>
             <div className="flex flex-row items-center justify-center">
@@ -52,15 +71,16 @@ const QuizPreview = () => {
 
             </div>
 
-            <div className="flex flex-row items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
                 <p>About this quiz: {quiz.description}</p>
-                <p>Due: </p>
+                <p>Ends On: {`${formatDate(quiz?.endsOn)}`} Time Left: {msToTime(remainingTime)}</p>
+               
             </div>
 
-            <p>Time: {time} s</p>
+            <p>Time: {time} m</p>
             <p>Points: {totalPoints}</p>
             <h1> {questions.length} questions</h1>
-            <button className="btn btn-primary" onClick={()=> navigate(`/quiz-solve/${id}`)}>Start</button>
+            <button className="btn btn-primary" onClick={() => navigate(`/quiz-solve/${id}`)}>Start</button>
 
 
 

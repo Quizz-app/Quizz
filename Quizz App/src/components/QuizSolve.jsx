@@ -100,7 +100,7 @@ const QuizSolve = () => {
     //     }
     // }, [userData]);
 
- 
+
 
     const handleCountdownEnd = async () => {
         setIsCountdownFinished(true);
@@ -111,7 +111,7 @@ const QuizSolve = () => {
     };
 
 
-
+    console.log(questions)
 
     return (
         <>
@@ -120,16 +120,9 @@ const QuizSolve = () => {
                 {!isCountdownFinished ? (
                     questions[currentQuestionIndex] && (
                         <>
-                            <QuizSolveCard
-                                question={questions[currentQuestionIndex]}
-                                quizId={id}
-                            />
-
-                            <Countdown
-                                date={Date.now() + countdownTime}
-                                onComplete={handleCountdownEnd}
-                                onTick={({ total }) => localStorage.setItem(`countdownTime-${id}`, total.toString())} // Convert to string before saving
-                            />
+                            <QuizSolveCard question={questions[currentQuestionIndex]} quizId={id} />
+                            <Countdown date={Date.now() + countdownTime} onComplete={handleCountdownEnd} onTick={({ total }) => 
+                            localStorage.setItem(`countdownTime-${id}`, total.toString())} />
 
                             {currentQuestionIndex < questions.length - 1 ? (
                                 <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}>Next</button>

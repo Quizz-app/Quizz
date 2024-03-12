@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAllTeachers } from "../services/users-service";
-import { onTeamMembersChange, getTeamById, removeMemberFromTeam, inviteUserToTeam, deleteTeam, getAllTeamQuizzes } from "../services/teams-service";
+import { onTeamMembersChange, getTeamById, removeMemberFromTeam, inviteUserToTeam, deleteTeam, getAllTeamQuizzes, removeQuizFromTeam } from "../services/teams-service";
 import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
+
 
 const CreateTeam = () => {
     const { userData, isLoading } = useContext(AppContext)
@@ -53,11 +54,15 @@ const CreateTeam = () => {
         removeMemberFromTeam(id, member);
     };
 
+    const handleRemoveQuiz = (quizId) => {
+        removeQuizFromTeam(id, quizId);
+    };
     const handleDeleteTeam = () => {
         deleteTeam(id);
         navigate('/my-teams');
 
     };
+
 
 
     return (
@@ -98,7 +103,7 @@ const CreateTeam = () => {
                     <div className="divider"></div>
                     <h1 className="text-2xl">Team members</h1>
                     <div className="divider"></div>
-                    <div className="border rounded-xl">
+                    <div className="teacher-table">
                         <table className="table">
                             <thead>
                                 <tr>
@@ -136,11 +141,12 @@ const CreateTeam = () => {
                             <p>{quiz.description}</p>
                             <p>{quiz.creator}</p>
                             <button onClick={() => navigate(`/quiz/${quiz.id}`)}>Got to quiz</button>
-                            <button>Remove quiz Trqbva da se opravi</button>
+                            <button onClick={() => handleRemoveQuiz(quiz.id)}>Remove quiz</button>
                         </div>
                     ))}
                 </div>
             </div>
+
         </div>
     );
 };
