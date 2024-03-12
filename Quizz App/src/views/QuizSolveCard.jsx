@@ -36,7 +36,7 @@ const QuizSolveCard = ({ question, quizId, }) => {
     }
 
 
-    console.log(question.correctAnswer);
+    
 
     return (
         <>
