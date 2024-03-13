@@ -9,9 +9,9 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, storage } from "../config/firebase-config";
+import { auth, storage } from "../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { get } from "firebase/database";
+
 
 const Profile = () => {
   const { userData } = useContext(AppContext);
@@ -98,7 +98,6 @@ const Profile = () => {
 
   const handleSavePhoto = async () => {
     await uploadFile();
-    // await updateUserInfo(userData.username, "avatar", avatarURL);
   };
 
   const handleUpdatePassword = async () => {
@@ -137,6 +136,7 @@ const Profile = () => {
   };
 
   const saveChanges = async () => {
+
     await handleSavePhoto();
     await handleSavePassword();
     await updateUserInfo(userData.username, "firstName", form.firstName);
@@ -145,7 +145,7 @@ const Profile = () => {
     await updateUserInfo(userData.username, "role", form.role);
     // await updateUserInfo(userData.username, "avatar", avatarURL);
 
-    navigate("/home");
+    navigate("/profile");
   };
 
   return (

@@ -2,7 +2,7 @@ import {
   get, set, ref, query, equalTo, orderByChild, update, onValue,
 } from "firebase/database";
 import { db } from "../config/firebase-config.js";
-import { addQuizToTheUser, getQuizById } from "./quiz-service.js";
+import { getQuizById } from "./quiz-service.js";
 import { addMemberToTeam } from "./teams-service.js";
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
@@ -11,14 +11,8 @@ import { addMemberToClass } from "./class-service.js";
 import { getWeek, getMonth, getYear, parseISO } from 'date-fns';
 
 
-export const createUsername = (
-  firstName,
-  lastName,
-  username,
-  uid,
-  email,
-  role
-) => {
+export const createUsername = (firstName, lastName, username, uid, email, role) => {
+
   return set(ref(db, `users/${username}`), {
     firstName,
     lastName,
@@ -31,9 +25,7 @@ export const createUsername = (
     isBlocked: false,
     role,
     teams: {},
-    // quizzes: {},
-    avatar:
-      "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg",
+    avatar: "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg",
   });
 };
 
@@ -361,12 +353,12 @@ export const getUserClasses = async (username, callback) => {
           ...classSnapshot.val(),
         };
       });
-    
+
       callback(Object.values(classes));
     });
   });
 
-  
+
   return () => unsubscribe();
 }
 
@@ -649,22 +641,23 @@ export const userQuizzesScoreAveragePerWeek = async (username, month, year) => {
 
 
 export const scheduleUserQuizzesScoreAveragePerWeek = (username) => {
-    return new Promise((resolve) => {
-        const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+  return new Promise((resolve) => {
+    const userQuizzesRef = ref(db, `users/${username}/quizzes`);
 
-        onValue(userQuizzesRef, async (snapshot) => {
-            const data = snapshot.val();
-            const quizzes = Object.values(data);
+    onValue(userQuizzesRef, async (snapshot) => {
+      const data = snapshot.val();
+      const quizzes = Object.values(data);
 
-            // Calculate average score
-            const totalScore = quizzes.reduce((acc, quiz) => acc + quiz.score, 0);
-            const averageScore = totalScore / quizzes.length;
+      // Calculate average score
+      const totalScore = quizzes.reduce((acc, quiz) => acc + quiz.score, 0);
+      const averageScore = totalScore / quizzes.length;
 
-            // Resolve the promise with the average score
-            resolve(averageScore);
-        });
+      // Resolve the promise with the average score
+      resolve(averageScore);
     });
+  });
 };
+
 export const mostReceivedGradeOnQuizzesByCreator = async (creatorUsername) => {
   const createdQuizzesRef = ref(db, `users/${creatorUsername}/createdQuizzes`);
   const createdQuizzesSnapshot = await get(createdQuizzesRef);

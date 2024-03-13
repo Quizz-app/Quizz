@@ -20,7 +20,9 @@ router.post("/chat", async (req, res) => {
       messages: [
         {
           role: "user",
-          content: `Generate twenty multiple-choice questions about ${prompt}.Organize the results as a JSON array as follows:
+          content: `Generate ten multiple-choice questions about ${prompt}.
+          I want the answers to be formed like this: "A programming language" not like this: "A) A programming language".
+          Organize the results as a JSON array as follows:
           {
             questions: [
               {
@@ -50,3 +52,5 @@ router.post("/chat", async (req, res) => {
 });
 
 module.exports = router;
+
+//I want the answers to be formed like this: "A programming language" not like this: "A) A programming language" 

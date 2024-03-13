@@ -15,6 +15,7 @@ import { getAllStudents, getUserTeams } from "../services/users-service";
 import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
 import { formatDate, msToTime, timeRanges } from "../services/time-functions";
+import Assistant from "../components/Assistant";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -33,8 +34,6 @@ const CreateQuiz = () => {
     const [open, setOpen] = useState(false);
     const [timeLimit, setTimeLimit] = useState(0);
     const [userTeams, setUserTeams] = useState([]);
-    const [showTeams, setShowTeams] = useState(false);
-    const [showUsers, setShowUsers] = useState(false);
     const [students, setStudents] = useState([]);
     const navigate = useNavigate();
     const [grades, setGrades] = useState({
@@ -47,6 +46,16 @@ const CreateQuiz = () => {
         answers,
         points: 0
     });
+
+    const [openPanel, setOpenPanel] = useState(null);
+    
+    const handleButtonClick = (panel) => {
+        if (openPanel === panel) {
+            setOpenPanel(null);
+        } else {
+            setOpenPanel(panel);
+        }
+    };
 
     //USE EFFECTS DO NOT TOUCH AT ANY COST
     useEffect(() => {
@@ -98,9 +107,7 @@ const CreateQuiz = () => {
 
     //USE EFFECTS FOR THE TEAMS
     useEffect(() => {
-        setLoading(true);
         getUserTeams(userData?.username, setUserTeams);
-        setLoading(false);
     }, [userData]);
     //Filter the user teams to get the teams the user is a member of
     const filteredTeams = userTeams.filter(
@@ -115,18 +122,12 @@ const CreateQuiz = () => {
     const filteredStudents = students.filter((student) =>
         student.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    //Handle the click event to show the teams
-    const handleAssignTeamClick = () => {
-        setShowTeams(!showTeams);
-    };
-    //Handle the click event to show the users
-    const handleAssignUserClick = () => {
-        setShowUsers(!showUsers);
-    };
+    
     //Handle the click event to add the quiz to the team
     const handleAddQuizToTeam = async (teamId) => {
         addQuizToTeam(teamId, id);
     };
+
 
     const handleAddQuizToStudent = async (studentId) => {
         inviteUserToQuiz(id, studentId, userData.username);
@@ -304,10 +305,13 @@ const CreateQuiz = () => {
                 {/* //action buttons */}
                 <div className="flex flex-row items-center justify-center">
                     <div className="flex flex-col items-center justify-center">
-                        <Button onClick={handleAssignTeamClick}>Assign to group</Button>
+                        <Button onClick={() => handleButtonClick('assignTeam')}>Assign to group</Button>
                     </div>
                     <div className="flex flex-col items-center justify-center">
-                        <Button onClick={handleAssignUserClick}>Assign to student</Button>
+                        <Button onClick={() => handleButtonClick('assignUser')}>Assign to student</Button>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                        <Button onClick={() => handleButtonClick('assignAssistant')}>Use Assistant</Button>
                     </div>
                     <div className="flex flex-col items-center justify-center">
                         <Button onClick={() => navigate("/my-library")}>See all quizzes</Button>
@@ -345,7 +349,7 @@ const CreateQuiz = () => {
                 </div>
             </div>
             {/* Here we can see all the teams that the current user is in*/}
-            {showTeams && filteredTeams.length > 0 && (
+            {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
                 <div>
                     <h1>TUK SE POKAZVAT OTBORITE V KOITO UCHSTVA SLED KATO E NATISNAL Assignto group</h1>
                     {filteredTeams.map((team) => (
@@ -357,7 +361,7 @@ const CreateQuiz = () => {
                 </div>
             )}
             {/* Here we can see all the students that are in the system*/}
-            {showUsers && students.length > 0 && (
+            {openPanel === 'assignUser' && students.length > 0 && (
                 <div>
                     <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search for student" />
                     {searchTerm.length > 2 &&
@@ -370,6 +374,10 @@ const CreateQuiz = () => {
                             </div>
                         ))}
                 </div>
+            )}
+            {/* Here we can see the assistant */}
+            {openPanel === 'assignAssistant' && (
+                <Assistant quiz={quiz} />
             )}
             <p>Add description:</p>
             <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />

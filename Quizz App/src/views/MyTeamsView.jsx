@@ -49,7 +49,6 @@ const MyTeamsView = () => {
             console.error(error);
         }
     }
-
     const handleButtonClick = () => {
         setIsDialogOpen(true);
     };
@@ -79,7 +78,6 @@ const MyTeamsView = () => {
                             </Label>
                             <Input id="title" value={team.name} onChange={updateForm('name')} className="col-span-3" />
                         </div>
-
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="category" className="text-right">
                                 Team description

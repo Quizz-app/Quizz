@@ -2,7 +2,7 @@ import { ref, push, get, update, remove, query } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
 export const addQuestion = async (quizId, content, answers,  points, correctAnswer) => {
-    console.log(quizId, content, answers,  points, correctAnswer);
+    
     const quizSnapshot = await get(ref(db, `quizzes/${quizId}`));
     if (!quizSnapshot.exists()) {
         throw new Error('Quiz not found');

@@ -10,11 +10,7 @@ import Login from "./views/Login";
 import Header from "./components/Header";
 import CreateQuiz from "./views/CreateQuiz";
 import CreateTeam from "./views/CreateTeam";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup, } from "@/components/ui/resizable";
 import { Link } from "react-router-dom";
 import Profile from "./views/Profile";
 import MyLibrary from "./views/MyLibrary";
@@ -22,7 +18,6 @@ import QuizSolve from "./components/QuizSolve";
 import QuizPreview from "./components/QuizPreview";
 import QuizResults from "./views/QuizResults";
 import MyTeamsView from "./views/MyTeamsView";
-import Assistant from "./views/Assistant";
 import Admin from "./views/Admin/Admin";
 import Dashboard from "./views/Dashboard";
 import CreateClass from "./views/CreateClass";
@@ -47,7 +42,7 @@ const App = () => {
           });
         }
       });
- 
+
     }
   }, [user, loading, error]);
 
@@ -91,7 +86,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/my-library" element={<MyLibrary />} />
                 <Route path="/my-teams" element={<MyTeamsView />} />
-                <Route path="/quiz-preview/:id"element={<QuizPreview />}/>
+                <Route path="/quiz-preview/:id" element={<QuizPreview />} />
                 <Route path="/my-classes" element={<MyClassesView />} />
                 <Route path="/quiz-solve/:id" element={<QuizSolve />} />
                 <Route path="/team/:id" element={<CreateTeam />} />
@@ -99,7 +94,6 @@ const App = () => {
                 <Route path="/quiz/:id" element={<CreateQuiz />} />
                 <Route path="/results/:id" element={<QuizResults />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/assistant" element={<Assistant />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 {/* Add more routes as needed */}
