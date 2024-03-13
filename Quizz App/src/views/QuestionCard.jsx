@@ -1,18 +1,8 @@
 import PropTypes from "prop-types";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { updateQuestion } from "../services/questions-service";
 
-
-const QuestionCard = ({
-  quizId,
-  questionId,
-  content,
-  answers,
-  points,
-  correctAnswer,
-  handleUpdateQuestion,
-  onDelete,
-}) => {
+const QuestionCard = ({ quizId, questionId, content, answers, points, correctAnswer, handleUpdateQuestion, onDelete, }) => {
   const [editing, setEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
   const [editedAnswers, setEditedAnswers] = useState([...answers]);
@@ -29,11 +19,7 @@ const QuestionCard = ({
 
   const handleSave = async () => {
     const updatedQuestion = {
-      id: questionId,
-      content: editedContent,
-      answers: editedAnswers,
-      points: editedPoints,
-      correctAnswer: editedCorrectAnswer
+      id: questionId, content: editedContent, answers: editedAnswers, points: editedPoints, correctAnswer: editedCorrectAnswer
         .map((answer) => editedAnswers.indexOf(answer))
         .filter((i) => i !== -1), // Map the answers back to their indices
     };
@@ -56,25 +42,13 @@ const QuestionCard = ({
       <div className="card-body">
         {editing ? (
           <>
-            <input
-              type="text"
-              value={editedContent}
-              onChange={(e) => setEditedContent(e.target.value)}
-            />
+            <input type="text" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
             {editedAnswers.map((answer, index) => (
               <div key={index}>
-                <input
-                  type="text"
-                  value={editedAnswers[index]}
-                  onChange={(e) => {
-                    const newAnswers = [...editedAnswers];
-                    newAnswers[index] = e.target.value;
-                    setEditedAnswers(newAnswers);
-                  }}
-                />
-                <input
-                  type="checkbox"
-                  checked={editedCorrectAnswer.includes(editedAnswers[index])}
+                <input type="text" value={editedAnswers[index]} onChange={(e) => {
+                  const newAnswers = [...editedAnswers]; newAnswers[index] = e.target.value; setEditedAnswers(newAnswers);
+                }} />
+                <input type="checkbox" checked={editedCorrectAnswer.includes(editedAnswers[index])}
                   onChange={() => {
                     if (editedCorrectAnswer.includes(editedAnswers[index])) {
                       setEditedCorrectAnswer(
@@ -92,14 +66,8 @@ const QuestionCard = ({
                 />
               </div>
             ))}
-            <input
-              type="number"
-              value={editedPoints}
-              onChange={(e) => setEditedPoints(Number(e.target.value))}
-            />
-            <button className="btn btn-outline btn-info" onClick={handleSave}>
-              Save
-            </button>
+            <input type="number" value={editedPoints} onChange={(e) => setEditedPoints(Number(e.target.value))} />
+            <button className="btn btn-outline btn-info" onClick={handleSave}>Save</button>
           </>
         ) : (
           <>
@@ -113,12 +81,7 @@ const QuestionCard = ({
             <button className="btn btn-outline btn-info" onClick={handleEdit}>
               Edit
             </button>
-            <button
-              className="btn btn-danger"
-              onClick={() => onDelete(questionId)}
-            >
-              delete
-            </button>
+            <button className="btn btn-danger" onClick={() => onDelete(questionId)}> delete</button>
           </>
         )}
       </div>

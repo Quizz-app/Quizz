@@ -15,6 +15,7 @@ import { getAllStudents, getUserTeams } from "../services/users-service";
 import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
 import { formatDate, msToTime, timeRanges } from "../services/time-functions";
+import axios from "axios";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -35,6 +36,7 @@ const CreateQuiz = () => {
     const [userTeams, setUserTeams] = useState([]);
     const [showTeams, setShowTeams] = useState(false);
     const [showUsers, setShowUsers] = useState(false);
+    const [showAssistant, setShowAssistant] = useState(false);
     const [students, setStudents] = useState([]);
     const navigate = useNavigate();
     const [grades, setGrades] = useState({
@@ -123,10 +125,15 @@ const CreateQuiz = () => {
     const handleAssignUserClick = () => {
         setShowUsers(!showUsers);
     };
+
+    const handleAssignAssistantClick = () => {
+        setShowAssistant(!showAssistant);
+    }
     //Handle the click event to add the quiz to the team
     const handleAddQuizToTeam = async (teamId) => {
         addQuizToTeam(teamId, id);
     };
+
 
     const handleAddQuizToStudent = async (studentId) => {
         inviteUserToQuiz(id, studentId, userData.username);
@@ -296,6 +303,40 @@ const CreateQuiz = () => {
         return () => clearInterval(timer);
     }, [quiz, id]);
 
+
+    const [prompt, setPrompt] = useState("");
+    const [assistantResult, setData] = useState(null);
+
+    const handleSubmitAssistant = async (e) => {
+        e.preventDefault();
+        const res = await axios.post("http://localhost:3000/chat", {
+            prompt: prompt,
+        });
+
+        const parsedData = JSON.parse(res.data.message);
+
+        setData(parsedData);
+    };
+
+
+    const handleQuestionFromAssistant = async (question) => {
+        try {
+            await addQuestion(
+                quiz.id,
+                question.content,
+                question.answers,
+                0,
+                question.correctAnswers,
+               
+            );
+            
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
+    console.log(assistantResult?.questions);
     return (
         <>
             <div className="flex flex-row items-center justify-center">
@@ -308,6 +349,9 @@ const CreateQuiz = () => {
                     </div>
                     <div className="flex flex-col items-center justify-center">
                         <Button onClick={handleAssignUserClick}>Assign to student</Button>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                        <Button onClick={handleAssignAssistantClick}>Use Assistant</Button>
                     </div>
                     <div className="flex flex-col items-center justify-center">
                         <Button onClick={() => navigate("/my-library")}>See all quizzes</Button>
@@ -370,6 +414,44 @@ const CreateQuiz = () => {
                             </div>
                         ))}
                 </div>
+            )}
+            {/* Here we can see the assistant */}
+            {showAssistant && (
+                <>
+                    <div>
+                        <input className="w-64 h-10 border" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+                        <button onClick={handleSubmitAssistant} className="btn"> Ask </button>
+                    </div>
+                    <div>
+                        <div className="ml-10 mr-10">
+                            <div className="overflow-x-auto">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                            <th>Answers</th>
+                                            <th>Correct answer index</th>
+                                            <th>Add question</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {assistantResult?.questions && (assistantResult?.questions.map((question, index) =>
+                                            <tr key={index}>
+                                                <th>{index + 1}</th>
+                                                <td>{question.content}</td>
+                                                <td>{question.answers.join(", ")}</td>
+                                                <td>{question.correctAnswers}</td>
+                                                <td><button className="btn btn-xs"
+                                                    onClick={() => handleQuestionFromAssistant(question)} >Add question</button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </>
             )}
             <p>Add description:</p>
             <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
