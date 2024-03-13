@@ -216,7 +216,7 @@ export const getUserClasses = async (username, callback) => {
 }
 
 export const getClassMemebersByRanking = async (classId) => {
-    console.log(classId);
+
     const classRef = ref(db, `classes/${classId}/members`);
     const classSnapshot = await get(classRef);
     const classData = classSnapshot.val();
@@ -251,6 +251,5 @@ export const getClassMemebersByRanking = async (classId) => {
         });
 
     const sortedMembers = membersArray.sort((a, b) => b.averageScore - a.averageScore);
-    console.log(sortedMembers);
     return Object.values(sortedMembers);
 }

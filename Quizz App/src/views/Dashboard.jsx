@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { getUserClasses, userQuizzesCreated, userQuizzesMostOccurringGrade, userQuizzesSolved } from "../services/users-service";
+import { getUserClasses, scheduleUserQuizzesScoreAveragePerWeek, userQuizzesCreated, userQuizzesMostOccurringGrade, userQuizzesSolved } from "../services/users-service";
 import { useState } from "react";
 import BarChart from "../components/barChart";
 import { BackgroundGradient } from "../components/ui/background-gradient";
@@ -24,6 +24,7 @@ const Dashboard = () => {
     const [open, setOpen] = useState(false);
     const [id, setId] = useState('');
     const [rankedMembers, setRankedMembers] = useState([]);
+    const [weeklyScoreData, setWeeklyScoreData] = useState([]);
 
     const experimentalData = [36, 78, 56, 78];
 
@@ -58,7 +59,44 @@ const Dashboard = () => {
         })();
     }, [id, classes]);
 
+// Fetch the data immediately when the component mounts
+useEffect(() => {
+    if (userData && userData.username) {
+        //console.log('i am run');
+        scheduleUserQuizzesScoreAveragePerWeek(userData.username)
+            .then(data => {
+                setWeeklyScoreData([data]);
+            });
+    }
+}, [userData]); // Add userData to the dependency array
 
+useEffect(() => {
+    const fetchData = async () => {
+        if (userData && userData.username) {
+            const data = await scheduleUserQuizzesScoreAveragePerWeek(userData.username);
+
+            // If the array length is 4, reset the array
+            if (weeklyScoreData.length === 4) {
+                setWeeklyScoreData([data]);
+            } else {
+                setWeeklyScoreData((prevData) => [...prevData, data]);
+            }
+
+            // Store the time of the last fetch in localStorage
+            localStorage.setItem('lastFetchTime', Date.now().toString());
+        }
+    };
+
+    // Calculate the time remaining until the next fetch
+    const lastFetchTime = Number(localStorage.getItem('lastFetchTime'));
+    const timeSinceLastFetch = Date.now() - lastFetchTime;
+    const timeUntilNextFetch = Math.max(0, 1000 * 60 * 60 * 24 * 7 - timeSinceLastFetch);
+
+    const intervalId = setInterval(fetchData, timeUntilNextFetch);
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+}, [userData, weeklyScoreData]); // Re-run the effect if userData or weeklyScoreData changes
 
     const currentUserPosition = rankedMembers.findIndex(member => member.username === userData.username) + 1;
 
@@ -135,7 +173,7 @@ const Dashboard = () => {
                 ?
                 (<BarChart data={experimentalData} />)
                 :
-                (<BarChart data={experimentalData} />)}
+                (<BarChart data={weeklyScoreData} />)}
 
 
             <Popover open={open} onOpenChange={setOpen}>
@@ -183,12 +221,12 @@ const Dashboard = () => {
                 </PopoverContent>
             </Popover>
 
-            <div>   
-                 {rankedMembers.length > 0 &&
-                rankedMembers.map((member, index) => {
-                    return <RankingTable key={index} student={member} index={index + 1}/>
-                })}
-                </div>
+            <table>
+                {rankedMembers.length > 0 &&
+                    rankedMembers.map((member, index) => {
+                        return <RankingTable key={index} student={member} index={index + 1} />
+                    })}
+            </table>
 
             {/* 
             <div>
