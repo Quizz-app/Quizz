@@ -38,7 +38,7 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
   };
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card w-96 bg-base-100 shadow-xl border">
       <div className="card-body">
         {editing ? (
           <>
@@ -74,7 +74,7 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
             <h2 className="card-title">{content}</h2>
             <ul>
               {answers.map((answer, index) => (
-                <li key={index}>{answer}</li>
+                <li className="border" key={index}>{answer}</li>
               ))}
             </ul>
             <p>Points: {points}</p>
