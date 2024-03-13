@@ -25,3 +25,39 @@ export const formatDate = (date) => {
 
     return [year, month, day].join('-');
 }
+
+
+export const timeRanges = [
+    {
+        value: "5",
+        label: "5m",
+    },
+    {
+        value: "10",
+        label: "10m",
+    },
+    {
+        value: "15",
+        label: "15m",
+    },
+    {
+        value: "20",
+        label: "20m",
+    },
+    {
+        value: "25",
+        label: "25m",
+    },
+    {
+        value: "30",
+        label: "30m",
+    },
+    {
+        value: "40",
+        label: "40m",
+    },
+    {
+        value: "50",
+        label: "50m",
+    },
+];

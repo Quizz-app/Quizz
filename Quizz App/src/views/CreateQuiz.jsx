@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popove
 import { getAllStudents, getUserTeams } from "../services/users-service";
 import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
-import { formatDate, msToTime } from "../services/time-functions";
+import { formatDate, msToTime, timeRanges } from "../services/time-functions";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -279,41 +279,6 @@ const CreateQuiz = () => {
         setCorrectAnswerIndices(correctAnswerIndices.filter((i) => i !== index));
     };
 
-    const timeRanges = [
-        {
-            value: "5",
-            label: "5m",
-        },
-        {
-            value: "10",
-            label: "10m",
-        },
-        {
-            value: "15",
-            label: "15m",
-        },
-        {
-            value: "20",
-            label: "20m",
-        },
-        {
-            value: "25",
-            label: "25m",
-        },
-        {
-            value: "30",
-            label: "30m",
-        },
-        {
-            value: "40",
-            label: "40m",
-        },
-        {
-            value: "50",
-            label: "50m",
-        },
-    ];
-
     const [remainingTime, setRemainingTime] = useState(null);
 
     useEffect(() => {
@@ -324,6 +289,7 @@ const CreateQuiz = () => {
             if (newRemainingTime <= 0) {
                 clearInterval(timer);
                 setOnGoing(id);
+
             }
         }, 1000);
 
@@ -490,7 +456,9 @@ const CreateQuiz = () => {
                 <div className="swap-off">NO</div> {/* enable */}
             </label>
             <div className="">
-                {remainingTime && <p>Ends On: {`${formatDate(quiz?.endsOn)}`} Time left: {msToTime(remainingTime)}</p>}
+                {remainingTime > 0
+                    ? <p>Ends On: {`${formatDate(quiz?.endsOn)}`} Time left: {msToTime(remainingTime)}</p>
+                    : <p>Ended On: {`${formatDate(quiz?.endsOn)}`}</p>}
                 <Calendar
                     mode="single"
                     selected={date}
