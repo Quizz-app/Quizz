@@ -16,6 +16,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
 import { formatDate, msToTime, timeRanges } from "../services/time-functions";
 import axios from "axios";
+import Assistant from "../components/Assistant";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -100,9 +101,7 @@ const CreateQuiz = () => {
 
     //USE EFFECTS FOR THE TEAMS
     useEffect(() => {
-        setLoading(true);
         getUserTeams(userData?.username, setUserTeams);
-        setLoading(false);
     }, [userData]);
     //Filter the user teams to get the teams the user is a member of
     const filteredTeams = userTeams.filter(
@@ -303,40 +302,6 @@ const CreateQuiz = () => {
         return () => clearInterval(timer);
     }, [quiz, id]);
 
-
-    const [prompt, setPrompt] = useState("");
-    const [assistantResult, setData] = useState(null);
-
-    const handleSubmitAssistant = async (e) => {
-        e.preventDefault();
-        const res = await axios.post("http://localhost:3000/chat", {
-            prompt: prompt,
-        });
-
-        const parsedData = JSON.parse(res.data.message);
-
-        setData(parsedData);
-    };
-
-
-    const handleQuestionFromAssistant = async (question) => {
-        try {
-            await addQuestion(
-                quiz.id,
-                question.content,
-                question.answers,
-                0,
-                question.correctAnswers,
-               
-            );
-            
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-
-    console.log(assistantResult?.questions);
     return (
         <>
             <div className="flex flex-row items-center justify-center">
@@ -417,41 +382,7 @@ const CreateQuiz = () => {
             )}
             {/* Here we can see the assistant */}
             {showAssistant && (
-                <>
-                    <div>
-                        <input className="w-64 h-10 border" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
-                        <button onClick={handleSubmitAssistant} className="btn"> Ask </button>
-                    </div>
-                    <div>
-                        <div className="ml-10 mr-10">
-                            <div className="overflow-x-auto">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Name</th>
-                                            <th>Answers</th>
-                                            <th>Correct answer index</th>
-                                            <th>Add question</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {assistantResult?.questions && (assistantResult?.questions.map((question, index) =>
-                                            <tr key={index}>
-                                                <th>{index + 1}</th>
-                                                <td>{question.content}</td>
-                                                <td>{question.answers.join(", ")}</td>
-                                                <td>{question.correctAnswers}</td>
-                                                <td><button className="btn btn-xs"
-                                                    onClick={() => handleQuestionFromAssistant(question)} >Add question</button></td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </>
+                <Assistant quiz={quiz} />
             )}
             <p>Add description:</p>
             <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
