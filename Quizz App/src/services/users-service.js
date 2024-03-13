@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
 import { serverTimestamp } from "firebase/database";
 import { addMemberToClass } from "./class-service.js";
+import { getWeek, getMonth, getYear, parseISO } from 'date-fns';
+
 
 export const createUsername = (
   firstName,
@@ -575,3 +577,65 @@ export const userQuizzesMostOccurringGrade = async (username) => {
   return mostOccurringGrade;
 };
 
+
+export const userQuizzesScoreAveragePerWeek = async (username, month, year) => {
+  const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+
+  onValue(userQuizzesRef, async (snapshot) => {
+    const data = snapshot.val();
+    const quizzes = Object.values(data);
+
+    // Filter quizzes by month and year
+    const quizzesInMonth = quizzes.filter(quiz => {
+      const quizDate = parseISO(quiz.date);
+      return getMonth(quizDate) + 1 === month && getYear(quizDate) === year;
+    });
+
+    // Group quizzes by week
+    const quizzesByWeek = quizzesInMonth.reduce((acc, quiz) => {
+      const quizDate = parseISO(quiz.date);
+      const week = getWeek(quizDate);
+
+      if (!acc[week]) {
+        acc[week] = [];
+      }
+
+      acc[week].push(quiz);
+
+      return acc;
+    }, {});
+
+    // Calculate average score for each week
+    const averageScores = Object.entries(quizzesByWeek).map(([week, quizzes]) => {
+      const totalScore = quizzes.reduce((acc, quiz) => acc + quiz.score, 0);
+      return {
+        week,
+        averageScore: totalScore / quizzes.length,
+      };
+    });
+
+    // Update average score in class for each week
+    for (const { week, averageScore } of averageScores) {
+      await updateAverageScoreInClass(username, averageScore, week);
+    }
+  });
+};
+
+
+export const scheduleUserQuizzesScoreAveragePerWeek = (username) => {
+    return new Promise((resolve) => {
+        const userQuizzesRef = ref(db, `users/${username}/quizzes`);
+
+        onValue(userQuizzesRef, async (snapshot) => {
+            const data = snapshot.val();
+            const quizzes = Object.values(data);
+
+            // Calculate average score
+            const totalScore = quizzes.reduce((acc, quiz) => acc + quiz.score, 0);
+            const averageScore = totalScore / quizzes.length;
+
+            // Resolve the promise with the average score
+            resolve(averageScore);
+        });
+    });
+};

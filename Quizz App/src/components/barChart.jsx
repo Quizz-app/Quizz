@@ -7,7 +7,7 @@ const BarChart = ({ data }) => {
         labels: ['Week1', 'Week2', 'Week3', 'Week4'],
         datasets: [
             {
-                label: 'Quizzes Solved',
+                label: 'Weekly Average Score',
                 data: data.map(el => el),
                 backgroundColor: 'rgb(173, 255, 47)', // bright greenish-yellow color
             }
