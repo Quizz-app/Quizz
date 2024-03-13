@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { getUserClasses, scheduleUserQuizzesScoreAveragePerWeek, userQuizzesCreated, userQuizzesMostOccurringGrade, userQuizzesSolved } from "../services/users-service";
+import { getUserClasses, getUserCreatedQuizzes, getUserQuizzes, getUsersRankedByScoreOnAQuiz, mostReceivedGradeOnQuizzesByCreator, scheduleUserQuizzesScoreAveragePerWeek, userQuizzesCreated, userQuizzesMostOccurringGrade, userQuizzesSolved } from "../services/users-service";
 import { useState } from "react";
 import BarChart from "../components/barChart";
 import { BackgroundGradient } from "../components/ui/background-gradient";
@@ -19,12 +19,18 @@ const Dashboard = () => {
     const [quizzesSolved, setQuizzesSolved] = useState(0);
     const [quizzesCreated, setQuizzesCreated] = useState(0);
     const [quizzesGrades, setQuizzesGrades] = useState([]);
-    const [classes, setClasses] = useState([]);
-    const [clasz, setClas] = useState(null);
-    const [open, setOpen] = useState(false);
-    const [id, setId] = useState('');
+    const [quizzes, setQuizzes] = useState([]);
     const [rankedMembers, setRankedMembers] = useState([]);
     const [weeklyScoreData, setWeeklyScoreData] = useState([]);
+    const [mostOccuringGrad, setMostOccuringGrade] = useState(null);
+    const [classes, setClasses] = useState([]);
+    const [clasz, setClas] = useState('');
+    const [open, setOpen] = useState(false);
+    const [id, setId] = useState('');
+    const [quizId, setQuizId] = useState('');
+    const [quizS, setQuiz] = useState('');
+    const [rankedQuizSolvers, setRankedQuizSolvers] = useState([]);
+
 
     const experimentalData = [36, 78, 56, 78];
 
@@ -41,7 +47,12 @@ const Dashboard = () => {
 
                 } else if (userData && userData.username) {
                     const quizzesCreated = await userQuizzesCreated(userData.username);
+                    const mostOccuringGrade = await mostReceivedGradeOnQuizzesByCreator(userData.username);
+
+                    getUserCreatedQuizzes(userData.username, setQuizzes);
+
                     setQuizzesCreated(quizzesCreated);
+                    setMostOccuringGrade(mostOccuringGrade);
                 }
             } catch (error) {
                 console.log(error);
@@ -51,59 +62,74 @@ const Dashboard = () => {
 
     useEffect(() => {
         (async () => {
-            if (id || (classes && classes[0])) {
+            if (quizId || (quizzes && quizzes[0])) {
+                const users = await getUsersRankedByScoreOnAQuiz(quizId || quizzes[0].id);
+                setRankedQuizSolvers(users);
+                //console.log('iam run');
+            }
+        })();
+    }, [quizId, quizzes]);
+
+
+    useEffect(() => {
+        (async () => {
+            if (id || (classes && classes[0]) && userData && userData.role === 'student') {
                 const classMembers = await getClassMemebersByRanking(id || classes[0].id);
                 setRankedMembers(classMembers);
+
 
             }
         })();
     }, [id, classes]);
 
-// Fetch the data immediately when the component mounts
-useEffect(() => {
-    if (userData && userData.username) {
-        //console.log('i am run');
-        scheduleUserQuizzesScoreAveragePerWeek(userData.username)
-            .then(data => {
-                setWeeklyScoreData([data]);
-            });
-    }
-}, [userData]); // Add userData to the dependency array
-
-useEffect(() => {
-    const fetchData = async () => {
-        if (userData && userData.username) {
-            const data = await scheduleUserQuizzesScoreAveragePerWeek(userData.username);
-
-            // If the array length is 4, reset the array
-            if (weeklyScoreData.length === 4) {
-                setWeeklyScoreData([data]);
-            } else {
-                setWeeklyScoreData((prevData) => [...prevData, data]);
-            }
-
-            // Store the time of the last fetch in localStorage
-            localStorage.setItem('lastFetchTime', Date.now().toString());
+    // Fetch the data immediately when the component mounts
+    useEffect(() => {
+        if (userData && userData.username && userData.role === 'student') {
+            //console.log('i am run');
+            scheduleUserQuizzesScoreAveragePerWeek(userData.username)
+                .then(data => {
+                    setWeeklyScoreData([data]);
+                });
         }
-    };
+    }, [userData]); // Add userData to the dependency array
 
-    // Calculate the time remaining until the next fetch
-    const lastFetchTime = Number(localStorage.getItem('lastFetchTime'));
-    const timeSinceLastFetch = Date.now() - lastFetchTime;
-    const timeUntilNextFetch = Math.max(0, 1000 * 60 * 60 * 24 * 7 - timeSinceLastFetch);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (userData && userData.username && userData.role === 'student') {
+                const data = await scheduleUserQuizzesScoreAveragePerWeek(userData.username);
 
-    const intervalId = setInterval(fetchData, timeUntilNextFetch);
+                // If the array length is 4, reset the array
+                if (weeklyScoreData.length === 4) {
+                    setWeeklyScoreData([data]);
+                } else {
+                    setWeeklyScoreData((prevData) => [...prevData, data]);
+                }
 
-    // Clear the interval when the component unmounts
-    return () => clearInterval(intervalId);
-}, [userData, weeklyScoreData]); // Re-run the effect if userData or weeklyScoreData changes
+                // Store the time of the last fetch in localStorage
+                localStorage.setItem('lastFetchTime', Date.now().toString());
+            }
+        };
+
+        // Calculate the time remaining until the next fetch
+        const lastFetchTime = Number(localStorage.getItem('lastFetchTime'));
+        const timeSinceLastFetch = Date.now() - lastFetchTime;
+        const timeUntilNextFetch = Math.max(0, 1000 * 60 * 60 * 24 * 7 - timeSinceLastFetch);
+
+        const intervalId = setInterval(fetchData, timeUntilNextFetch);
+
+        // Clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, [userData, weeklyScoreData]); // Re-run the effect if userData or weeklyScoreData changes
 
     const currentUserPosition = rankedMembers.findIndex(member => member.username === userData.username) + 1;
+
+    const quizOptions = quizzes.map((quiz) => { return { label: quiz.title, value: quiz.id }; });
 
     const classOptions = classes.map((clasz) => {
         return { label: clasz.name, value: clasz.id };
     });
 
+    console.log(rankedQuizSolvers);
     return (
         <div className="flex flex-col h-full items-start justify-start p-6">
             <h1>Dashboard</h1>
@@ -119,19 +145,12 @@ useEffect(() => {
                             </div>
                         </div>
 
-                        <div className="stats shadow border round-md">
-                            <div className="stat">
-                                <div className="stat-title">Users solved:</div>
-                                <div className="stat-value">0</div>
-                                <div className="stat-title">of your quizzes</div>
-                            </div>
-                        </div>
 
                         {/* last 20 solvings only for now */}
                         <div className="stats shadow border round-md">
                             <div className="stat">
                                 <div className="stat-title">Average grade</div>
-                                <div className="stat-value">Satisfactory</div>
+                                <div className="stat-value">{mostOccuringGrad}</div>
                                 <div className="stat-title">received on your quizzes</div>
                             </div>
                         </div>
@@ -176,50 +195,105 @@ useEffect(() => {
                 (<BarChart data={weeklyScoreData} />)}
 
 
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-[200px] justify-between"
-                    >
-                        {clasz
-                            ? classOptions.find((framework) => framework.value === clasz)?.label
-                            : "Choose a class"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                        {/* <CommandInput placeholder="Search framework..." /> */}
-                        <CommandEmpty>No class selected</CommandEmpty>
-                        <CommandGroup>
-                            {classOptions.map((clas, index) => (
-                                <CommandItem
-                                    key={index}
-                                    value={clas.value}
-                                    onSelect={async (currentValue) => {
-                                        // console.log(currentValue);
-                                        // console.log(clas.value);
-                                        setClas(clas.value);
-                                        setId(clas.value);
-                                        setOpen(false);
-                                    }}
-                                >
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-5 w-4",
-                                            clasz === clas.value ? "opacity-100" : "opacity-0"
-                                        )}
-                                    />
-                                    {clas.label}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
+
+
+
+            {userData && (userData.role === 'student') ?
+                (<Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className="w-[200px] justify-between"
+                        >
+                            {clasz
+                                ? classOptions.find((framework) => framework.value === clasz)?.label
+                                : "Choose a class"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                            {/* <CommandInput placeholder="Search framework..." /> */}
+                            <CommandEmpty>No class selected</CommandEmpty>
+                            <CommandGroup>
+                                {classOptions.map((clas, index) => (
+                                    <CommandItem
+                                        key={index}
+                                        value={clas.value}
+                                        onSelect={async (currentValue) => {
+                                            // console.log(currentValue);
+                                            // console.log(clas.value);
+                                            setClas(clas.value);
+                                            setId(clas.value);
+                                            setOpen(false);
+                                        }}
+                                    >
+                                        <Check
+                                            className={cn(
+                                                "mr-2 h-5 w-4",
+                                                clasz === clas.value ? "opacity-100" : "opacity-0"
+                                            )}
+                                        />
+                                        {clas.label}
+                                    </CommandItem>
+                                ))}
+                            </CommandGroup>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+                )
+                :
+                (<Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className="w-[200px] justify-between"
+                        >
+                            {quizS
+                                ? quizOptions.find((framework) => framework.value === quizS)?.label
+                                : "Choose a quizz"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                            {/* <CommandInput placeholder="Search framework..." /> */}
+                            <CommandEmpty>No class selected</CommandEmpty>
+                            <CommandGroup>
+                                {quizOptions.map((quiz, index) => (
+                                    <CommandItem
+                                        key={index}
+                                        value={quiz.value}
+                                        onSelect={async (currentValue) => {
+                                            // console.log(currentValue);
+                                            // console.log(clas.value);
+                                            setQuiz(quiz.value);
+                                            setQuizId(quiz.value);
+                                            setOpen(false);
+                                        }}
+                                    >
+                                        <Check
+                                            className={cn(
+                                                "mr-2 h-5 w-4",
+                                                quizS === quiz.value ? "opacity-100" : "opacity-0"
+                                            )} />
+                                        {quiz.label}
+                                    </CommandItem>
+                                ))}
+                            </CommandGroup>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+
+
+
+
+
+                )}
 
             <table>
                 {rankedMembers.length > 0 &&
@@ -227,6 +301,18 @@ useEffect(() => {
                         return <RankingTable key={index} student={member} index={index + 1} />
                     })}
             </table>
+
+        <table>
+            {rankedQuizSolvers.length > 0 &&
+                rankedQuizSolvers.map((member, index) => {
+                    if (member.quizzes[quizId]) {
+                        return <RankingTable key={index} student={member} score={member.quizzes[quizId].score} />;
+                    } else {
+                        return null;
+                    }
+                })}
+        </table>
+
 
             {/* 
             <div>

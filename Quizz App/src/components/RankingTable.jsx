@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContext';
 /**
  * 
  * @param {{teacher: {username: string, email: string, role: string, firstName: string, lastName: string, avatar: string}, handleRemoveMember: function, creator: string}} param0 
  * @returns 
  */
-const RankingTable = ({ student, index }) => {
+const RankingTable = ({ student, index, score }) => {
+    const {userData} = useContext(AppContext);
     const { avatar, firstName, lastName, username } = student;
     //console.log(username)
 
@@ -28,7 +31,7 @@ const RankingTable = ({ student, index }) => {
                     <br />
                     {/* <span className="badge badge-ghost badge-sm">{`${role}`}</span> */}
                 </td>
-                <td>{`${index}`}</td>
+                <td>{userData.role === 'teacher' ? `${score}` : `${index}`}</td>
                 {/* <th>
                     {(userData?.username === creator || userData?.isAdmin || userData?.username === username) &&
                         <button className="btn btn-ghost btn-xs" onClick={handleRemoveMember}>Remove member</button>
@@ -41,7 +44,8 @@ const RankingTable = ({ student, index }) => {
 
 RankingTable.propTypes = {
     student: PropTypes.object,
-    index: PropTypes.number
+    index: PropTypes.number,
+    score: PropTypes.number
 }
 
 export default RankingTable;
