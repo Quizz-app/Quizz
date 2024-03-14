@@ -6,6 +6,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { getAllTeachers, getAllUsers } from "../services/users-service";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
+import { useNavigate } from "react-router-dom";
 
 
 const Home = () => {
@@ -13,30 +15,71 @@ const Home = () => {
     const { user, userData } = useContext(AppContext);
     const [userCount, setUserCount] = useState(0);
     const [educatorCount, setEducatorCount] = useState(0);
+    const navigate = useNavigate();
 
-    useEffect(() => { 
+    useEffect(() => {
         const fetchUsers = async () => {
             const users = await getAllUsers();
             const educators = await getAllTeachers();
 
             setEducatorCount(educators.length);
-            setUserCount(users.size);
+            setUserCount(users.length);
         };
 
         fetchUsers();
     }, [userCount, educatorCount]);
 
+    const words = [
+        {
+            text: "Explore",
+        },
+        {
+            text: "the",
+        },
+        {
+            text: "depths",
+        },
+        {
+            text: "of your",
+        },
+        {
+            text: "mind",
+        },
+        {
+            text: "with",
+        },
+        {
+            text: "BrainBurst.",
+            className: "text-lime-500 dark:text-lime-500",
+        },
+    ];
 
-    
     return (
         <>
-            
+
+
+
             {user ?
                 (
                     <h1>Home</h1>
                 )
                 :
                 <>
+
+                    <div className="flex flex-col items-center justify-center  ">
+                        <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base  ">
+                            The road to quality education stats here
+                        </p>
+                        <TypewriterEffectSmooth words={words} />
+                        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
+                            <button onClick={() => navigate("/register")} className="w-40 h-10 rounded-xl bg-black border dark:border-white border-transparent text-white text-sm">
+                                Join now
+                            </button>
+                        </div>
+                    </div>
+
+
+
                     {/* //hero */}
                     <div className="flex flex-col items-center justify-center mt-20 ">
                         <h1 className="text-4xl text-center font-bold">Become a Master Genius and Get Brainburst!</h1>
@@ -63,7 +106,7 @@ const Home = () => {
 
                     {/* cateogirs */}
                     <div className="flex flex-col items-center justify-center mt-20 ">
-                        <h1 className="text-4xl text-center font-bold">Top Ctaegories:</h1>
+                        <h1 className="text-4xl text-center font-bold">Top Categories:</h1>
                     </div>
                     <div className="flex items-center justify-center p-10">
                         <Carousel

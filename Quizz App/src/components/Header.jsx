@@ -101,65 +101,66 @@ const Header = ({ theme, onThemeChange }) => {
     <div className="navbar bg-base-100 flex justify-between">
 
       {/* HEADER DROPDOWN */}
-      <div className="dropdown" onClick={() => setDropdownVisible(!dropdownVisible)}>
-        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
-        </div>
-        {dropdownVisible && (
-          <motion.ul
-            variants={dropdownVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            <motion.li
-              variants={listItemVariants}
-              onClick={() => setDropdownVisible(false)}
-            >
-              <Link to="/home" className="font-semibold mb-2"> 🔍 Homeview </Link>
-            </motion.li>
 
-            <motion.li
-              variants={listItemVariants}
-              onClick={() => setDropdownVisible(false)}
+      {userData && (
+        <div className="dropdown" onClick={() => setDropdownVisible(!dropdownVisible)}>
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+          </div>
+          {dropdownVisible && (
+            <motion.ul
+              variants={dropdownVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <Link to="/dashboard" className="font-semibold mb-2"> 📊 Dashboard </Link>
-            </motion.li>
-            <motion.li
-              variants={listItemVariants}
-              onClick={() => setDropdownVisible(false)}
-            >
-              <Link to="/my-library" className="font-semibold mb-2">📚 Library </Link>
-            </motion.li>
-
-            {userData && userData.role === 'teacher'
-              ?
-              (<><motion.li
+              <motion.li
                 variants={listItemVariants}
                 onClick={() => setDropdownVisible(false)}
               >
-                <Link to="/my-teams" className="font-semibold mb-2">👥 Teams</Link>
+                <Link to="/home" className="font-semibold mb-2"> 🔍 Homeview </Link>
               </motion.li>
-                <motion.li
+
+              <motion.li
+                variants={listItemVariants}
+                onClick={() => setDropdownVisible(false)}
+              >
+                <Link to="/dashboard" className="font-semibold mb-2"> 📊 Dashboard </Link>
+              </motion.li>
+              <motion.li
+                variants={listItemVariants}
+                onClick={() => setDropdownVisible(false)}
+              >
+                <Link to="/my-library" className="font-semibold mb-2">📚 Library </Link>
+              </motion.li>
+
+              {userData && userData.role === 'teacher'
+                ?
+                (<><motion.li
+                  variants={listItemVariants}
+                  onClick={() => setDropdownVisible(false)}
+                >
+                  <Link to="/my-teams" className="font-semibold mb-2">👥 Teams</Link>
+                </motion.li>
+                  <motion.li
+                    variants={listItemVariants}
+                    onClick={() => setDropdownVisible(false)}
+                  >
+                    <Link to="/my-classes" className="font-semibold mb-2">🎓 Classes</Link>
+                  </motion.li></>)
+                :
+                (<motion.li
                   variants={listItemVariants}
                   onClick={() => setDropdownVisible(false)}
                 >
                   <Link to="/my-classes" className="font-semibold mb-2">🎓 Classes</Link>
-                </motion.li></>)
-              :
-              (<motion.li
-                variants={listItemVariants}
-                onClick={() => setDropdownVisible(false)}
-              >
-                <Link to="/my-classes" className="font-semibold mb-2">🎓 Classes</Link>
-              </motion.li>)}
-
-
-          </motion.ul>
-        )}
-      </div>
+                </motion.li>)}
+            </motion.ul>
+          )}
+        </div>
+      )}
 
       <div className="flex-2">
         <a className="btn btn-ghost text-xl" onClick={() => navigate("/")}>BrainBurst</a>
@@ -185,10 +186,12 @@ const Header = ({ theme, onThemeChange }) => {
         {!user ? (
           <>
             <button onClick={() => navigate("/login")} className="btn btn-outline btn-secondary">Log in</button>
-            <button onClick={() => navigate("/register")} className="btn btn-outline btn-secondary">Sign up</button>
           </>
         ) : (
           <>
+
+
+
 
             {userData?.role === 'teacher' && teamInvites.length > 0 && (
               <div className="indicator">
