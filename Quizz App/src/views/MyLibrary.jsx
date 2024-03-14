@@ -98,16 +98,16 @@ const MyLibrary = () => {
 
     return (
         <>
+            <div className="m-10">
+                {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
+                    <>
+                        <div className="flex flex-row h-full items-start justify-between ">
 
-            {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
-                <>
-                    <div className="flex flex-row h-full items-start justify-between ">
+                            <div>
+                                <h2 className="text-4xl font-bold mb-4">My Quizzes</h2>
+                            </div>
 
-                        <div>
-                            <h2 className="text-4xl font-bold mb-4">My Quizzes</h2>
-                        </div>
 
-                        
 
                             <div>
                                 <Dialog onClose={handleCloseDialog}>
@@ -178,42 +178,45 @@ const MyLibrary = () => {
                                     </DialogContent>
                                 </Dialog>
                             </div>
-                        
- </div>
 
-                        <div className="grid grid-cols-5 gap-4 mr-2">
+                        </div>
+
+                        <div className="grid grid-cols-5 gap-5">
                             {myQuizzes.map((quiz, index) => (
                                 <ThreeDCardDemo key={index} quiz={quiz} />
                             ))}
                         </div>
 
 
-                   </>
-            ) : (
-                <div className="flex flex-col h-full items-start justify-start p-6">
-                    <h2 className="text-4xl font-bold mb-4">Completed</h2>
-                    {studentQuizzes.completed && studentQuizzes.completed.length > 0 ? (
-                        studentQuizzes.completed.map((quiz, index) => (
-                            // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
-                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
-                        ))
-                    ) : (
-                        <p>No completed quizzes yet.</p>
-                    )}
-                    <h2 className="text-4xl font-bold mb-4">Todo</h2>
-                    {studentQuizzes.nonCompleted && studentQuizzes.nonCompleted.length > 0 ? (
-                        studentQuizzes.nonCompleted.map((quiz, index) => (
+                    </>
+                ) : (
+                    <div className="flex flex-col h-full items-start justify-start p-6">
+                        <h2 className="text-4xl font-bold mb-4">Completed</h2>
+                        {studentQuizzes.completed && studentQuizzes.completed.length > 0 ? (
+                            studentQuizzes.completed.map((quiz, index) => (
+                                // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
+                                <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
+                            ))
+                        ) : (
+                            <p>No completed quizzes yet.</p>
+                        )}
+                        <h2 className="text-4xl font-bold mb-4">Todo</h2>
+                        {studentQuizzes.nonCompleted && studentQuizzes.nonCompleted.length > 0 ? (
+                            studentQuizzes.nonCompleted.map((quiz, index) => (
 
-                            // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
-                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={false} />
-                            
-                        ))
-                    ) : (
-                        <p>No quizzes to do yet.</p>
-                    )}
+                                // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
+                                <ThreeDCardDemo key={index} quiz={quiz} isCompleted={false} />
+
+                            ))
+                        ) : (
+                            <p>No quizzes to do yet.</p>
+                        )}
+                    </div>
+                )} 
+                
                 </div>
-            )}
-        </>
+            </>
+       
     );
 }
 
