@@ -140,7 +140,7 @@ const CreateTeam = () => {
                                 </tr>
                             </thead>
                             {members && userData && team.creator && members.map((member, index) => (
-                                <TableRow key={index} teacher={member} creator={team.creator.username} handleRemoveMember={() => handleRemoveMember(member)} />
+                                <TableRow key={index} member={member} creator={team.creator.username} handleRemoveMember={() => handleRemoveMember(member)} />
                             ))}
                         </table>
                     </div>

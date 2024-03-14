@@ -513,9 +513,35 @@ export const userQuizzesCreated = async (username) => {
   const userQuizzesRef = ref(db, `users/${username}/createdQuizzes`);
   const snapshot = await get(userQuizzesRef);
   const data = snapshot.val();
-  console.log(data);
+  //console.log(data);
   return data ? Object.values(data).length : 0;
 }
+
+export const getUserCreatedQuizzes = async (username, callback) => {
+  const userQuizzesRef = ref(db, `users/${username}/createdQuizzes`);
+
+  const unsubscribe = onValue(userQuizzesRef, async (snapshot) => {
+    const quizIds = Object.keys(snapshot.val() || {});
+    const quizzes = [];
+
+    for (const quizId of quizIds) {
+      const quizRef = ref(db, `quizzes/${quizId}`);
+      const quizSnapshot = await get(quizRef);
+      const quizData = quizSnapshot.val();
+
+      if (quizData) {
+        quizzes.push({
+          id: quizId,
+          title: quizData.title,
+        });
+      }
+    }
+
+    callback(quizzes);
+  });
+
+  return () => unsubscribe();
+};
 
 export const userQuizzesScoreAverage = async (username) => {
   const userQuizzesRef = ref(db, `users/${username}/quizzes`);
@@ -630,4 +656,51 @@ export const scheduleUserQuizzesScoreAveragePerWeek = (username) => {
       resolve(averageScore);
     });
   });
+};
+
+export const mostReceivedGradeOnQuizzesByCreator = async (creatorUsername) => {
+  const createdQuizzesRef = ref(db, `users/${creatorUsername}/createdQuizzes`);
+  const createdQuizzesSnapshot = await get(createdQuizzesRef);
+  const createdQuizzes = createdQuizzesSnapshot.val();
+
+  const gradeCounts = {};
+
+  const usersRef = ref(db, 'users');
+  const usersSnapshot = await get(usersRef);
+  const usersData = usersSnapshot.val();
+
+  for (const user of Object.values(usersData)) {
+    if (user.username !== creatorUsername && user.quizzes) {
+      for (const quizId in createdQuizzes) {
+        if (createdQuizzes[quizId] && user.quizzes[quizId] && user.quizzes[quizId].grade) {
+          const grade = user.quizzes[quizId].grade;
+          gradeCounts[grade] = (gradeCounts[grade] || 0) + 1;
+        }
+      }
+    }
+  }
+
+  let mostOccurringGrade = null;
+  let maxCount = 0;
+  for (const grade in gradeCounts) {
+    if (gradeCounts[grade] > maxCount) {
+      maxCount = gradeCounts[grade];
+      mostOccurringGrade = grade;
+    }
+  }
+
+  console.log(mostOccurringGrade);
+  return mostOccurringGrade;
+};
+
+export const getUsersRankedByScoreOnAQuiz = async (quizId) => {
+  const usersRef = ref(db, 'users');
+  const usersSnapshot = await get(usersRef);
+  const usersData = usersSnapshot.val();
+  const users = Object.values(usersData);
+
+  const usersWithScore = users.filter(user => user.quizzes && user.quizzes[quizId] && user.quizzes[quizId].score);
+  usersWithScore.sort((a, b) => b.quizzes[quizId].score - a.quizzes[quizId].score);
+
+  return usersWithScore;
 };

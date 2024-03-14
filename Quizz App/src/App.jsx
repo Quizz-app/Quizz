@@ -50,60 +50,7 @@ const App = () => {
     setTheme(event.target.checked ? "synthwave" : "1");
   };
 
-  return user ? (
-    <BrowserRouter>
-      <AppContext.Provider value={{ ...context, setContext }}>
-        <Header theme={theme} onThemeChange={handleThemeChange} />
-
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="min-h-full max-w-full" //{/* if you want a border add  - rounded-lg border */ }
-        >
-          <ResizablePanel defaultSize={25}>
-            <div className="flex h-full items-start justify-start p-6 flex-col">
-              <Link to="/dashboard" className="font-semibold mb-2">
-                Dashboard
-              </Link>
-              <Link to="/my-library" className="font-semibold mb-2">
-                Library
-              </Link>
-              <Link to="/my-teams" className="font-semibold mb-2">
-                Teams
-              </Link>
-              <Link to="/my-classes" className="font-semibold mb-2">
-                Classes
-              </Link>
-
-            </div>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={75}>
-            <div>
-              <Routes>
-                <Route index element={<Home />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/my-library" element={<MyLibrary />} />
-                <Route path="/my-teams" element={<MyTeamsView />} />
-                <Route path="/quiz-preview/:id" element={<QuizPreview />} />
-                <Route path="/my-classes" element={<MyClassesView />} />
-                <Route path="/quiz-solve/:id" element={<QuizSolve />} />
-                <Route path="/team/:id" element={<CreateTeam />} />
-                <Route path="/class/:id" element={<CreateClass />} />
-                <Route path="/quiz/:id" element={<CreateQuiz />} />
-                <Route path="/results/:id" element={<QuizResults />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                {/* Add more routes as needed */}
-              </Routes>
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </AppContext.Provider>
-    </BrowserRouter>
-  ) : (
+  return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
         <Header theme={theme} onThemeChange={handleThemeChange} />
@@ -111,10 +58,26 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route index element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/my-library" element={<MyLibrary />} />
+          <Route path="/my-teams" element={<MyTeamsView />} />
+          <Route path="/quiz-preview/:id" element={<QuizPreview />} />
+          <Route path="/my-classes" element={<MyClassesView />} />
+          <Route path="/quiz-solve/:id" element={<QuizSolve />} />
+          <Route path="/team/:id" element={<CreateTeam />} />
+          <Route path="/class/:id" element={<CreateClass />} />
+          <Route path="/quiz/:id" element={<CreateQuiz />} />
+          <Route path="/results/:id" element={<QuizResults />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </AppContext.Provider>
     </BrowserRouter>
-  );
+    );
 };
 
 export default App;

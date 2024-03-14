@@ -3,11 +3,11 @@ import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 /**
  * 
- * @param {{teacher: {username: string, email: string, role: string, firstName: string, lastName: string, avatar: string}, handleRemoveMember: function, creator: string}} param0 
+ * @param {{member: {username: string, email: string, role: string, firstName: string, lastName: string, avatar: string}, handleRemoveMember: function, creator: string}} param0 
  * @returns 
  */
-const TableRow = ({ teacher, handleRemoveMember, creator }) => {
-    const { avatar, email, firstName, lastName, role, username } = teacher;
+const TableRow = ({ member, handleRemoveMember, creator }) => {
+    const { avatar, email, firstName, lastName, role, username } = member;
     //console.log(username)
 
     const { userData } = useContext(AppContext)
@@ -44,7 +44,7 @@ const TableRow = ({ teacher, handleRemoveMember, creator }) => {
 }
 
 TableRow.propTypes = {
-    teacher: PropTypes.object,
+    member: PropTypes.object,
     handleRemoveMember: PropTypes.func,
     creator: PropTypes.string,
 }
