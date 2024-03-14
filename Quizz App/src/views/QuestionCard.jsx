@@ -1,23 +1,17 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { updateQuestion } from "../services/questions-service";
 
-const QuestionCard = ({ quizId, questionId, content, answers, points, correctAnswers, handleUpdateQuestion, onDelete, }) => {
+const QuestionCard = ({ quizId, questionId, content, answers, points, correctAnswer, handleUpdateQuestion, onDelete, }) => {
   const [editing, setEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
   const [editedAnswers, setEditedAnswers] = useState([...answers]);
   const [editedPoints, setEditedPoints] = useState(points);
-  // const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(
-  //   Array.isArray(correctAnswer)
-  //     ? correctAnswer.map((index) => answers[index])
-  //     : [answers[correctAnswer]]
-  // );
-  const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(correctAnswers || []);
-
-
-  useEffect(() => {
-    setEditedCorrectAnswer(correctAnswers || []);
-  }, [correctAnswers]);
+  const [editedCorrectAnswer, setEditedCorrectAnswer] = useState(
+    Array.isArray(correctAnswer)
+      ? correctAnswer.map((index) => answers[index])
+      : [answers[correctAnswer]]
+  );
 
   const handleEdit = () => {
     setEditing(true);
@@ -54,18 +48,18 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
                 <input type="text" value={editedAnswers[index]} onChange={(e) => {
                   const newAnswers = [...editedAnswers]; newAnswers[index] = e.target.value; setEditedAnswers(newAnswers);
                 }} />
-                <input type="checkbox" checked={editedCorrectAnswer.includes(index)}
+                <input type="checkbox" checked={editedCorrectAnswer.includes(editedAnswers[index])}
                   onChange={() => {
-                    if (editedCorrectAnswer.includes(index)) {
+                    if (editedCorrectAnswer.includes(editedAnswers[index])) {
                       setEditedCorrectAnswer(
                         editedCorrectAnswer.filter(
-                          (i) => i !== index
+                          (answer) => answer !== editedAnswers[index]
                         )
                       );
                     } else {
                       setEditedCorrectAnswer([
                         ...editedCorrectAnswer,
-                        index,
+                        editedAnswers[index],
                       ]);
                     }
                   }}
@@ -104,6 +98,6 @@ QuestionCard.propTypes = {
   handleUpdateQuestion: PropTypes.func.isRequired,
   quizId: PropTypes.string.isRequired,
   questionId: PropTypes.string.isRequired,
-  correctAnswers: PropTypes.array,
+  correctAnswer: PropTypes.array,
   onDelete: PropTypes.func.isRequired,
 };
