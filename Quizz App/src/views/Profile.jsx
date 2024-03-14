@@ -22,11 +22,11 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState(null);
   const [formData, setFormData] = useState(userData);
 
-
   useEffect(() => {
-    setFormData(userData]);
+    if (userData) {
+      setFormData(userData);
+    }
   }, [userData]);
-
 
 
   const handleFileChange = (event) => {
