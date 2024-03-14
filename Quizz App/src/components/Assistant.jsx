@@ -55,7 +55,7 @@ const Assistant = ({ quiz }) => {
         <button onClick={handleSubmitAssistant} className="btn"> Ask </button>
       </div>
       <div>
-        <div className="ml-10 mr-10">
+        {assistantResult?.questions && <div className="ml-10 mr-10">
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
@@ -81,7 +81,7 @@ const Assistant = ({ quiz }) => {
               </tbody>
             </table>
           </div>
-        </div>
+        </div>}
       </div>
     </>
   );

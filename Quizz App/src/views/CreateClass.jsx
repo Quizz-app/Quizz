@@ -117,7 +117,7 @@ const CreateClass = () => {
                                 </tr>
                             </thead>
                             {members && userData && classz.creator && members.map((member, index) => (
-                                <TableRow key={index} teacher={member} creator={classz.creator.username} handleRemoveMember={() => handleRemoveMember(member)} />
+                                <TableRow key={index} member={member} creator={classz.creator.username} handleRemoveMember={() => handleRemoveMember(member)} />
                             ))}
                         </table>
                     </div>

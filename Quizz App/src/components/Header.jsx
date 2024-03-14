@@ -9,7 +9,7 @@ const Header = ({ theme, onThemeChange }) => {
   const { user, setContext, userData } = useContext(AppContext);
   const [teamInvites, setTeamInvites] = useState([]);
   const [quizInvites, setQuizInvites] = useState([]);
-  const [classInvites, setClassInvites] = useState([]); // [ { inviter: "username", classId: "id", className: "name" }
+  const [classInvites, setClassInvites] = useState([]);
   const navigate = useNavigate();
   const isChecked = theme === "synthwave";
 
