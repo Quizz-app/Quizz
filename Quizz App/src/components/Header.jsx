@@ -4,6 +4,8 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { getUserClassInvites, getUserQuizInvites, getUserTeamInvites, respondToClassInvite, respondToQuizInvite, respondToTeamInvite } from "../services/users-service";
 import PropTypes from 'prop-types';
+import { Link } from "react-router-dom";
+import { motion } from 'framer-motion';
 
 const Header = ({ theme, onThemeChange }) => {
   const { user, setContext, userData } = useContext(AppContext);
@@ -12,7 +14,7 @@ const Header = ({ theme, onThemeChange }) => {
   const [classInvites, setClassInvites] = useState([]);
   const navigate = useNavigate();
   const isChecked = theme === "synthwave";
-
+  const [dropdownVisible, setDropdownVisible] = useState(false); // New state for dropdown visibility
 
   useEffect(() => {
     if (userData && userData.username) {
@@ -30,7 +32,7 @@ const Header = ({ theme, onThemeChange }) => {
     }
   }, [userData]);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (userData && userData.username) {
       getUserClassInvites(userData.username, (invites) => {
         setClassInvites(Object.values(invites));
@@ -39,6 +41,32 @@ const Header = ({ theme, onThemeChange }) => {
   }, [userData])
 
 
+  const dropdownVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      transition: { 
+        type: 'spring', 
+        damping: 20, 
+        stiffness: 500,
+        when: "beforeChildren",
+        staggerChildren: 0.05
+      } 
+    },
+  };
+
+  const listItemVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: {
+        duration: 0.05,
+        ease: [0.3, -0.05, 0.01, 0.99]
+      }
+    },
+  };
 
   const logOut = async () => {
     await logoutUser();
@@ -65,6 +93,60 @@ const Header = ({ theme, onThemeChange }) => {
   //console.log(quizInvites)
   return (
     <div className="navbar bg-base-100 flex justify-between">
+
+      {/* HEADER DROPDOWN */}
+      <div className="dropdown" onClick={() => setDropdownVisible(!dropdownVisible)}>
+        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+        </div>
+        {dropdownVisible && (
+          <motion.ul
+            variants={dropdownVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <motion.li
+              variants={listItemVariants}
+              onClick={() => setDropdownVisible(false)}
+            >
+              <Link to="/dashboard" className="font-semibold mb-2"> Dashboard </Link>
+            </motion.li>
+            <motion.li
+              variants={listItemVariants}
+              onClick={() => setDropdownVisible(false)}
+            >
+              <Link to="/my-library" className="font-semibold mb-2"> Library </Link>
+            </motion.li>
+
+            {userData && userData.role === 'teacher'
+              ?
+              (<><motion.li
+                variants={listItemVariants}
+                onClick={() => setDropdownVisible(false)}
+              >
+                <Link to="/my-teams" className="font-semibold mb-2">Teams</Link>
+              </motion.li>
+                <motion.li
+                  variants={listItemVariants}
+                  onClick={() => setDropdownVisible(false)}
+                >
+                  <Link to="/my-classes" className="font-semibold mb-2">Classes</Link>
+                </motion.li></>)
+              :
+              (<motion.li
+                variants={listItemVariants}
+                onClick={() => setDropdownVisible(false)}
+              >
+                <Link to="/my-classes" className="font-semibold mb-2">Classes</Link>
+              </motion.li>)}
+
+          </motion.ul>
+        )}
+      </div>
+
       <div className="flex-2">
         <a className="btn btn-ghost text-xl" onClick={() => navigate("/")}>BrainBurst</a>
         <label className="flex cursor-pointer gap-2" onClick={handleClick}>
@@ -78,6 +160,11 @@ const Header = ({ theme, onThemeChange }) => {
           </svg>
         </label>
       </div>
+
+      {/* //search bar */}
+      {/* <div className="form-control flex justify-center w-3/4">
+        <input type="text" placeholder="Search" className="input input-bordered w-96" />
+      </div> */}
 
       {/* login and register */}
       <div className="flex-none gap-2 mr-3">
