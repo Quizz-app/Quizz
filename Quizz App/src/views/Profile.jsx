@@ -58,6 +58,7 @@ const Profile = () => {
 
       const updatedUserData = {
         ...formData,
+        avatar,
       }
 
 
@@ -67,7 +68,7 @@ const Profile = () => {
         userData: {
           ...prevContext.userData,
           ...formData,
-          avatar,
+          avatar
         }
       }));
 
