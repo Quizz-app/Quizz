@@ -24,7 +24,7 @@ import { EvervaultCard } from "./ui/evervault-card";
 * time: number 
 * }, isCompleted: boolean, onButtonClick: function }} param0 - Props that are passed to the QuizCard component.
 */
-export const ThreeDCardDemo = ({ quiz,  onButtonClick }) => {
+export const ThreeDCardDemo = ({ quiz, onButtonClick }) => {
 
   const { userData } = useContext(AppContext);
 
@@ -33,10 +33,10 @@ export const ThreeDCardDemo = ({ quiz,  onButtonClick }) => {
   const buttonText = isTeacherOrAdmin ? 'See quiz' : 'Start quiz';
   const buttonClickPath = isTeacherOrAdmin ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
 
-  
+
 
   return (
-    <CardContainer className="inter-var mr-10 w-64 h-64">
+    <CardContainer className="inter-var mr-10 w-64 h-64 flex-shrink-0">
       <CardBody className="bg-gradient-to-r from-cyan-500 to-blue-500 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border transform:">
         <CardItem
           translateZ="50"
@@ -45,8 +45,8 @@ export const ThreeDCardDemo = ({ quiz,  onButtonClick }) => {
           {quiz.title}
         </CardItem>
         <div className="flex justify-between mt-5">
-          {/**TUK MOJE DA SE SLOJI SNIMKA */}
-          <CardItem translateZ="100" className="w-1/2 mt-4">
+                  
+          <CardItem translateZ="100" className="w-1/2 mt-4 flex-shrink-0">
             <MyImage
               src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               height="1000"
@@ -55,15 +55,15 @@ export const ThreeDCardDemo = ({ quiz,  onButtonClick }) => {
               alt="thumbnail"
             />
           </CardItem>
-          
-            <CardItem
-              as="p"
-              translateZ="60"
-              className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-10"
-            >
-              {quiz.description}
-            </CardItem>
-          
+
+          <CardItem
+            as="p"
+            translateZ="60"
+            className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-5 truncate"
+          >
+            {quiz.description}
+          </CardItem>
+
         </div>
         <div className="flex justify-between items-center mt-10">
           {isTeacherOrAdmin && <CardItem
