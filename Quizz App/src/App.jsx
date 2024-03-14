@@ -54,7 +54,7 @@ const App = () => {
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
         <Header theme={theme} onThemeChange={handleThemeChange} />
-        <div className='min-h-screen place-content-center flex flex-col flex-wrap content-center shrink pt-28'>
+        <div className='min-h-screen place-content-center flex flex-col  content-center shrink '>
           <Routes>
             <Route index element={<Home />} />
             <Route path="/register" element={<Register />} />
