@@ -54,30 +54,32 @@ const App = () => {
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
         <Header theme={theme} onThemeChange={handleThemeChange} />
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route index element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/my-library" element={<MyLibrary />} />
-          <Route path="/my-teams" element={<MyTeamsView />} />
-          <Route path="/quiz-preview/:id" element={<QuizPreview />} />
-          <Route path="/my-classes" element={<MyClassesView />} />
-          <Route path="/quiz-solve/:id" element={<QuizSolve />} />
-          <Route path="/team/:id" element={<CreateTeam />} />
-          <Route path="/class/:id" element={<CreateClass />} />
-          <Route path="/quiz/:id" element={<CreateQuiz />} />
-          <Route path="/results/:id" element={<QuizResults />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
+        <div className='min-h-screen place-content-center flex flex-row flex-wrap content-center shrink pt-28'>
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route index element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/my-library" element={<MyLibrary />} />
+            <Route path="/my-teams" element={<MyTeamsView />} />
+            <Route path="/quiz-preview/:id" element={<QuizPreview />} />
+            <Route path="/my-classes" element={<MyClassesView />} />
+            <Route path="/quiz-solve/:id" element={<QuizSolve />} />
+            <Route path="/team/:id" element={<CreateTeam />} />
+            <Route path="/class/:id" element={<CreateClass />} />
+            <Route path="/quiz/:id" element={<CreateQuiz />} />
+            <Route path="/results/:id" element={<QuizResults />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </div>
       </AppContext.Provider>
     </BrowserRouter>
-    );
+  );
 };
 
 export default App;
