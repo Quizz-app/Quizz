@@ -22,9 +22,9 @@ import { EvervaultCard } from "./ui/evervault-card";
 * isPublic: boolean, 
 * quizTime: number, 
 * time: number 
-* }, isCompleted: boolean }} param0 - Props that are passed to the QuizCard component.
+* }, isCompleted: boolean, onButtonClick: function }} param0 - Props that are passed to the QuizCard component.
 */
-export const ThreeDCardDemo = ({ quiz }) => {
+export const ThreeDCardDemo = ({ quiz,  onButtonClick }) => {
 
   const { userData } = useContext(AppContext);
 
@@ -32,14 +32,9 @@ export const ThreeDCardDemo = ({ quiz }) => {
   const isTeacherOrAdmin = (userData.role === 'teacher' && quiz.creator === userData.username)
   const buttonText = isTeacherOrAdmin ? 'See quiz' : 'Start quiz';
   const buttonClickPath = isTeacherOrAdmin ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
-  const deleteQuiz = async () => {
-    try {
-      await deleteQuizById(quiz.id);
-      navigate('/my-library');
-    } catch (error) {
-      console.error(error);
-    }
-  }
+
+  
+
   return (
     <CardContainer className="inter-var mr-10 w-64 h-64">
       <CardBody className="bg-gradient-to-r from-cyan-500 to-blue-500 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border transform:">
@@ -49,30 +44,34 @@ export const ThreeDCardDemo = ({ quiz }) => {
         >
           {quiz.title}
         </CardItem>
-        <CardItem
-          as="p"
-          translateZ="60"
-          className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
-        >
-          {quiz.description}
-        </CardItem>
-        {/**TUK MOJE DA SE SLOJI SNIMKA */}
-        <CardItem translateZ="100" className="w-1/2 mt-4">
-          <MyImage
-            src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            height="1000"
-            width="1000"
-            className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
-            alt="thumbnail"
-          />
-        </CardItem>
-        <div className="flex justify-between items-center mt-20">
+        <div className="flex justify-between mt-5">
+          {/**TUK MOJE DA SE SLOJI SNIMKA */}
+          <CardItem translateZ="100" className="w-1/2 mt-4">
+            <MyImage
+              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              height="1000"
+              width="1000"
+              className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+              alt="thumbnail"
+            />
+          </CardItem>
+          
+            <CardItem
+              as="p"
+              translateZ="60"
+              className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-10"
+            >
+              {quiz.description}
+            </CardItem>
+          
+        </div>
+        <div className="flex justify-between items-center mt-10">
           {isTeacherOrAdmin && <CardItem
             translateZ={20}
             as="button"
             target="__blank"
             className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
-            onClick={deleteQuiz}
+            onClick={onButtonClick}
           >
             Delete quiz
           </CardItem>}
@@ -82,7 +81,7 @@ export const ThreeDCardDemo = ({ quiz }) => {
             className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
             onClick={() => navigate(`/results/${quiz.id}`)}
           >
-            Sign up
+            See quiz
           </CardItem>)
             :
             (<CardItem
@@ -102,5 +101,6 @@ export const ThreeDCardDemo = ({ quiz }) => {
 export default ThreeDCardDemo;
 
 ThreeDCardDemo.propTypes = {
-  quiz: PropTypes.object
+  quiz: PropTypes.object,
+  onButtonClick: PropTypes.func
 }

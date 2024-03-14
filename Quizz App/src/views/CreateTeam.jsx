@@ -5,6 +5,7 @@ import { onTeamMembersChange, getTeamById, removeMemberFromTeam, inviteUserToTea
 import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
 import QuizCard from "./QuizCard";
+import ThreeDCardDemo from "../components/ThreeDCardDemo";
 
 
 const CreateTeam = () => {
@@ -156,16 +157,7 @@ const CreateTeam = () => {
                     <div className="divider"></div>
                     <div className="flex flex-row">
                         {currentQuizzes.map((quiz, index) => (
-                            <div key={index} className="card w-96 bg-gradient-to-r from-cyan-500 to-blue-500 text-primary-content mr-5">
-                                <div className="card-body flex">
-                                    <h2 className="card-title">{quiz.title}</h2>
-                                    <p>{quiz.description}</p>
-                                    <div className="card-actions justify-between">
-                                        <button className="btn" onClick={() => navigate(`/quiz/${quiz.id}`)}>Got to quiz</button>
-                                        <button className="btn" onClick={() => handleRemoveQuiz(quiz.id)}>Remove quiz</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => handleRemoveQuiz(quiz.id)} />
                         ))}
 
                     </div>

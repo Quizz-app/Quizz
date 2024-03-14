@@ -1,16 +1,15 @@
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { createQuiz, getQuizByCreator, getQuizById, listenForCategories } from "../services/quiz-service";
+import { createQuiz, deleteQuizById, getQuizByCreator, getQuizById, listenForCategories } from "../services/quiz-service";
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom";
-import QuizCard from "./QuizCard";
 import { addQuizToCreator, getUserQuizzes } from "../services/users-service";
 import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
-import { EvervaultCard } from "../components/ui/evervault-card";
+
 
 const MyLibrary = () => {
     const { user, userData } = useContext(AppContext);
@@ -87,6 +86,15 @@ const MyLibrary = () => {
     const handleCloseDialog = () => {
         setIsDialogOpen(false);
     };
+
+    const deleteQuiz = async (id) => {
+        try {
+            await deleteQuizById(id);
+            navigate('/my-library');
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <>
@@ -185,16 +193,20 @@ const MyLibrary = () => {
                 <div className="flex flex-col h-full items-start justify-start p-6">
                     <h2 className="text-4xl font-bold mb-4">Completed</h2>
                     {studentQuizzes.completed && studentQuizzes.completed.length > 0 ? (
-                        studentQuizzes.completed.map(quiz => (
-                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
+                        studentQuizzes.completed.map((quiz, index) => (
+                            // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
+                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
                         ))
                     ) : (
                         <p>No completed quizzes yet.</p>
                     )}
                     <h2 className="text-4xl font-bold mb-4">Todo</h2>
                     {studentQuizzes.nonCompleted && studentQuizzes.nonCompleted.length > 0 ? (
-                        studentQuizzes.nonCompleted.map(quiz => (
-                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
+                        studentQuizzes.nonCompleted.map((quiz, index) => (
+
+                            // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
+                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={false} />
+                            
                         ))
                     ) : (
                         <p>No quizzes to do yet.</p>

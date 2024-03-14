@@ -146,6 +146,19 @@ export const removeQuizFromTeam = async (teamId, quiz) => {
     // Remove the team from the quiz's teams
 }
 
+export const removeQuizFromAllTeams = async (quizId) => {
+    const teamsRef = ref(db, `teams`);
+    const teamsSnapshot = await get(teamsRef);
+    const teamsData = teamsSnapshot.val();
+
+    for (let teamId in teamsData) {
+        if (teamsData[teamId].quizzes && teamsData[teamId].quizzes[quizId]) {
+            const quizRef = ref(db, `teams/${teamId}/quizzes/${quizId}`);
+            await remove(quizRef);
+        }
+    }
+}
+
 /**
  * Sets up a listener for changes in the members of a team in the database.
  *

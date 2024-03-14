@@ -253,3 +253,15 @@ export const getClassMemebersByRanking = async (classId) => {
     const sortedMembers = membersArray.sort((a, b) => b.averageScore - a.averageScore);
     return Object.values(sortedMembers);
 }
+
+
+export const removeQuizFromAllClasses = async (quizId) => {
+    const classesRef = ref(db, `classes`);
+    const classesSnapshot = await get(classesRef);
+    const classesData = classesSnapshot.val();
+
+    for (const classId in classesData) {
+        const classRef = ref(db, `classes/${classId}/quizzes/${quizId}`);
+        await remove(classRef);
+    }
+}

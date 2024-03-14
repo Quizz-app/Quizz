@@ -1,5 +1,8 @@
 import { db } from "../config/firebase-config";
 import { get, set, ref, query, equalTo, orderByChild, update, push, onValue } from "firebase/database";
+import { removeQuizFromAllTeams } from "./teams-service";
+import { removeMemberFromClass } from "./class-service";
+import { removeQuizFromAllUsers } from "./users-service";
 
 export const createQuiz = async (creator, title, category, isPublic, questionTypes,) => {
 
@@ -95,6 +98,11 @@ export const updateQuiz = async (id, updatedQuiz) => {
 export const deleteQuizById = async (id) => {
   const quizRef = ref(db, `quizzes/${id}`);
   await set(quizRef, null);
+
+  removeQuizFromAllTeams(id);
+  removeMemberFromClass(id);
+  removeQuizFromAllUsers(id);
+
   return true;
 };
 
