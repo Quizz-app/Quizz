@@ -71,5 +71,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
   }
 }

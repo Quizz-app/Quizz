@@ -2,10 +2,11 @@ import PropTypes from 'prop-types';
 import { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/AppContext';
 import { addUserAnswer } from '../services/users-service';
+import { BackgroundGradient } from '../components/ui/background-gradient';
 
 
 const QuizSolveCard = ({ question, quizId, }) => {
-    const {userData} = useContext(AppContext);
+    const { userData } = useContext(AppContext);
     //const history = useHistory();
 
     //inside the user's quizzes current quiz the quiz's question whole object should be present
@@ -36,35 +37,72 @@ const QuizSolveCard = ({ question, quizId, }) => {
     }
 
 
-    
+
 
     return (
         <>
             <div className="flex flex-col items-center justify-center">
                 {/* //quiz title */}
-                {question && <h1 className="text-4xl font-bold mb-4">{question.content}</h1>}
+                {/* {question && <h1 className="text-4xl font-bold mb-4">{question.content}</h1>} */}
 
                 {/* //question answers */}
-                {question && question.answers.map((answer, index) => (
+                {/* {question && question.answers.map((answer, index) => (
                     <div key={index} className="flex flex-row items-start justify-start w-600px ">
-                        <p key={index} className="text-xl mb-4">{answer}</p>
+                        <p key={index} className="text-xl mb-4">{answer}</p> */}
 
 
                         {/* checkbox for the rigth */}
-                        <div className="flex items-center justify-center ml-5">
-                        <input
+                        {/* <div className="flex items-center justify-center ml-5">
+                            <input
                                 type="checkbox"
                                 checked={selectedAnswers.includes(index)}
                                 onChange={() => handleCheckboxChange(index)}
                             />
-                        </div>
+                        </div> */}
 
-
+{/* 
                     </div>
-                ))}
+                ))
+                } */}
 
                 {/* //question points */}
-                {question && <p className="text-xl mb-4">Points: {question.points}</p>}
+                {/* {question && <p className="text-xl mb-4">Points: {question.points}</p>} */}
+
+
+
+                <div>
+                    <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900">
+
+                        <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200">
+                            {question && <h1 className="text-4xl font-bold mb-4">{question.content}</h1>}
+                        </p>
+
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                            {question.correctAnswer.length > 1 ? 'Choose all that apply' : 'Choose one'}
+                        </p>
+
+                        {question && question.answers.map((answer, index) => (
+                            <div key={index} className="flex flex-row items-start justify-start w-600px ">
+                                <p key={index} className="text-xl mb-4">{answer}</p>
+
+
+                                {/* checkbox for the rigth */}
+                                <div className="flex items-center justify-center ml-5">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedAnswers.includes(index)}
+                                        onChange={() => handleCheckboxChange(index)}
+                                    />
+                                </div>
+
+
+                            </div>
+                        ))}
+
+
+                        {question && <p className="text-xl mb-4">Points: {question.points}</p>}
+                    </BackgroundGradient>
+                </div>
 
             </div>
         </>
@@ -76,5 +114,5 @@ export default QuizSolveCard;
 QuizSolveCard.propTypes = {
     question: PropTypes.object.isRequired,
     quizId: PropTypes.string.isRequired,
-    
+
 };

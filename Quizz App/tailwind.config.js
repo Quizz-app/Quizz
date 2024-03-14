@@ -1,5 +1,9 @@
 import daisyui from "./node_modules/daisyui"
 
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -20,6 +24,9 @@ module.exports = {
     },
 
     extend: {
+      boxShadow: {
+        input: `0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`,
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -95,11 +102,25 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          "primary": "#a991f7",
-          "secondary": "#f6d860",
-          "accent": "#37cdbe",
-          "neutral": "#3d4451",
-          "base-100": "#FF7F50",
+          
+          
+            "primary": "#a3e635",
+                     
+            "secondary": "#4f46e5",
+                     
+            "accent": "#a3e635",
+                     
+            "neutral": "#ffedd5",
+                     
+            "base-100": "#f3f4f6",
+                     
+            "info": "#4f46e5",
+                     
+            "success": "#bef264",
+                     
+            "warning": "#fde68a",
+                     
+            "error": "#fca5a5",
         },
       },
       "light",
@@ -137,10 +158,16 @@ module.exports = {
     ],
   },
 
-
-
-
-
-  plugins: [daisyui],
+  plugins: [daisyui, addVariablesForColors],
 }
 
+function addVariablesForColors({ addBase, theme }) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}

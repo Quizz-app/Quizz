@@ -174,6 +174,18 @@ export const removeQuizFromUser = async (username, quizId) => {
   await set(userRef, null);
 };
 
+export const removeQuizFromAllUsers = async (quizId) => {
+  const usersRef = ref(db, `users`);
+  const usersSnapshot = await get(usersRef);
+  const usersData = usersSnapshot.val();
+
+  for (const username in usersData) {
+    const userRef = ref(db, `users/${username}/quizzes/${quizId}`);
+    await set(userRef, null);
+  }
+
+}
+
 export const addQuizToCreator = async (username, quizId) => {
   const userRef = ref(db, `users/${username}/createdQuizzes/${quizId}`);
   await set(userRef, true);
