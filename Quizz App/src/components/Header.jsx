@@ -88,19 +88,19 @@ const Header = ({ theme, onThemeChange }) => {
 
       {userData && (
         <div>
-          <div className="flex items-center justify-center">
-          <Link to="/home" className="font-semibold mb-2"> 🔍 Homeview </Link>
-          <Link to="/dashboard" className="font-semibold mb-2"> 📊 Dashboard </Link>
-          <Link to="/my-library" className="font-semibold mb-2">📚 Library </Link>
+          <div className="flex items-center justify-center mr-20">
+            <Link to="/home" className="font-semibold mb-4 mr-8">  Homeview </Link>
+            <Link to="/dashboard" className="font-semibold mb-4 mr-8">  Dashboard </Link>
+            <Link to="/my-library" className="font-semibold mb-4 mr-8"> Library </Link>
 
-          {userData.role === 'teacher' ? (
-            <>
-              <Link to="/my-teams" className="font-semibold mb-2">👥 Teams</Link>
-              <Link to="/my-classes" className="font-semibold mb-2">🎓 Classes</Link>
-            </>
-          ) : (
-            <Link to="/my-classes" className="font-semibold mb-2">🎓 Classes</Link>
-          )}
+            {userData.role === 'teacher' ? (
+              <>
+                <Link to="/my-teams" className="font-semibold mb-4 mr-8">Teams</Link>
+                <Link to="/my-classes" className="font-semibold mb-4 mr-8"> Classes</Link>
+              </>
+            ) : (
+              <Link to="/my-classes" className="font-semibold mb-4 mr-15"> Classes</Link>
+            )}
           </div>
         </div>
       )}

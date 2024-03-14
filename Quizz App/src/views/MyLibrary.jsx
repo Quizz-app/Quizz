@@ -90,85 +90,97 @@ const MyLibrary = () => {
 
     return (
         <>
-            
-            {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
-                <div className="flex flex h-full items-start justify-start p-6">
-                    <div className="flex mr-5">
-                        {myQuizzes.map((quiz, index) => (
-                            <ThreeDCardDemo key={index} quiz={quiz} />
-                        ))}
-                    </div>
-                    <div>
-                        <Dialog onClose={handleCloseDialog}>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-neutral text-black dark:text-white">
-                                <DialogHeader>
-                                    <DialogTitle>Create Quiz</DialogTitle>
-                                    <DialogDescription>
-                                        {`Create a new quiz by filling out the form below.`}
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="title" className="text-right">
-                                            Title
-                                        </Label>
-                                        <Input id="title" value={quiz.title} onChange={updateForm('title')} className="col-span-3" />
-                                    </div>
 
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="category" className="text-right">
-                                            Crate Category
-                                        </Label>
-                                        <Input id="category" value={quiz.category} onChange={updateForm('category')} className="col-span-3" />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="visibility" className="text-right">
-                                            Or choose category
-                                        </Label>
-                                        <div className="relative w-[180px]">
-                                            <select onChange={event => setSelectedOption(event.target.value)} className="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                                {suggestions.length > 0 && suggestions.map((suggestion, index) => (
-                                                    <option key={index} value={suggestion}>{suggestion}</option>
-                                                ))}
-                                            </select>
-                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                    <path d="M5.305 7.695a.999.999 0 0 1 1.414 0L10 11.076l3.28-3.381a.999.999 0 1 1 1.44 1.402l-4 4.242a1 1 0 0 1-1.44 0l-4-4.242a.999.999 0 0 1 0-1.402z" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="visibility" className="text-right">
-                                            Visibility
-                                        </Label>
-                                        <div className="relative w-[180px]">
-                                            <select
-                                                className="block appearance-none w-full bg-white border border-black-700 text-black-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-black-500"
-                                                value={quiz.isPublic ? 'Public' : 'Private'}
-                                                onChange={event => setQuiz(prevQuiz => ({ ...prevQuiz, isPublic: event.target.value === 'Public' }))}>
-                                                <option value="Public">Public</option>
-                                                <option value="Private">Private</option>
-                                            </select>
-                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                    <path d="M5.305 7.695a.999.999 0 0 1 1.414 0L10 11.076l3.28-3.381a.999.999 0 1 1 1.44 1.402l-4 4.242a1 1 0 0 1-1.44 0l-4-4.242a.999.999 0 0 1 0-1.402z" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button type="submit" onClick={quizCreation}>Create Quiz</Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
+            {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
+                <>
+                    <div className="flex flex-row h-full items-start justify-between ">
+
+                        <div>
+                            <h2 className="text-4xl font-bold mb-4">My Quizzes</h2>
+                        </div>
+
                         
-                    </div>
-                </div>
+
+                            <div>
+                                <Dialog onClose={handleCloseDialog}>
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-[425px] bg-white dark:bg-neutral text-black dark:text-white">
+                                        <DialogHeader>
+                                            <DialogTitle>Create Quiz</DialogTitle>
+                                            <DialogDescription>
+                                                {`Create a new quiz by filling out the form below.`}
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="grid gap-4 py-4">
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="title" className="text-right">
+                                                    Title
+                                                </Label>
+                                                <Input id="title" value={quiz.title} onChange={updateForm('title')} className="col-span-3" />
+                                            </div>
+
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="category" className="text-right">
+                                                    Crate Category
+                                                </Label>
+                                                <Input id="category" value={quiz.category} onChange={updateForm('category')} className="col-span-3" />
+                                            </div>
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="visibility" className="text-right">
+                                                    Or choose category
+                                                </Label>
+                                                <div className="relative w-[180px]">
+                                                    <select onChange={event => setSelectedOption(event.target.value)} className="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                                        {suggestions.length > 0 && suggestions.map((suggestion, index) => (
+                                                            <option key={index} value={suggestion}>{suggestion}</option>
+                                                        ))}
+                                                    </select>
+                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                            <path d="M5.305 7.695a.999.999 0 0 1 1.414 0L10 11.076l3.28-3.381a.999.999 0 1 1 1.44 1.402l-4 4.242a1 1 0 0 1-1.44 0l-4-4.242a.999.999 0 0 1 0-1.402z" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="visibility" className="text-right">
+                                                    Visibility
+                                                </Label>
+                                                <div className="relative w-[180px]">
+                                                    <select
+                                                        className="block appearance-none w-full bg-white border border-black-700 text-black-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-black-500"
+                                                        value={quiz.isPublic ? 'Public' : 'Private'}
+                                                        onChange={event => setQuiz(prevQuiz => ({ ...prevQuiz, isPublic: event.target.value === 'Public' }))}>
+                                                        <option value="Public">Public</option>
+                                                        <option value="Private">Private</option>
+                                                    </select>
+                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                            <path d="M5.305 7.695a.999.999 0 0 1 1.414 0L10 11.076l3.28-3.381a.999.999 0 1 1 1.44 1.402l-4 4.242a1 1 0 0 1-1.44 0l-4-4.242a.999.999 0 0 1 0-1.402z" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <DialogFooter>
+                                            <Button type="submit" onClick={quizCreation}>Create Quiz</Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                        
+ </div>
+
+                        <div className="grid grid-cols-5 gap-4 mr-2">
+                            {myQuizzes.map((quiz, index) => (
+                                <ThreeDCardDemo key={index} quiz={quiz} />
+                            ))}
+                        </div>
+
+
+                   </>
             ) : (
                 <div className="flex flex-col h-full items-start justify-start p-6">
                     <h2 className="text-4xl font-bold mb-4">Completed</h2>

@@ -102,11 +102,25 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          "primary": "#a991f7",
-          "secondary": "#f6d860",
-          "accent": "#37cdbe",
-          "neutral": "#3d4451",
-          "base-100": "#FF7F50",
+          
+          
+            "primary": "#a3e635",
+                     
+            "secondary": "#4f46e5",
+                     
+            "accent": "#a3e635",
+                     
+            "neutral": "#ffedd5",
+                     
+            "base-100": "#f3f4f6",
+                     
+            "info": "#4f46e5",
+                     
+            "success": "#bef264",
+                     
+            "warning": "#fde68a",
+                     
+            "error": "#fca5a5",
         },
       },
       "light",
