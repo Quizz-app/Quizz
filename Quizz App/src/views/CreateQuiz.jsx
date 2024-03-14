@@ -63,20 +63,22 @@ const CreateQuiz = () => {
             try {
                 setLoading(true);
                 const fetchedQuiz = await getQuizById(id);
+                 console.log(fetchedQuiz);
                 if (JSON.stringify(fetchedQuiz) !== JSON.stringify(quiz)) {
                     setQuiz(fetchedQuiz);
-                    setTimeLimit(fetchedQuiz.quizTime || 0);
+                   setTimeLimit(fetchedQuiz.quizTime || 0);
+                    console.log(timeLimit);
                     setGrades(fetchedQuiz.grades || { good: 0, bad: 0 });
                     setDescription(fetchedQuiz.description || "");
                     setLoading(false);
 
-                    console.log("use effect triggered");
-                }
+                    // console.log("use effect triggered");
+                    }
             } catch (error) {
                 console.error(error);
             }
         })();
-    }, [id]); // Only re-run the effect if `id` changes
+    }, [id]); 
 
     useEffect(() => {
         (async () => {
@@ -297,6 +299,9 @@ const CreateQuiz = () => {
         return () => clearInterval(timer);
     }, [quiz, id]);
 
+
+    
+  
     return (
         <>
             <div className="flex flex-row items-center justify-center">
@@ -320,21 +325,21 @@ const CreateQuiz = () => {
                     <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
                             <Button variant="outline" role="combobox" className="w-[200px] justify-between">
-                                {timeLimit ? timeRanges.find((framework) => framework.value === timeLimit)?.label : "Set time limit"}
+                                {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-[200px] p-0">
                             <Command>
                                 {/* <CommandInput placeholder="Search framework..." /> */}
-                                <CommandEmpty>No time limit set</CommandEmpty>
+                                {/* <CommandEmpty>No time limit set</CommandEmpty> */}
                                 <CommandGroup>
                                     {timeRanges.map((timeRange) => (
                                         <CommandItem
                                             key={timeRange.value}
                                             value={timeRange.value}
                                             onSelect={async (currentValue) => {
-                                                setTimeLimit(currentValue);
+                                                setTimeLimit(Number(currentValue));
                                                 setOpen(false);
                                                 await handleSetTime(currentValue);
                                             }}>
