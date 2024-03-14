@@ -14,6 +14,8 @@ const Header = ({ theme, onThemeChange }) => {
   const [classInvites, setClassInvites] = useState([]);
   const navigate = useNavigate();
   const isChecked = theme === "synthwave";
+  const [userAvatar, setUserAvatar] = useState(userData?.avatar);
+
   const [dropdownVisible, setDropdownVisible] = useState(false); // New state for dropdown visibility
 
   useEffect(() => {
@@ -39,6 +41,10 @@ const Header = ({ theme, onThemeChange }) => {
       });
     }
   }, [userData])
+
+  useEffect(() => {
+    setUserAvatar(userData?.avatar);
+  }, [userData]);
 
 
   const dropdownVariants = {
@@ -269,7 +275,7 @@ const Header = ({ theme, onThemeChange }) => {
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
-                  <img alt="Tailwind CSS Navbar component" src={userData?.avatar} />
+                  <img alt="Tailwind CSS Navbar component" src={userAvatar} />
                 </div>
               </div>
               <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
