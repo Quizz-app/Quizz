@@ -20,7 +20,8 @@ export const createQuiz = async (creator, title, category, isPublic, questionTyp
     questionTypes,
     onGoing: true,
     endsOn: null,
-    
+    image: 'https://firebasestorage.googleapis.com/v0/b/quizz-app-1a3aa.appspot.com/o/images%2F93fc27c7-2df4-4771-8451-149e892e4267.jpg?alt=media&token=7928b9f6-ea95-43b5-b8cf-bbd73c8429de'
+
   });
 
   return newQuizRef.key;
