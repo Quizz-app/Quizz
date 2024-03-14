@@ -22,9 +22,9 @@ import { EvervaultCard } from "./ui/evervault-card";
 * isPublic: boolean, 
 * quizTime: number, 
 * time: number 
-* }, isCompleted: boolean }} param0 - Props that are passed to the QuizCard component.
+* }, isCompleted: boolean, onButtonClick: function }} param0 - Props that are passed to the QuizCard component.
 */
-export const ThreeDCardDemo = ({ quiz }) => {
+export const ThreeDCardDemo = ({ quiz,  onButtonClick }) => {
 
   const { userData } = useContext(AppContext);
 
@@ -32,14 +32,9 @@ export const ThreeDCardDemo = ({ quiz }) => {
   const isTeacherOrAdmin = (userData.role === 'teacher' && quiz.creator === userData.username)
   const buttonText = isTeacherOrAdmin ? 'See quiz' : 'Start quiz';
   const buttonClickPath = isTeacherOrAdmin ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
-  const deleteQuiz = async () => {
-    try {
-      await deleteQuizById(quiz.id);
-      navigate('/my-library');
-    } catch (error) {
-      console.error(error);
-    }
-  }
+
+  
+
   return (
     <CardContainer className="inter-var mr-10 ">
       <CardBody className="bg-gradient-to-r from-cyan-500 to-blue-500 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border transform:">
@@ -76,7 +71,7 @@ export const ThreeDCardDemo = ({ quiz }) => {
             as="button"
             target="__blank"
             className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
-            onClick={deleteQuiz}
+            onClick={onButtonClick}
           >
             Delete quiz
           </CardItem>}
@@ -106,5 +101,6 @@ export const ThreeDCardDemo = ({ quiz }) => {
 export default ThreeDCardDemo;
 
 ThreeDCardDemo.propTypes = {
-  quiz: PropTypes.object
+  quiz: PropTypes.object,
+  onButtonClick: PropTypes.func
 }
