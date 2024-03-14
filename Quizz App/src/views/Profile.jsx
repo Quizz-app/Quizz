@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
-import { updateUser, updateUserInfo } from "../services/users-service";
+import { getUserByUsername, updateUser, } from "../services/users-service";
 import toast from "react-hot-toast";
 import {
   EmailAuthProvider,
@@ -17,10 +17,17 @@ const Profile = () => {
 
   const [user] = useAuthState(auth);
   const { userData, setContext } = useContext(AppContext)
-  const [formData, setFormData] = useState(userData)
   const [file, setFile] = useState(null);
   const [currentPassword, setCurrentPassword] = useState(null);
   const [newPassword, setNewPassword] = useState(null);
+  const [formData, setFormData] = useState(userData);
+
+
+  useEffect(() => {
+    setFormData(userData]);
+  }, [userData]);
+
+
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -35,38 +42,38 @@ const Profile = () => {
 
   const handleSubmit = async (event) => {
 
-
+    console.log(userData);
     event.preventDefault();
-
-    if (newPassword !== '') {
-      await handleSavePassword();
-    }
-
     try {
-      let avatarUrl = userData?.avatarUrl;
+      let avatar = userData?.avatar;
       if (file) {
         const imageRef = ref(storage, `images/${user.uid}`);
         await uploadBytes(imageRef, file);
-        avatarUrl = await getDownloadURL(imageRef);
+        avatar = await getDownloadURL(imageRef);
+      }
+
+      if (newPassword !== '') {
+        await handleSavePassword();
       }
 
       const updatedUserData = {
         ...formData,
-        avatarUrl
-      };
+      }
 
 
-      await updateUser(userData.username, updatedUserData);
-
+      await updateUser(userData?.username, updatedUserData);
       setContext(prevContext => ({
         ...prevContext,
-        userData: updatedUserData
+        userData: {
+          ...prevContext.userData,
+          ...formData,
+          avatar,
+        }
       }));
 
     } catch (error) {
       console.error('Failed to update user:', error);
     }
-
   };
 
   const handleUpdatePassword = async () => {
@@ -97,60 +104,74 @@ const Profile = () => {
       }
     }
   };
-
   return (
     <>
-      <div className="hero min-h-screen bg-base-200 flex flex-col">
-        <h2 className="text-2xl font-bold mb-4">Profile details</h2>
+      <div className="hero min-h-screen bg-base-200 flex flex-col items-center justify-center mx-auto">
+        <div className="profile-details mt-8 ml-0" style={{ marginLeft: '-600px' }}>
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold mb-2 text-left justify-items-start">Profile details</h2>
+            <p>Refreshing your profile is quick and easy, requiring just a few moments of your attention.</p>
+          </div>
+        </div>
         <div className="hero-content basis-1/4 w-full">
-          <div className="w-32 rounded-full mb-43 absolute right-100 top-30" style={{ marginTop: '40px', marginRight: '1120px', marginBottom: '245px' }}>
-            <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" className="rounded-full" />
+          <div className="w-32 rounded-full mb-43 absolute right-100 top-30" style={{ marginTop: '-15px', marginRight: '1120px', marginBottom: '245px' }}>
+            <label htmlFor="name">
+              <span className="label-text">Photo</span>
+            </label>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <img src={userData?.avatar} className="w-32 h-32 rounded-full" />
+              <label htmlFor="avatar-upload" className="flex items-center justify-center w-32 h-8 bg-blue-500 text-white rounded cursor-pointer p-2 ml-5" style={{ marginBottom: '-90px' }}>
+                Change
+              </label>
+              <input type="file" id="avatar-upload" className="hidden" accept="image/*" onChange={handleFileChange} />
+            </div>
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col w-full">
             <div className="flex flex-row justify-between w-full">
-              <div className="flex flex-col w-1/2 mb-5 mr-5" style={{ marginTop: '274px' }}>
+              <div className="flex flex-col w-1/2 mb-5 mr-5" style={{ marginTop: '293px' }}>
                 <div className="form-control mb-5">
-                  <label htmlFor="name">
+                  <label htmlFor="name" className="mb-2">
                     <span className="label-text">First name</span>
                   </label>
                   <input value={formData?.firstName} onChange={handleInputChange} type="text" name="firstName" className="input input-bordered" placeholder={userData?.firstName} />
                 </div>
                 <div className="form-control mb-5">
-                  <label htmlFor="email">
+                  <label htmlFor="email" className="mb-2">
                     <span className="label-text">Email address</span>
                   </label>
-                  <input value={formData?.email} type="email" placeholder="email" name="email" className="input input-bordered" readOnly onDoubleClick={() => toast.error("You cannot change your email.")}
+                  <input value={formData?.email} type="email" placeholder={userData?.email} name="email" className="input input-bordered" readOnly onDoubleClick={() => toast.error("You cannot change your email.")}
                   />
                 </div>
                 <div className="form-control mb-5">
-                  <label htmlFor="currentPassword">
+                  <label htmlFor="currentPassword" className="mb-2">
                     <span className="label-text">Current password</span>
                   </label>
                   <input onChange={(e) => setCurrentPassword(e.target.value)} type="password" className="input input-bordered"
                   />
                 </div>
-
               </div>
-              <div className="flex flex-col w-1/2 mb-5 mt-40">
-                <h2>About me</h2>
-                <textarea className="textarea textarea-bordered mb-4" placeholder="Write something about you..."
-                ></textarea>
+              <div className="flex flex-col w-1/2 mb-10 mt-40" style={{ marginTop: '152px' }}>
                 <div className="form-control mb-5">
-                  <label htmlFor="name">
+                  <label htmlFor="role" className="mb-2">
+                    <span className="label-text">About me</span>
+                  </label>
+                  <textarea name="aboutMe" onChange={handleInputChange} className="textarea textarea-bordered mb-4" placeholder="Write something about you..." value={formData?.aboutMe}></textarea>
+                </div>
+                <div className="form-control mb-5">
+                  <label htmlFor="name" className="mb-2">
                     <span className="label-text">Last name</span>
                   </label>
-                  <input value={formData?.lastName} onChange={handleInputChange} type="text" name="lastName" className="input input-bordered"
+                  <input value={formData?.lastName} onChange={handleInputChange} type="text" name="lastName" className="input input-bordered" placeholder={userData?.lastName}
                   />
                 </div>
                 <div className="form-control mb-5">
-                  <label htmlFor="role">
+                  <label htmlFor="role" className="mb-2">
                     <span className="label-text">Role</span>
                   </label>
-                  <input value={formData?.role} type="text" name="role" className="input input-bordered" readOnly
-                  />
+                  <input value={formData?.role} type="text" name="role" className="input input-bordered" readOnly placeholder={userData?.role} onDoubleClick={() => toast.error("You cannot change your role.")} />
                 </div>
                 <div className="form-control mb-5">
-                  <label htmlFor="password">
+                  <label htmlFor="password" className="mb-2">
                     <span className="label-text">New password</span>
                   </label>
                   <input onChange={(e) => setNewPassword(e.target.value)} type="password" name="password" className="input input-bordered" />
@@ -158,13 +179,12 @@ const Profile = () => {
 
               </div>
             </div>
-
+            <div className="absolute bottom-0 inset-x-0 flex items-center justify-center mb-0">
+              <button type="submit" className="btn btn-primary" style={{ marginBottom: '-20px' }} >Save changes</button>
+            </div>
           </form>
-          <div className="absolute bottom-0 right-0 mb-5 mr-5">
-            <button type="submit" className="btn btn-primary">Save changes</button>
-          </div>
         </div>
-      </div>
+      </div >
     </>
   );
 }
