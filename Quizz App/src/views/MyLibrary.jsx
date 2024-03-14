@@ -183,7 +183,7 @@ const MyLibrary = () => {
 
                         <div className="grid grid-cols-5 gap-5">
                             {myQuizzes.map((quiz, index) => (
-                                <ThreeDCardDemo key={index} quiz={quiz} />
+                                <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={()=> deleteQuiz(quiz.id)}  />
                             ))}
                         </div>
 
