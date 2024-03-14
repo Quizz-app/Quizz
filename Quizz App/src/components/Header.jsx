@@ -79,11 +79,6 @@ const Header = ({ theme, onThemeChange }) => {
         </label>
       </div>
 
-      {/* //search bar */}
-      <div className="form-control flex justify-center w-3/4">
-        <input type="text" placeholder="Search" className="input input-bordered w-96" />
-      </div>
-
       {/* login and register */}
       <div className="flex-none gap-2 mr-3">
         {!user ? (
