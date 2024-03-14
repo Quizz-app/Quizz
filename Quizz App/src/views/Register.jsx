@@ -1,55 +1,27 @@
-import { useState } from "react";
-
-import {
-  createUsername,
-  getUserByUsername,
-  verifyUser,
-} from "../services/users-service";
+import { useContext, useState } from "react";
+import { AppContext } from "../context/AppContext";
+import { createUsername} from "../services/users-service";
 import { registerUser } from "../services/auth-service";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
-import {
-  emailPattern,
-  namePattern,
-  usernamePattern,
-} from "../constants/constants";
-import { auth } from "../config/firebase-config";
-import { fetchSignInMethodsForEmail } from "firebase/auth";
+import { Label } from ".././components/ui/label";
+import { Input } from ".././components/ui/input";
+import LabelInputContainer from "../components/ui/LabelInputContainer";
+
 
 const Register = () => {
+
+  // const { setContext } = useContext(AppContext)
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
-    role: "",
+    role: "teacher",
   });
 
-  // const username = form.username;
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [step, setStep] = useState(1);
-
   const navigate = useNavigate();
-
-  const checkEmailExists = async (email) => {
-    try {
-      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      if (signInMethods.length > 0) {
-        console.log("The email address is already in use by another account.");
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const updateForm = (prop) => (e) => {
     const value = e.target.value;
@@ -57,97 +29,13 @@ const Register = () => {
       ...form,
       [prop]: value,
     });
-
-    if (prop === "username") {
-      setUsername(value);
-    }
-    if (prop === "email") {
-      setEmail(value);
-    }
-
-    if (prop === "firstName") {
-      setFirstName(value);
-    }
-
-    if (prop === "lastName") {
-      setLastName(value);
-    }
-
-    if (prop === "password") {
-      setPassword(value);
-    }
-
-    if (prop === "confirmPassword") {
-      setConfirmPassword(value);
-    }
-  };
-
-  const continueButton = async () => {
-    const user = await getUserByUsername(form.username);
-
-    try {
-      if (!username.length) {
-        return toast.error(`Username is required!`);
-      } else if (!usernamePattern.test(username)) {
-        return toast.error(`Username does not match the required format!`);
-      } else if (user.exists()) {
-        return toast.error(`Username ${username} already exists!`);
-      }
-
-      if (await checkEmailExists(email)) {
-        return toast.error(`Email ${email} already exists!`);
-      } else if (!email.length) {
-        return toast.error(`Email is required!`);
-      } else if (!emailPattern.test(email)) {
-        return toast.error(`Email does not match the required format!`);
-      }
-
-      setStep(2);
-    } catch (error) {
-      console.log(error);
-      // toast.error(`An error occurred: ${error.message}`);
-    }
   };
 
   const register = async () => {
-    console.log(firstName);
-
-    if (!firstName.length) {
-      return toast.error(`First name is required!`);
-    } else if (!namePattern.test(firstName)) {
-      return toast.error(`First name does not match the required format!`);
-    }
-
-    if (!lastName.length) {
-      return toast.error(`Last name is required!`);
-    } else if (!namePattern.test(lastName)) {
-      return toast.error(`Last name does not match the required format!`);
-    }
-
-    if (!password.length) {
-      return toast.error(`Password is required!`);
-    } else if (password.length < 8) {
-      return toast.error("Password must be at least 8 characters long!");
-    }
-
-    if (password !== confirmPassword) {
-      return toast.error(
-        "Please ensure the password and confirm password fields are the same!"
-      );
-    }
 
     try {
       const credentials = await registerUser(form.email, form.password);
-      await verifyUser(credentials.user);
-      await createUsername(
-        form.firstName,
-        form.lastName,
-        form.username,
-        credentials.user.uid,
-        form.email,
-        form.role
-      );
-
+      await createUsername(form.firstName, form.lastName, form.username, credentials.user.uid, form.email, form.role);
       navigate("/");
     } catch (error) {
       console.error(error);
@@ -155,138 +43,62 @@ const Register = () => {
   };
 
   return (
-    <div className="relative w-full flex flex-col justify-center h-screen overflow-hidden">
-      <div className="w-full p-6 m-auto bg-gray border border-amber-950 rounded-md shadow-2xl shad ring-2 ring-white lg:max-w-xl">
-        <h1 className="text-3xl font-semibold text-center text-gray-700">
-          Sign Up
-        </h1>
-        <br />
-        {step === 1 && (
-          <>
-            <div className="mb-7">
-              <label htmlFor="username"></label>
+    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 mb-5">
+        Welcome to BrainBurst
+      </h2>
+      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300 mb-5">
+        Login to aceternity if you can because we don&apos;t have a login flow
+        yet
+      </p>
 
-              <input
-                className="w-full input input-bordered"
-                value={form.username}
-                onChange={updateForm("username")}
-                type="text"
-                placeholder="Username"
-              ></input>
-            </div>
-            <div className="mb-7">
-              <label htmlFor="email"></label>
+      
+        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+          <LabelInputContainer>
+            <Label htmlFor="firstname">First name</Label>
+            <Input id="firstname" placeholder="First name" type="text" value={form.firstName} onChange={updateForm("firstName")} />
+          </LabelInputContainer>
+          <LabelInputContainer>
+            <Label htmlFor="lastname">Last name</Label>
+            <Input id="lastname" placeholder="Last name" type="text" value={form.lastName} onChange={updateForm("lastName")} />
+          </LabelInputContainer>
+        </div>
+        <LabelInputContainer className="mb-8">
+          <Label htmlFor="twitterpassword">Username</Label>
+          <Input id="username" placeholder="Username" type="text" value={form.username} onChange={updateForm("username")} />
+        </LabelInputContainer>
+        <LabelInputContainer className="mb-4">
+          <Label htmlFor="email">Email Address</Label>
+          <Input id="email" placeholder="your-email-here@bb.com" type="email" value={form.email} onChange={updateForm("email")} />
+        </LabelInputContainer>
+        <LabelInputContainer className="mb-4">
+          <Label htmlFor="password">Password</Label>
+          <Input id="password" placeholder="••••••••" type="password" value={form.password} onChange={updateForm("password")} />
+        </LabelInputContainer>
 
-              <input
-                className="w-full input input-bordered"
-                value={form.email}
-                onChange={updateForm("email")}
-                type="text"
-                placeholder="name@example.com"
-              ></input>
-            </div>
-
-            <div className="mb-7">
-              <button
-                className="btn btn-ghost btn-circle avatar bg-base-200 w-full border-2 border-amber-950"
-                onClick={continueButton}
-              >
-                Continue
-              </button>
-            </div>
-          </>
-        )}
-
-        {step === 2 && (
-          <>
-            <div>
-              <button
-                className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
-                onClick={() => {
-                  setForm({ ...form, role: "student" });
-                  setStep(3);
-                }}
-              >
-                Student
-              </button>
-            </div>
-
-            <div>
-              <button
-                className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
-                onClick={() => {
-                  setForm({ ...form, role: "teacher" });
-                  setStep(3);
-                }}
-              >
-                Teacher
-              </button>
-            </div>
-          </>
-        )}
-        {/* {step === 3 && (
-          <>
-            <label htmlFor="age">Age</label>
-            <input
-              className="w-full input input-bordered"
-              value={form.age}
-              onChange={updateForm("age")}
-              type="text"
-            ></input>
-
-            <button
-              className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
-              onClick={() => setStep(4)}
-            >
-              Continue
-            </button>
-          </>
-        )} */}
-        {step === 3 && (
-          <>
-            <label htmlFor="firstName">First name</label>
-            <input
-              className="w-full input input-bordered"
-              value={form.firstName}
-              onChange={updateForm("firstName")}
-              type="text"
-            ></input>
-
-            <label htmlFor="lastName">Last name</label>
-            <input
-              className="w-full input input-bordered"
-              value={form.lastName}
-              onChange={updateForm("lastName")}
-              type="text"
-            ></input>
-
-            <label htmlFor="password">Password</label>
-            <input
-              className="w-full input input-bordered"
-              value={form.password}
-              onChange={updateForm("password")}
-              type="password"
-            ></input>
-
-            <label htmlFor="password">Confirm password</label>
-            <input
-              className="w-full input input-bordered"
-              value={form.confirmPassword}
-              onChange={updateForm("confirmPassword")}
-              type="password"
-            ></input>
-
-            <button
-              className="btn btn-ghost btn-circle avatar bg-base-200 w-full"
-              onClick={register}
-            >
-              Register
-            </button>
-          </>
-        )}
-      </div>
+        <button
+          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+          type="submit"
+          onClick={register}
+        >
+          Sign up &rarr;
+          <BottomGradient />
+        </button>
+        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+      
     </div>
   );
 };
+
+
+const BottomGradient = () => {
+  return (
+    <>
+      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+    </>
+  );
+};
+
 
 export default Register;
