@@ -43,27 +43,27 @@ const Header = ({ theme, onThemeChange }) => {
 
   const dropdownVariants = {
     hidden: { opacity: 0, scale: 0.95 },
-    visible: { 
-      opacity: 1, 
-      scale: 1, 
-      transition: { 
-        type: 'spring', 
-        damping: 20, 
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: 'spring',
+        damping: 20,
         stiffness: 500,
         when: "beforeChildren",
         staggerChildren: 0.05
-      } 
+      }
     },
   };
 
   const listItemVariants = {
     hidden: { opacity: 0, x: -50 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       x: 0,
       transition: {
-        duration: 0.05,
-        ease: [0.3, -0.05, 0.01, 0.99]
+        duration: 0.07,
+        ease: [0.6, -0.05, 0.01, 0.99]
       }
     },
   };
@@ -112,13 +112,20 @@ const Header = ({ theme, onThemeChange }) => {
               variants={listItemVariants}
               onClick={() => setDropdownVisible(false)}
             >
-              <Link to="/dashboard" className="font-semibold mb-2"> Dashboard </Link>
+              <Link to="/home" className="font-semibold mb-2"> 🔍 Homeview </Link>
+            </motion.li>
+
+            <motion.li
+              variants={listItemVariants}
+              onClick={() => setDropdownVisible(false)}
+            >
+              <Link to="/dashboard" className="font-semibold mb-2"> 📊 Dashboard </Link>
             </motion.li>
             <motion.li
               variants={listItemVariants}
               onClick={() => setDropdownVisible(false)}
             >
-              <Link to="/my-library" className="font-semibold mb-2"> Library </Link>
+              <Link to="/my-library" className="font-semibold mb-2">📚 Library </Link>
             </motion.li>
 
             {userData && userData.role === 'teacher'
@@ -127,21 +134,22 @@ const Header = ({ theme, onThemeChange }) => {
                 variants={listItemVariants}
                 onClick={() => setDropdownVisible(false)}
               >
-                <Link to="/my-teams" className="font-semibold mb-2">Teams</Link>
+                <Link to="/my-teams" className="font-semibold mb-2">👥 Teams</Link>
               </motion.li>
                 <motion.li
                   variants={listItemVariants}
                   onClick={() => setDropdownVisible(false)}
                 >
-                  <Link to="/my-classes" className="font-semibold mb-2">Classes</Link>
+                  <Link to="/my-classes" className="font-semibold mb-2">🎓 Classes</Link>
                 </motion.li></>)
               :
               (<motion.li
                 variants={listItemVariants}
                 onClick={() => setDropdownVisible(false)}
               >
-                <Link to="/my-classes" className="font-semibold mb-2">Classes</Link>
+                <Link to="/my-classes" className="font-semibold mb-2">🎓 Classes</Link>
               </motion.li>)}
+
 
           </motion.ul>
         )}
