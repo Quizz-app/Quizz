@@ -1,12 +1,10 @@
 "use client";
 import MyImage from "../components/ui/MyImage";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
-import { Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
-import { deleteQuizById } from "../services/quiz-service";
-import { EvervaultCard } from "./ui/evervault-card";
 
 /**
  * QuizCard component displays a card with quiz details.
