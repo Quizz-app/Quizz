@@ -90,7 +90,7 @@ const MyLibrary = () => {
 
     return (
         <>
-            
+
             {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
                 <div className="flex flex h-full items-start justify-start p-6">
                     <div className="flex mr-5">
@@ -166,23 +166,27 @@ const MyLibrary = () => {
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-                        
+
                     </div>
                 </div>
             ) : (
                 <div className="flex flex-col h-full items-start justify-start p-6">
                     <h2 className="text-4xl font-bold mb-4">Completed</h2>
                     {studentQuizzes.completed && studentQuizzes.completed.length > 0 ? (
-                        studentQuizzes.completed.map(quiz => (
-                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
+                        studentQuizzes.completed.map((quiz, index) => (
+                            // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
+                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
                         ))
                     ) : (
                         <p>No completed quizzes yet.</p>
                     )}
                     <h2 className="text-4xl font-bold mb-4">Todo</h2>
                     {studentQuizzes.nonCompleted && studentQuizzes.nonCompleted.length > 0 ? (
-                        studentQuizzes.nonCompleted.map(quiz => (
-                            <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
+                        studentQuizzes.nonCompleted.map((quiz, index) => (
+                            
+                            // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
+                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={false} />,
+                            <p key={index}>asdasd</p>
                         ))
                     ) : (
                         <p>No quizzes to do yet.</p>
