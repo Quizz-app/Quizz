@@ -1,33 +1,33 @@
-import { Button } from "../components/ui/button";
-import { Calendar } from "../components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { getAllTeachers, getAllUsers } from "../services/users-service";
+import { getAllUsers } from "../services/users-service";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
 import { useNavigate } from "react-router-dom";
-
+import { getAllQuizzes, listenForCategories } from "../services/quiz-service";
 
 const Home = () => {
     // const [date, setDate] = React.useState(new Date());
-    const { user, userData } = useContext(AppContext);
-    const [userCount, setUserCount] = useState(0);
+    const { userData } = useContext(AppContext);
     const [educatorCount, setEducatorCount] = useState(0);
     const navigate = useNavigate();
+    const [quizzes, setQuizzes] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [users, setUsers] = useState([]);
+
+    useState(() => {
+        listenForCategories(setCategories);
+        getAllQuizzes(setQuizzes);
+        getAllUsers(setUsers);
+
+    }, [categories, quizzes]);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const users = await getAllUsers();
-            const educators = await getAllTeachers();
-
-            setEducatorCount(educators.length);
-            setUserCount(users.length);
-        };
-
-        fetchUsers();
-    }, [userCount, educatorCount]);
+        const count = users.reduce((acc, user) => user.role === "teacher" ? acc + 1 : acc, 0);
+        setEducatorCount(count);
+    }, [users]);
 
     const words = [
         {
@@ -56,16 +56,22 @@ const Home = () => {
 
     return (
         <>
-
-
-
-            {user ?
+            {userData ?
                 (
-                    <h1>Home</h1>
+                    <div>
+                        <div>
+                            Tuk e search bara
+                        </div>
+                        <div>
+                            Tuke e recent and popular quizzes
+                        </div>
+                        <div>
+                            Categories
+                        </div>
+                    </div>
                 )
                 :
                 <>
-
                     <div className="flex flex-col items-center justify-center  ">
                         <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base  ">
                             The road to quality education stats here
@@ -77,10 +83,6 @@ const Home = () => {
                             </button>
                         </div>
                     </div>
-
-
-
-
                     {/* //hero */}
                     <div>
                         <div className="flex flex-col items-center justify-center mt-20 ">
@@ -91,7 +93,7 @@ const Home = () => {
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Users</div>
-                                    <div className="stat-value text-secondary">{userCount}</div>
+                                    <div className="stat-value text-secondary">{users.length}</div>
                                     <div className="stat-desc text-secondary">↗︎ 54%</div>
                                 </div>
 
@@ -104,8 +106,6 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-
-
                     {/* cateogirs */}
                     <div>
                         <div className="flex flex-col items-center justify-center mt-20 ">
@@ -192,7 +192,6 @@ const Home = () => {
                             <a className="link link-hover">Cookie policy</a>
                         </nav>
                     </footer>
-
                 </>}
         </>
     );
