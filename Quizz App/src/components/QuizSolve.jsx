@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { get } from "firebase/database";
 import { getQuestionsByQuizId } from "../services/questions-service";
-import { getQuizById } from "../services/quiz-service";
+import { getQuizById, incrementFinishedCount } from "../services/quiz-service";
 import QuizSolveCard from "../views/QuizSolveCard";
 import { useNavigate } from "react-router-dom";
 import { updateQuizCompletion } from "../services/users-service";
@@ -66,48 +66,10 @@ const QuizSolve = () => {
     }, [id, countdownTime]);
 
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const quiz = await getQuizById(id);
-    //             const questions = await getQuestionsByQuizId(id);
-
-    //             setQuiz(quiz);
-    //             setQuestions(questions);
-    //             setCountdownTime(quiz.quizTime); // Set countdownTime to quizTime
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [id]);
-
-    // useEffect(() => {
-    //     const countdownTimer = setInterval(() => {
-    //         setCountdownTime((prevTime) => {
-    //             if (prevTime > 0) {
-    //                 return prevTime - 1;
-    //             } else {
-    //                 // Time is over, update the quiz's isCompleted property
-    //                 (async () => {
-    //                     await updateQuizCompletion(userData.username, id, true);
-    //                 })();
-    //                 return 0;
-    //             }
-    //         });
-    //     }, 1000);
-
-    //     return () => {
-    //         clearInterval(countdownTimer);
-    //     }
-    // }, [userData]);
-
-
-
     const handleCountdownEnd = async () => {
         setIsCountdownFinished(true);
         await updateQuizCompletion(userData.username, id, true);
+        await incrementFinishedCount(id);
         localStorage.removeItem(`countdownTime-${id}`); // Remove countdownTime from localStorage
 
         navigate(`/results/${id}`);
