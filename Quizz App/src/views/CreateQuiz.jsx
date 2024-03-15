@@ -203,7 +203,11 @@ const CreateQuiz = () => {
     };
 
     const handleSetDescription = async () => {
-        const updatedQuiz = { ...quiz, description }; // Include quizTime
+        if (description.length > 35) {
+            console.error("Description should not be more than 35 characters");
+            return;
+        }
+        const updatedQuiz = { ...quiz, description };
         try {
             await updateQuiz(id, updatedQuiz);
             setQuiz(updatedQuiz);
