@@ -307,7 +307,6 @@ const CreateQuiz = () => {
         observeQuiz(id, setQuiz);
     }
     , [id]);
-
     
     return (
         <>
@@ -504,9 +503,11 @@ const CreateQuiz = () => {
                             <div className="swap-off">NO</div> {/* enable */}
                         </label>
                         <div className="">
-                            {remainingTime > 0
-                                ? <p>Ends On: {`${formatDate(quiz?.endsOn)}`} Time left: {msToTime(remainingTime)}</p>
-                                : <p>Ended On: {`${formatDate(quiz?.endsOn)}`}</p>}
+                            {quiz?.endsOn && (
+                                remainingTime > 0
+                                    ? <p>Ends On: {`${formatDate(quiz.endsOn)}`} Time left: {msToTime(remainingTime)}</p>
+                                    : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
+                            )}
                             <DatePickerDemo
                                 selected={date}
                                 onSelect={setDate}
