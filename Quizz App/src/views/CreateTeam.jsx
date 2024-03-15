@@ -6,6 +6,7 @@ import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
 import QuizCard from "./QuizCard";
 import ThreeDCardDemo from "../components/ThreeDCardDemo";
+import { Input } from ".././components/ui/input";
 
 
 const CreateTeam = () => {
@@ -83,7 +84,7 @@ const CreateTeam = () => {
         <div className="hero min-h-screen flex flex-col bg-base-200 rounded-lg">
             <div className="hero-content text-center flex flex-col w-full">
                 <div className="flex">
-                    <input className="input input-bordered w-full max-w-xs" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
+                    <Input className="input input-bordered w-full max-w-xs" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
 
                     <label className="btn btn-circle swap swap-rotate ml-3">
 

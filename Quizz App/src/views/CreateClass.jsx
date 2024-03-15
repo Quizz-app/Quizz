@@ -5,6 +5,7 @@ import { onClassMembersChange, getClassById, removeMemberFromClass, inviteUserTo
 import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
 import { removeQuizFromTeam } from "../services/teams-service.js";
+import { Input } from ".././components/ui/input";
 
 const CreateClass = () => {
     const { userData, isLoading } = useContext(AppContext)
@@ -72,7 +73,7 @@ const CreateClass = () => {
         <div className="hero min-h-screen flex flex-col bg-base-200 rounded-lg">
             <div className="hero-content text-center flex flex-col w-full">
                 <div>
-                    <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for students" />
+                    <Input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for students" />
                 </div>
                 <div className="w-full">
                 <div className="ml-10 mr-10">

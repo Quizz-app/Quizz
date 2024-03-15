@@ -9,13 +9,13 @@ import { useNavigate } from "react-router-dom";
 import { getAllQuizzes, listenForCategories } from "../services/quiz-service";
 
 const Home = () => {
-    // const [date, setDate] = React.useState(new Date());
     const { userData } = useContext(AppContext);
     const [educatorCount, setEducatorCount] = useState(0);
     const navigate = useNavigate();
     const [quizzes, setQuizzes] = useState([]);
     const [categories, setCategories] = useState([]);
     const [users, setUsers] = useState([]);
+    const [sortedTeachersQuizzes, setSortedTeachersQuizzes] = useState([]);
 
     useState(() => {
         listenForCategories(setCategories);
@@ -54,16 +54,91 @@ const Home = () => {
         },
     ];
 
+
+
+    useEffect(() => {
+        const teachers = users.filter((user) => user.role === "teacher");
+        const teachersQuizes = teachers.map((teacher) => {
+            return {
+                name: teacher.username,
+                quizCount: teacher.createdQuizzes ? Object.values(teacher.createdQuizzes).length : 0
+            };
+        });
+        const sorted = teachersQuizes.sort((a, b) => b.quizCount - a.quizCount);
+        setSortedTeachersQuizzes(sorted);
+    }, [users]);
+
+
     return (
         <>
             {userData ?
                 (
-                    <div>
+                    <div className="flex flex-col items-center h-screen">
                         <div>
                             Tuk e search bara
                         </div>
-                        <div>
-                            Tuke e recent and popular quizzes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <div className="flex flex-row  w-full">
+                            <div className="border w-2/3">
+                                <div>
+                                    recent
+                                </div>
+                                <div>
+                                    popular
+                                </div>
+                            </div>
+                            <div className="border w-1/3">
+                                <div className="overflow-x-auto">
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Teacher</th>
+                                                <th>Created Quizzes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {sortedTeachersQuizzes.map((teacher, index) => (
+                                                <tr key={index}>
+                                                    <th>{index + 1}</th>
+                                                    <td>{teacher.name}</td>
+                                                    <td>{teacher.quizCount}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                         <div>
                             Categories

@@ -5,6 +5,8 @@ import { motion, stagger, useAnimate, useInView } from "framer-motion";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 
+
+
 export const TypewriterEffect = ({ words, className, cursorClassName }) => {
     const wordsArray = words.map((word) => {
         return {
@@ -84,6 +86,7 @@ export const TypewriterEffect = ({ words, className, cursorClassName }) => {
 };
 
 export const TypewriterEffectSmooth = ({ words, className, cursorClassName }) => {
+
     const wordsArray = words.map((word) => {
         return {
             ...word,
