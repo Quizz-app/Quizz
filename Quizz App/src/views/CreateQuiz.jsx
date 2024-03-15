@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { addQuizToTeam, getQuizById, inviteUserToQuiz, setEndOn, setOnGoing, updateQuiz, } from "../services/quiz-service";
+import { addQuizToTeam, getQuizById, inviteUserToQuiz, observeQuiz, setEndOn, setOnGoing, updateQuiz, } from "../services/quiz-service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate, useParams } from "react-router-dom";
-import { addQuestion, deleteQuestion, getQuestionsByQuizId, updateQuestion } from "../services/questions-service";
+import { addQuestion, deleteQuestion, getQuestionsByQuizId, listenForQuestions, updateQuestion } from "../services/questions-service";
 import QuestionCard from "./QuestionCard";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
 import { formatDate, msToTime, timeRanges } from "../services/time-functions";
 import Assistant from "../components/Assistant";
+import { DatePickerDemo } from "../components/DatePicker";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -81,10 +82,9 @@ const CreateQuiz = () => {
     }, [id]);
 
     useEffect(() => {
-        (async () => {
+        const unsubscribe = listenForQuestions(id, (fetchedQuestions) => {
             try {
                 setLoading(true);
-                const fetchedQuestions = await getQuestionsByQuizId(id);
                 if (JSON.stringify(fetchedQuestions) !== JSON.stringify(questions)) {
                     setQuestions(fetchedQuestions);
 
@@ -104,7 +104,9 @@ const CreateQuiz = () => {
                     throw error;
                 }
             }
-        })();
+        });
+
+        return () => unsubscribe();
     }, [id, refreshQuestions]);
 
     //USE EFFECTS FOR THE TEAMS
@@ -153,7 +155,6 @@ const CreateQuiz = () => {
         }
 
         try {
-            console.log(quiz.id);
             await addQuestion(
                 quiz.id,
                 question.content,
@@ -220,8 +221,6 @@ const CreateQuiz = () => {
     const handleSetGrades = async () => {
         if (grades.good !== 0 || grades.bad !== 0) {
             const updatedQuiz = { ...quiz, grades };
-            console.log(quiz);
-            //console.log(grades);
             try {
                 await updateQuiz(id, updatedQuiz);
                 setQuiz(updatedQuiz);
@@ -300,201 +299,221 @@ const CreateQuiz = () => {
     }, [quiz, id]);
 
 
+    useEffect(() => {
+        observeQuiz(id, setQuiz);
+    }
+    , [id]);
 
-
+    
     return (
         <>
-        <div className="mx-20 my-10">
-            <div className="flex flex-row items-center justify-between">
+            <div className="mx-20 my-10">
+                <div className="flex flex-row items-center justify-between">
+                    {/* quiz title */}
+                    <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
+                    <p>Total points: {totalPoints}</p>
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" role="combobox" className="w-[200px] justify-between">
+                                {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                {/* <CommandInput placeholder="Search framework..." /> */}
+                                {/* <CommandEmpty>No time limit set</CommandEmpty> */}
+                                <CommandGroup>
+                                    {timeRanges.map((timeRange) => (
+                                        <CommandItem
+                                            key={timeRange.value}
+                                            value={timeRange.value}
+                                            onSelect={async (currentValue) => {
+                                                setTimeLimit(Number(currentValue));
+                                                setOpen(false);
+                                                await handleSetTime(currentValue);
+                                            }}>
+                                            <Check className={cn("mr-2 h-5 w-4", timeLimit === timeRange.value ? "opacity-100" : "opacity-0")} />
+                                            {timeRange.label}
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
 
-                {/* quiz title */}
-                {quiz && <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>}
-
-                {/* action buttons */}
-                <div className="flex flex-row items-center justify-center">
-                    <div className="flex flex-col items-center justify-center">
-                        <Button onClick={() => handleButtonClick('assignTeam')}>Assign to group</Button>
-                    </div>
-                    <div className="flex flex-col items-center justify-center">
-                        <Button onClick={() => handleButtonClick('assignUser')}>Assign to student</Button>
-                    </div>
-                    <div className="flex flex-col items-center justify-center">
-                        <Button onClick={() => handleButtonClick('assignAssistant')}>Use Assistant</Button>
-                    </div>
-                    <div className="flex flex-col items-center justify-center">
-                        <Button onClick={() => navigate("/my-library")}>Save Changes</Button>
-                    </div>
-                </div>
-
-            </div>
-
-            <p>Total points: {totalPoints}</p>
-
-
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button variant="outline" role="combobox" className="w-[200px] justify-between">
-                        {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                        {/* <CommandInput placeholder="Search framework..." /> */}
-                        {/* <CommandEmpty>No time limit set</CommandEmpty> */}
-                        <CommandGroup>
-                            {timeRanges.map((timeRange) => (
-                                <CommandItem
-                                    key={timeRange.value}
-                                    value={timeRange.value}
-                                    onSelect={async (currentValue) => {
-                                        setTimeLimit(Number(currentValue));
-                                        setOpen(false);
-                                        await handleSetTime(currentValue);
-                                    }}>
-                                    <Check className={cn("mr-2 h-5 w-4", timeLimit === timeRange.value ? "opacity-100" : "opacity-0")} />
-                                    {timeRange.label}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
-
-
-
-            {/* Here we can see all the teams that the current user is in*/}
-            {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
-                <div>
-                    <h1>TUK SE POKAZVAT OTBORITE V KOITO UCHSTVA SLED KATO E NATISNAL Assignto group</h1>
-                    {filteredTeams.map((team) => (
-                        <div key={team.id}>
-                            <p>{team.name}</p>
-                            <button onClick={() => handleAddQuizToTeam(team.id)}>Add quiz to team</button>
+                    {/* action buttons */}
+                    <div className="flex flex-row items-center justify-center">
+                        <div className="flex flex-col items-center justify-center">
+                            <Button onClick={() => handleButtonClick('assignTeam')}>Assign to group</Button>
                         </div>
-                    ))}
+                        <div className="flex flex-col items-center justify-center">
+                            <Button onClick={() => handleButtonClick('assignUser')}>Assign to student</Button>
+                        </div>
+                        <div className="flex flex-col items-center justify-center">
+                            <Button onClick={() => navigate("/my-library")}>Save Changes</Button>
+                        </div>
+                    </div>
+
                 </div>
-            )}
-            {/* Here we can see all the students that are in the system*/}
-            {openPanel === 'assignUser' && students.length > 0 && (
-                <div>
-                    <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search for student" />
-                    {searchTerm.length > 2 &&
-                        filteredStudents.map((student, index) => (
-                            <div key={index}>
-                                <p>{student.username}</p>
-                                <button onClick={() => handleAddQuizToStudent(student)}>
-                                    Add quiz to student
-                                </button>
+
+                {/* Here we can see all the teams that the current user is in*/}
+                {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
+                    <div>
+                        <h1>TUK SE POKAZVAT OTBORITE V KOITO UCHSTVA SLED KATO E NATISNAL Assignto group</h1>
+                        {filteredTeams.map((team) => (
+                            <div key={team.id}>
+                                <p>{team.name}</p>
+                                <button onClick={() => handleAddQuizToTeam(team.id)}>Add quiz to team</button>
                             </div>
                         ))}
-                </div>
-            )}
-            {/* Here we can see the assistant */}
-            {openPanel === 'assignAssistant' && (
-                <Assistant quiz={quiz} />
-            )}
-            <p>Add description:</p>
-            <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
-            {/* //questions */}
-            <div className="flex flex-row items-start justify-start w-screen">
-                <div className="flex flex-col items-start justify-start ">
-                    <div className="grid grid-cols-3 gap-4">
-                        {questions ? (
-                            questions.map((question, index) => (
-                                <QuestionCard
-                                    key={index}
-                                    content={question.content}
-                                    quizId={id}
-                                    questionId={question.id}
-                                    answers={question.answers}
-                                    correctAnswers={question.correctAnswers}
-                                    points={Number(question.points)}
-                                    handleUpdateQuestion={handleUpdateQuestion}
-                                    onDelete={handleDeleteQuestion}
-                                />
-                            ))
-                        ) : (
-                            <h1>No questions yet</h1>
-                        )}
                     </div>
+                )}
 
-                    {createMode && (
-                        <div className=" border rounded-md">
-                            <div className="p-3">
-                                <div className="flex flex-col items-start justify-start w-800px ">
-                                    {/* the question */}
-                                    <Label htmlFor="question">Question</Label>
-                                    <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
-                                    {/* answers */}
-                                    {answers.map((answer, index) => (
-                                        <div key={index} className="flex flex-row items-start justify-start w-600px ">
-                                            <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)}
-                                            />
-                                            {/* checkbox for the rigth */}
-                                            <div className="flex items-center justify-center ml-5">
-                                                <input type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
-                                            </div>
-                                            <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
-                                        </div>
-                                    ))}
-                                    {/* points */}
-                                    <Label htmlFor="points">Points</Label>
-                                    <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
-                                    {/* action buttons */}
-                                    <button onClick={handleAddAnswer}>Add Answer</button>
-                                    <button onClick={handleAddQuestion} disabled={loading}>
-                                        Save
+                {/* Here we can see all the students that are in the system*/}
+                {openPanel === 'assignUser' && students.length > 0 && (
+                    <div>
+                        <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search for student" />
+                        {searchTerm.length > 2 &&
+                            filteredStudents.map((student, index) => (
+                                <div key={index}>
+                                    <p>{student.username}</p>
+                                    <button onClick={() => handleAddQuizToStudent(student)}>
+                                        Add quiz to student
                                     </button>
                                 </div>
+                            ))}
+                    </div>
+                )}
+                {/* Here we can see the assistant */}
+
+                <div className="flex flex-row items-center justify-between">
+                    <div>
+                        <p>Description:</p>
+                        <div className="w-96">
+                            <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
+                        </div>
+                    </div>
+                    <div className="flex flex-row items-center justify-center">
+                        <button className="btn btn-outline btn-primary " onClick={questionCreation}>Add question +</button>
+                        <div className="flex flex-col items-center justify-center">
+                            <Button onClick={() => handleButtonClick('assignAssistant')}>Use Assistant ✨</Button>
+                        </div>
+                    </div>
+                </div>
+
+                {openPanel === 'assignAssistant' && (
+                    <Assistant quiz={quiz} />
+                )}
+
+                <div className="flex flex-row items-start justify-start">
+                    <div>
+                        {/* //questions */}
+                        <div className="flex flex-row items-start justify-start ">
+                            <div className="flex flex-col items-start justify-start ">
+                                <div className="grid grid-cols-2 gap-5">
+                                    {questions ? (
+                                        questions.map((question, index) => (
+                                            <QuestionCard
+                                                key={index}
+                                                content={question.content}
+                                                quizId={id}
+                                                questionId={question.id}
+                                                answers={question.answers}
+                                                correctAnswers={question.correctAnswers}
+                                                points={Number(question.points)}
+                                                handleUpdateQuestion={handleUpdateQuestion}
+                                                onDelete={handleDeleteQuestion}
+                                            />
+                                        ))
+                                    ) : (
+                                        <h1>No questions yet</h1>
+                                    )}
+                                </div>
+
+                                {createMode && (
+                                    <div className=" border rounded-md">
+                                        <div className="p-3">
+                                            <div className="flex flex-col items-start justify-start w-800px ">
+                                                {/* the question */}
+                                                <Label htmlFor="question">Question</Label>
+                                                <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
+                                                {/* answers */}
+                                                {answers.map((answer, index) => (
+                                                    <div key={index} className="flex flex-row items-start justify-start w-600px ">
+                                                        <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)}
+                                                        />
+                                                        {/* checkbox for the rigth */}
+                                                        <div className="flex items-center justify-center ml-5">
+                                                            <input type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
+                                                        </div>
+                                                        <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
+                                                    </div>
+                                                ))}
+                                                {/* points */}
+                                                <Label htmlFor="points">Points</Label>
+                                                <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
+                                                {/* action buttons */}
+                                                <button onClick={handleAddAnswer}>Add Answer</button>
+                                                <button onClick={handleAddQuestion} disabled={loading}>
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {editingQuestion && (
+                                    <form onSubmit={() => handleUpdateQuestion(editingQuestion)}>
+                                        <input
+                                            type="text"
+                                            value={editingQuestion.content}
+                                            onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value, })} />
+                                        {/* Add more inputs for other fields */}
+                                        <button type="submit">Update Question</button>
+                                    </form>
+                                )}
                             </div>
                         </div>
-                    )}
+                    </div>
 
-                    {editingQuestion && (
-                        <form onSubmit={() => handleUpdateQuestion(editingQuestion)}>
-                            <input
-                                type="text"
-                                value={editingQuestion.content}
-                                onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value, })} />
-                            {/* Add more inputs for other fields */}
-                            <button type="submit">Update Question</button>
-                        </form>
-                    )}
+
+                    <div>
+                        {/* grading */}
+                        <div className="flex flex-col items-start justify-start">
+                            <p>Set grades (optional):</p>
+                            <p>Add indexes:</p>
+                            <input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
+                            <input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
+                            <p>Good: {grades.good} and above</p>
+                            <p>Satisfactory: {grades.bad} - {grades.good}</p>
+                            <p>Bad: {grades.bad} and below</p>
+                            <Button onClick={handleSetGrades}>Set Grades</Button>
+                        </div>
+
+
+                        <h1>Retake quiz permission </h1>
+                        <label className="swap">
+                            <input type="checkbox" onChange={handleRetakeSwap} />
+                            <div className="swap-on">YES</div> {/* disable */}
+                            <div className="swap-off">NO</div> {/* enable */}
+                        </label>
+                        <div className="">
+                            {remainingTime > 0
+                                ? <p>Ends On: {`${formatDate(quiz?.endsOn)}`} Time left: {msToTime(remainingTime)}</p>
+                                : <p>Ended On: {`${formatDate(quiz?.endsOn)}`}</p>}
+                            <DatePickerDemo
+                                selected={date}
+                                onSelect={setDate}
+                            />
+                            <button className="border" onClick={() => setEndOn(id, date)}>Save date</button>
+                        </div>
+
+                        
+                    </div>
                 </div>
-                <button className="btn btn-outline btn-primary" onClick={questionCreation}>Add +</button>
-            </div>
 
-            {/* grading */}
-            <div className="flex flex-col items-center justify-center">
-                <p>Set grades (optional):</p>
-                <p>Add indexes:</p>
-                <input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
-                <input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
-                <p>Good: {grades.good} and above</p>
-                <p>Satisfactory: {grades.bad} - {grades.good}</p>
-                <p>Bad: {grades.bad} and below</p>
-                <Button onClick={handleSetGrades}>Set Grades</Button>
             </div>
-            <h1>Retake quiz permission </h1>
-            <label className="swap">
-                <input type="checkbox" onChange={handleRetakeSwap} />
-                <div className="swap-on">YES</div> {/* disable */}
-                <div className="swap-off">NO</div> {/* enable */}
-            </label>
-            <div className="">
-                {remainingTime > 0
-                    ? <p>Ends On: {`${formatDate(quiz?.endsOn)}`} Time left: {msToTime(remainingTime)}</p>
-                    : <p>Ended On: {`${formatDate(quiz?.endsOn)}`}</p>}
-                <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    className="rounded-md border"
-                />
-                <button onClick={() => setEndOn(id, date)}>Save</button>
-            </div>
-        </div>
         </>
     );
 };

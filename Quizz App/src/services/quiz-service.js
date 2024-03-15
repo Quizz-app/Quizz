@@ -208,3 +208,25 @@ export const setOnGoing = async (quizId) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
   await update(quizRef, { onGoing: false });
 }
+
+
+
+export const observeQuiz = (quizId, callback) => {
+  const quizRef = ref(db, `quizzes/${quizId}`);
+  const unsubscribe = onValue(quizRef, (snapshot) => {
+    if (!snapshot.exists()) {
+      console.error('No quiz found with this id');
+      callback(null);
+      return;
+    }
+
+    const quiz = {
+      id: quizId,
+      ...snapshot.val(),
+    };
+
+    callback(quiz);
+  });
+
+  return unsubscribe;
+};
