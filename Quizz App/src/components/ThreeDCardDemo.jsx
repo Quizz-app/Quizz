@@ -1,7 +1,5 @@
-"use client";
-import MyImage from "../components/ui/MyImage";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
@@ -42,27 +40,13 @@ export const ThreeDCardDemo = ({ quiz, onButtonClick }) => {
         >
           {quiz.title}
         </CardItem>
-        <div className="flex justify-between mt-5">
-                  
-          <CardItem translateZ="100" className="w-1/2 mt-4 flex-shrink-0">
-            <MyImage
-              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              height="1000"
-              width="1000"
-              className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
-              alt="thumbnail"
-            />
-          </CardItem>
-
-          <CardItem
-            as="p"
-            translateZ="60"
-            className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-5 truncate"
-          >
-            {quiz.description}
-          </CardItem>
-
-        </div>
+        <CardItem
+          as="p"
+          translateZ="60"
+          className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-5 truncate"
+        >
+          {quiz.description}
+        </CardItem>
         <div className="flex justify-between items-center mt-10">
           {isTeacherOrAdmin && <CardItem
             translateZ={20}

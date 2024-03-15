@@ -34,10 +34,20 @@ export const getUserByUsername = (handle) => {
   return get(ref(db, `users/${handle}`));
 };
 
-export const getAllUsers = async () => {
-  const snapshot = await get(ref(db, `users`));
-  const data = snapshot.val();
-  return data ? Object.values(data) : [];
+export const getAllUsers = async (callback) => {
+  const snapshot = ref(db, `users`);
+  const unsubscribe = onValue(snapshot, (snap) => {
+    if (!snap.exists()) {
+      return;
+    }
+    const users = Object.keys(snap.val()).map((key) => ({
+      username: key,
+      ...snap.val()[key],
+    }));
+    callback(users);
+  })
+
+  return unsubscribe;
 };
 
 export const getUserData = (uid) => {
@@ -88,8 +98,8 @@ export const getAllStudents = async () => {
 /**
  * Retrieves all users with the role of 'teacher' from the database.
  *
- * @returns {Promise<Array|Null>} An array of teacher objects if found, an empty array if no teachers exist, or null if an error occurs.
- *
+ * @returns {Promise<Array|Null>} An array of teacher objects if found, an empty array if no teachers exist, 
+ * or null if an error occurs.
  * @async
  * @function
  */

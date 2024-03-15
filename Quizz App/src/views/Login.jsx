@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { emailPattern } from "../constants/constants";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase-config";
+import { Input } from ".././components/ui/input";
 
 const Login = () => {
   const { user, userData, setContext } = useContext(AppContext);
@@ -85,13 +86,13 @@ const Login = () => {
                 <label htmlFor="email">
                   <span className="label-text">Email</span>
                 </label>
-                <input value={form.email} onChange={updateForm("email")} type="email" placeholder="email" className="input input-bordered" />
+                <Input value={form.email} onChange={updateForm("email")} type="email" placeholder="email" className="input input-bordered" />
               </div>
               <div className="form-control">
                 <label htmlFor="password">
                   <span className="label-text">Password</span>
                 </label>
-                <input value={form.password} onChange={updateForm("password")} type="password" placeholder="password" className="input input-bordered" />
+                <Input value={form.password} onChange={updateForm("password")} type="password" placeholder="password" className="input input-bordered" />
                 <label className="label">
                   <a href="#" className="label-text-alt link link-hover" onClick={forgotPassword}>Forgot password?</a>
                 </label>

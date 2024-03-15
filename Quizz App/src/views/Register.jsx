@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { Label } from ".././components/ui/label";
 import { Input } from ".././components/ui/input";
 import LabelInputContainer from "../components/ui/LabelInputContainer";
+import { emailPattern, namePattern, usernamePattern } from "../constants/constants";
+import toast from "react-hot-toast";
 
 
 const Register = () => {
-
-  // const { setContext } = useContext(AppContext)
 
   const [form, setForm] = useState({
     firstName: "",
@@ -18,9 +18,10 @@ const Register = () => {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     role: "",
   });
- 
+
   const navigate = useNavigate();
 
   const updateForm = (prop) => (e) => {
@@ -31,14 +32,37 @@ const Register = () => {
     });
   };
 
+
   const register = async () => {
+
+    // if (!namePattern.test(form.firstName && form.lastName)) {
+    //   return toast.error('First name or last name is not valid. Please use only alphabetic characters.');
+    // }
+
+    // if (!usernamePattern.test(form.username)) {
+    //   return toast.error('Username is not valid. It must be alphanumeric and between 5 and 15 characters.');
+    // }
+
+    // if (!emailPattern.test(form.email)) {
+    //   return toast.error('Please enter a valid email address.');
+    // }
+
+    // if (form.password.length < 8 || form.password !== form.confirmPassword) {
+    //   return toast.error('Password is less than 8 characters or does not match the confirm password.');
+    // }
+
+    // if (form.role.length === 0) {
+    //   return toast.error('Role is not selected. Please choose a role.');
+    // }
 
     try {
       const credentials = await registerUser(form.email, form.password);
       await createUsername(form.firstName, form.lastName, form.username, credentials.user.uid, form.email, form.role);
+      toast.success(`Hello ${form.username}, get ready to test your knowledge!`);
       navigate("/");
     } catch (error) {
       console.error(error);
+      return toast.error('The email address is already in use by another account. Please use a different email address.');
     }
   };
 
@@ -51,8 +75,6 @@ const Register = () => {
         Login to aceternity if you can because we don&apos;t have a login flow
         yet
       </p>
-
-
       <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
         <LabelInputContainer>
           <Label htmlFor="firstname">First name</Label>
@@ -69,12 +91,16 @@ const Register = () => {
         <Input id="username" placeholder="Username" type="text" value={form.username} onChange={updateForm("username")} />
       </LabelInputContainer>
       <LabelInputContainer className="mb-4">
-        <Label htmlFor="email">Email Address</Label>
+        <Label htmlFor="email">Email address</Label>
         <Input id="email" placeholder="your-email-here@bb.com" type="email" value={form.email} onChange={updateForm("email")} />
       </LabelInputContainer>
       <LabelInputContainer className="mb-4">
         <Label htmlFor="password">Password</Label>
         <Input id="password" placeholder="••••••••" type="password" value={form.password} onChange={updateForm("password")} />
+      </LabelInputContainer>
+      <LabelInputContainer className="mb-4">
+        <Label htmlFor="password">Confirm password</Label>
+        <Input id="password" placeholder="••••••••" type="password" value={form.confirmPassword} onChange={updateForm("confirmPassword")} />
       </LabelInputContainer>
       <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4 justify-center items-center">
         <LabelInputContainer>
@@ -119,3 +145,4 @@ const BottomGradient = () => {
 
 
 export default Register;
+

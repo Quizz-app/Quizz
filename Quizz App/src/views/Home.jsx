@@ -1,33 +1,48 @@
-import { Button } from "../components/ui/button";
-import { Calendar } from "../components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { getAllTeachers, getAllUsers } from "../services/users-service";
+import { getAllUsers } from "../services/users-service";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
 import { useNavigate } from "react-router-dom";
-
+import { getAllQuizzes, listenForCategories } from "../services/quiz-service";
+import { Input } from ".././components/ui/input";
+import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
 
 const Home = () => {
-    // const [date, setDate] = React.useState(new Date());
-    const { user, userData } = useContext(AppContext);
-    const [userCount, setUserCount] = useState(0);
+    const { userData } = useContext(AppContext);
     const [educatorCount, setEducatorCount] = useState(0);
     const navigate = useNavigate();
+    const [quizzes, setQuizzes] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [sortedTeachersQuizzes, setSortedTeachersQuizzes] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+  
+    useState(() => {
+        listenForCategories(setCategories);
+        getAllQuizzes(setQuizzes);
+        getAllUsers(setUsers);
+
+    }, [categories, quizzes]);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const users = await getAllUsers();
-            const educators = await getAllTeachers();
+        const count = users.reduce((acc, user) => user.role === "teacher" ? acc + 1 : acc, 0);
+        setEducatorCount(count);
+    }, [users]);
 
-            setEducatorCount(educators.length);
-            setUserCount(users.length);
-        };
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
 
-        fetchUsers();
-    }, [userCount, educatorCount]);
+
+    const publicQuizzes = quizzes.filter(quiz => quiz.isPublic);
+
+    const searchQuizzes = publicQuizzes.filter((quiz) =>
+        quiz.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+
 
     const words = [
         {
@@ -54,18 +69,77 @@ const Home = () => {
         },
     ];
 
+
+
+    useEffect(() => {
+        const teachers = users.filter((user) => user.role === "teacher");
+        const teachersQuizes = teachers.map((teacher) => {
+            return {
+                name: teacher.username,
+                quizCount: teacher.createdQuizzes ? Object.values(teacher.createdQuizzes).length : 0
+            };
+        });
+        const sorted = teachersQuizes.sort((a, b) => b.quizCount - a.quizCount);
+        setSortedTeachersQuizzes(sorted);
+    }, [users]);
+
+
     return (
         <>
-
-
-
-            {user ?
+            {userData ?
                 (
-                    <h1>Home</h1>
+                    <div className="flex flex-col">
+                        <div className="flex justify-center w-full">
+                            <Input type="text" value={searchTerm} onChange={handleSearchChange}
+                                placeholder="Search quizzes..."
+                                className="text-center" />
+                        </div>
+                        <div className="flex flex-row">
+                            {searchTerm.length > 0 &&
+                                searchQuizzes
+                                    .filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                                    .map((quiz, index) => (
+                                        <ThreeDCardDemo key={index} quiz={quiz} />))}
+                        </div>
+                        <div className="flex flex-row  w-full">
+                            <div className="border w-2/3">
+                                <div>
+                                    recent
+                                </div>
+                                <div>
+                                    popular
+                                </div>
+                            </div>
+                            <div className="border w-1/3">
+                                <div className="overflow-x-auto">
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Teacher</th>
+                                                <th>Created Quizzes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {sortedTeachersQuizzes.map((teacher, index) => (
+                                                <tr key={index}>
+                                                    <th>{index + 1}</th>
+                                                    <td>{teacher.name}</td>
+                                                    <td>{teacher.quizCount}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            Categories
+                        </div>
+                    </div>
                 )
                 :
                 <>
-
                     <div className="flex flex-col items-center justify-center  ">
                         <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base  ">
                             The road to quality education stats here
@@ -77,10 +151,6 @@ const Home = () => {
                             </button>
                         </div>
                     </div>
-
-
-
-
                     {/* //hero */}
                     <div>
                         <div className="flex flex-col items-center justify-center mt-20 ">
@@ -91,7 +161,7 @@ const Home = () => {
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Users</div>
-                                    <div className="stat-value text-secondary">{userCount}</div>
+                                    <div className="stat-value text-secondary">{users.length}</div>
                                     <div className="stat-desc text-secondary">↗︎ 54%</div>
                                 </div>
 
@@ -104,8 +174,6 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-
-
                     {/* cateogirs */}
                     <div>
                         <div className="flex flex-col items-center justify-center mt-20 ">
@@ -136,7 +204,6 @@ const Home = () => {
                             </Carousel>
                         </div>
                     </div>
-
                     {/* //accordion - q&a */}
                     <div>
                         <div className="flex flex-col items-center justify-center mt-20 ">
@@ -193,7 +260,6 @@ const Home = () => {
                             <a className="link link-hover">Cookie policy</a>
                         </nav>
                     </footer>
-
                 </>}
         </>
     );
