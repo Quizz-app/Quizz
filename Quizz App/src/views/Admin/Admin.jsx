@@ -7,6 +7,7 @@ import {
 } from "../../services/users-service";
 import { deleteQuizById, getAllQuizzes } from "../../services/quiz-service";
 import UserView from "./UserView";
+import { set } from "date-fns";
 
 const Admin = () => {
   const [page, setPage] = useState(1);
@@ -21,9 +22,9 @@ const Admin = () => {
       setUsers(result.filter((user) => !user.isBlocked));
       setBlockedUsers(result.filter((user) => user.isBlocked));
     });
-    getAllQuizzes().then((result) => setQuizzes(result));
+    getAllQuizzes(setQuizzes);
   }, [blocked, quizzes]);
-
+  
   const handleBlock = (userHandle) => {
     updateBlockedUser(userHandle).then(() => setBlocked(!blocked));
   };

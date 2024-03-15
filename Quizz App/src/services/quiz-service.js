@@ -30,20 +30,6 @@ export const createQuiz = async (creator, title, category, isPublic, questionTyp
   return newQuizRef.key;
 };
 
-export const getAllQuizzes = async () => {
-  const snapShot = await get(ref(db, "quizzes"), orderByChild("createdOn"));
-
-  if (!snapShot.exists()) {
-    return [];
-  }
-  const quizzes = Object.keys(snapShot.val()).map((key) => ({
-    id: key,
-    ...snapShot.val()[key],
-
-  }));
-
-  return quizzes;
-};
 
 export const getQuizByCreator = (creator, callback) => {
   if (!creator) {
@@ -209,8 +195,6 @@ export const setOnGoing = async (quizId) => {
   await update(quizRef, { onGoing: false });
 }
 
-
-
 export const observeQuiz = (quizId, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
   const unsubscribe = onValue(quizRef, (snapshot) => {
@@ -226,6 +210,23 @@ export const observeQuiz = (quizId, callback) => {
     };
 
     callback(quiz);
+  });
+
+  return unsubscribe;
+};
+
+export const getAllQuizzes = async (callback) => {
+  const snapShot = ref(db, "quizzes");
+  const unsubscribe = onValue(snapShot, (snap) => {
+    if (!snap.exists()) {
+      return [];
+    }
+    const quizzes = Object.keys(snap.val()).map((key) => ({
+      id: key,
+      ...snap.val()[key],
+    }));
+
+    callback(quizzes);
   });
 
   return unsubscribe;

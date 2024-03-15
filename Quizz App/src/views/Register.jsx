@@ -35,25 +35,25 @@ const Register = () => {
 
   const register = async () => {
 
-    if (!namePattern.test(form.firstName && form.lastName)) {
-      return toast.error('First name or last name is not valid. Please use only alphabetic characters.');
-    }
+    // if (!namePattern.test(form.firstName && form.lastName)) {
+    //   return toast.error('First name or last name is not valid. Please use only alphabetic characters.');
+    // }
 
-    if (!usernamePattern.test(form.username)) {
-      return toast.error('Username is not valid. It must be alphanumeric and between 5 and 15 characters.');
-    }
+    // if (!usernamePattern.test(form.username)) {
+    //   return toast.error('Username is not valid. It must be alphanumeric and between 5 and 15 characters.');
+    // }
 
-    if (!emailPattern.test(form.email)) {
-      return toast.error('Please enter a valid email address.');
-    }
+    // if (!emailPattern.test(form.email)) {
+    //   return toast.error('Please enter a valid email address.');
+    // }
 
-    if (form.password.length < 8 || form.password !== form.confirmPassword) {
-      return toast.error('Password is less than 8 characters or does not match the confirm password.');
-    }
+    // if (form.password.length < 8 || form.password !== form.confirmPassword) {
+    //   return toast.error('Password is less than 8 characters or does not match the confirm password.');
+    // }
 
-    if (form.role.length === 0) {
-      return toast.error('Role is not selected. Please choose a role.');
-    }
+    // if (form.role.length === 0) {
+    //   return toast.error('Role is not selected. Please choose a role.');
+    // }
 
     try {
       const credentials = await registerUser(form.email, form.password);
@@ -75,8 +75,6 @@ const Register = () => {
         Login to aceternity if you can because we don&apos;t have a login flow
         yet
       </p>
-
-
       <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
         <LabelInputContainer>
           <Label htmlFor="firstname">First name</Label>
