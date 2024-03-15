@@ -23,9 +23,7 @@ const QuizPreview = () => {
                 const quizQuestions = await getQuestionsByQuizId(id);
                 setQuiz(quizData);
                 setQuestions(quizQuestions);
-
-
-
+                
                 const totalPoints = quizQuestions.reduce((total, question) => total + Number(question.points), 0);
                 setTotalPoints(totalPoints);
             } catch (error) {

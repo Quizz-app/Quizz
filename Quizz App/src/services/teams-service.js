@@ -1,5 +1,5 @@
 import { db } from "../config/firebase-config";
-import { get, remove, set, ref, query, equalTo, orderByChild, update, push, onValue } from "firebase/database";
+import { get, remove, set, ref, push, onValue } from "firebase/database";
 
 
 /**
