@@ -3,16 +3,18 @@ import { AppContext } from "../context/AppContext";
 import { createQuiz, deleteQuizById, getQuizByCreator, getQuizById, listenForCategories } from "../services/quiz-service";
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTrigger, } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom";
 import { addQuizToCreator, getUserQuizzes } from "../services/users-service";
 import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
+import { cn } from "@/utils/cn";
+import LabelInputContainer from "../components/ui/LabelInputContainer";
 
 
 const MyLibrary = () => {
-    const { user, userData } = useContext(AppContext);
+    const { userData } = useContext(AppContext);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [myQuizzes, setMyQuizzes] = useState([]);
     const [studentQuizzes, setStudentQuizzes] = useState([]);
@@ -102,99 +104,103 @@ const MyLibrary = () => {
                 {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
                     <>
                         <div className="flex flex-row h-full items-start justify-between ">
-
                             <div>
                                 <h2 className="text-4xl font-bold mb-4">My Quizzes</h2>
                             </div>
-
-
-
                             <div>
                                 <Dialog onClose={handleCloseDialog}>
                                     <DialogTrigger asChild>
                                         <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button>
                                     </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[425px] bg-white dark:bg-neutral text-black dark:text-white">
-                                        <DialogHeader>
-                                            <DialogTitle>Create Quiz</DialogTitle>
-                                            <DialogDescription>
-                                                {`Create a new quiz by filling out the form below.`}
-                                            </DialogDescription>
-                                        </DialogHeader>
-                                        <div className="grid gap-4 py-4">
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label htmlFor="title" className="text-right">
-                                                    Title
-                                                </Label>
-                                                <Input id="title" value={quiz.title} onChange={updateForm('title')} className="col-span-3" />
-                                            </div>
+                                    <DialogContent className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+                                        <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 ">
+                                            Hey there, quiz enthusiast!
+                                        </h2>
+                                        <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300 mb-3">
+                                            It's time to step into the spotlight and showcase your quiz-making skills. Be the pioneer and set the bar high for others to follow!
+                                        </p>
+                                        <LabelInputContainer className="mb-3">
+                                            <Label htmlFor="title">Quiz title</Label>
+                                            <Input id="title" placeholder="Quiz title" type="text" value={quiz.title} onChange={updateForm("title")} />
+                                        </LabelInputContainer>
+                                        <LabelInputContainer className="mb-3">
+                                            <Label htmlFor="crate-category">Create category</Label>
+                                            <Input id="create-category" placeholder="Create category" type="text" value={quiz.category} onChange={updateForm("category")} />
+                                        </LabelInputContainer>
+                                        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-3">
+                                            <LabelInputContainer>
+                                                <div className="">
+                                                    <Label htmlFor="visibility" className="text-right">
+                                                        Visibility
+                                                    </Label>
+                                                    <div className="relative w-[180px]">
+                                                        <select
+                                                            onChange={event => setQuiz(prevQuiz => ({ ...prevQuiz, isPublic: event.target.value === 'Public' }))}
+                                                            className={cn(
+                                                                `flex h-10 w-full border-none bg-gray-50 dark:bg-zinc-800 text-black dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
+                                                          file:text-sm file:font-medium placeholder:text-neutral-400 dark:placeholder-text-neutral-600 
+                                                          focus-visible:outline-none focus-visible:ring-[2px]  focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600
+                                                           disabled:cursor-not-allowed disabled:opacity-50
+                                                           dark:shadow-[0px_0px_1px_1px_var(--neutral-700)]
+                                                           group-hover/input:shadow-none transition duration-400
+                                                           `)}>
+                                                            <option value="Public">Public</option>
+                                                            <option value="Private">Private</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </LabelInputContainer>
+                                            <LabelInputContainer>
+                                                <div className="">
+                                                    <Label htmlFor="visibility" className="text-right">
+                                                        Or choose category
+                                                    </Label>
+                                                    <div className="relative w-[180px]">
+                                                        <select onChange={event => setSelectedOption(event.target.value)}
+                                                            className={cn(
+                                                                `flex h-10 w-full border-none bg-gray-50 dark:bg-zinc-800 text-black dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
+                                                          file:text-sm file:font-medium placeholder:text-neutral-400 dark:placeholder-text-neutral-600 
+                                                          focus-visible:outline-none focus-visible:ring-[2px]  focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600
+                                                           disabled:cursor-not-allowed disabled:opacity-50
+                                                           dark:shadow-[0px_0px_1px_1px_var(--neutral-700)]
+                                                           group-hover/input:shadow-none transition duration-400
+                                                           `)}>
+                                                            {suggestions.length > 0 && suggestions.map((suggestion, index) => (
+                                                                <option key={index} value={suggestion}>{suggestion}</option>
+                                                            ))}
+                                                        </select>
 
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label htmlFor="category" className="text-right">
-                                                    Crate Category
-                                                </Label>
-                                                <Input id="category" value={quiz.category} onChange={updateForm('category')} className="col-span-3" />
-                                            </div>
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label htmlFor="visibility" className="text-right">
-                                                    Or choose category
-                                                </Label>
-                                                <div className="relative w-[180px]">
-                                                    <select onChange={event => setSelectedOption(event.target.value)} className="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                                        {suggestions.length > 0 && suggestions.map((suggestion, index) => (
-                                                            <option key={index} value={suggestion}>{suggestion}</option>
-                                                        ))}
-                                                    </select>
-                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                            <path d="M5.305 7.695a.999.999 0 0 1 1.414 0L10 11.076l3.28-3.381a.999.999 0 1 1 1.44 1.402l-4 4.242a1 1 0 0 1-1.44 0l-4-4.242a.999.999 0 0 1 0-1.402z" />
-                                                        </svg>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label htmlFor="visibility" className="text-right">
-                                                    Visibility
-                                                </Label>
-                                                <div className="relative w-[180px]">
-                                                    <select
-                                                        className="block appearance-none w-full bg-white border border-black-700 text-black-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-black-500"
-                                                        value={quiz.isPublic ? 'Public' : 'Private'}
-                                                        onChange={event => setQuiz(prevQuiz => ({ ...prevQuiz, isPublic: event.target.value === 'Public' }))}>
-                                                        <option value="Public">Public</option>
-                                                        <option value="Private">Private</option>
-                                                    </select>
-                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                            <path d="M5.305 7.695a.999.999 0 0 1 1.414 0L10 11.076l3.28-3.381a.999.999 0 1 1 1.44 1.402l-4 4.242a1 1 0 0 1-1.44 0l-4-4.242a.999.999 0 0 1 0-1.402z" />
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            </LabelInputContainer>
                                         </div>
-                                        <DialogFooter>
-                                            <Button type="submit" onClick={quizCreation}>Create Quiz</Button>
-                                        </DialogFooter>
+                                        <button
+                                            className=" mt-5 bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 
+                                            to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium 
+                                            shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] 
+                                            dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                                            type="submit"
+                                            onClick={quizCreation}>
+                                            Create quiz &rarr;
+                                            <BottomGradient />
+                                        </button>
+                                        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
                                     </DialogContent>
                                 </Dialog>
                             </div>
-
                         </div>
 
                         <div className="grid grid-cols-5 gap-5">
                             {myQuizzes.map((quiz, index) => (
-                                <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={()=> deleteQuiz(quiz.id)}  />
+                                <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
                             ))}
                         </div>
-
-
                     </>
                 ) : (
                     <div className="flex flex-col h-full items-start justify-start p-6">
                         <h2 className="text-4xl font-bold mb-4">Completed</h2>
                         {studentQuizzes.completed && studentQuizzes.completed.length > 0 ? (
                             studentQuizzes.completed.map((quiz, index) => (
-                                // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={true} />
                                 <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
                             ))
                         ) : (
@@ -203,21 +209,25 @@ const MyLibrary = () => {
                         <h2 className="text-4xl font-bold mb-4">Todo</h2>
                         {studentQuizzes.nonCompleted && studentQuizzes.nonCompleted.length > 0 ? (
                             studentQuizzes.nonCompleted.map((quiz, index) => (
-
-                                // <QuizCard key={quiz.id} content={quiz.title} id={quiz.id} quiz={quiz} isCompleted={false} />
                                 <ThreeDCardDemo key={index} quiz={quiz} isCompleted={false} />
-
                             ))
                         ) : (
                             <p>No quizzes to do yet.</p>
                         )}
                     </div>
-                )} 
-                
-                </div>
-            </>
-       
+                )}
+            </div>
+        </>
     );
 }
 
-export default MyLibrary;   
+export default MyLibrary;
+
+const BottomGradient = () => {
+    return (
+        <>
+            <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+            <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+        </>
+    );
+};
