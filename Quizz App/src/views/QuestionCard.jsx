@@ -42,7 +42,7 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
   };
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl border">
+    <div className="card w-96 bg-gradient-to-br from-white to-gray-100 shadow-xl p-0 m-0">
       <div className="card-body">
         {editing ? (
           <>
@@ -65,12 +65,12 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
                         editedAnswers[index],
                       ]);
                     }
-                  }} />
+                  } } />
 
                 <div className="w-64">
                   <Input type="text" value={editedAnswers[index]} onChange={(e) => {
                     const newAnswers = [...editedAnswers]; newAnswers[index] = e.target.value; setEditedAnswers(newAnswers);
-                  }} />
+                  } } />
                 </div>
 
               </div>
@@ -78,13 +78,17 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
             <Input type="number" value={editedPoints} onChange={(e) => setEditedPoints(Number(e.target.value))} />
             {/* <button className="btn btn-outline btn-info" onClick={handleSave}>Save</button> */}
             <MdDownloadDone onClick={handleSave} />
+
+
           </>
         ) : (
           <>
             <h2 className="card-title">{content}</h2>
             <ul>
               {answers.map((answer, index) => (
-                <li className="" key={index}>{answer}</li>
+                <div className="border-l-4 border-neon-green rounded-md mb-1" key={index}>
+                  <li className="ml-2" key={index}>{answer}</li>
+                </div>
               ))}
             </ul>
             <p>Points: {points}</p>
@@ -98,6 +102,8 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
         )}
       </div>
     </div>
+     
+     
   );
 };
 
@@ -113,3 +119,4 @@ QuestionCard.propTypes = {
   correctAnswer: PropTypes.array,
   onDelete: PropTypes.func.isRequired,
 };
+

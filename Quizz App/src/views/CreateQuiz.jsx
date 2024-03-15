@@ -20,6 +20,9 @@ import { DatePickerDemo } from "../components/DatePicker";
 import { AiOutlineTeam } from "react-icons/ai";
 import { PiStudent } from "react-icons/pi";
 import { MdDoneAll } from "react-icons/md";
+import { ScrollArea } from "@/components/ui/scroll-area"
+// import { Separator } from "@/components/ui/separator"
+import { motion } from 'framer-motion';
 
 
 const CreateQuiz = () => {
@@ -306,8 +309,10 @@ const CreateQuiz = () => {
     useEffect(() => {
         observeQuiz(id, setQuiz);
     }
-    , [id]);
-    
+        , [id]);
+
+
+
     return (
         <>
             <div className="mx-20 my-10">
@@ -348,7 +353,7 @@ const CreateQuiz = () => {
                     {/* action buttons */}
                     <div className="flex flex-row items-center justify-center">
                         <div className="flex flex-col items-center justify-center">
-               
+
                             <Button onClick={() => handleButtonClick('assignTeam')}> <AiOutlineTeam />   Assign to group</Button>
                         </div>
                         <div className="flex flex-col items-center justify-center">
@@ -360,6 +365,7 @@ const CreateQuiz = () => {
                     </div>
 
                 </div>
+                <div className="border-t-2 border-gray-200 mb-2"></div>
 
                 {/* Here we can see all the teams that the current user is in*/}
                 {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
@@ -391,7 +397,7 @@ const CreateQuiz = () => {
                 )}
                 {/* Here we can see the assistant */}
 
-                <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row items-center justify-between pb-4">
                     <div>
                         <p>Description:</p>
                         <div className="w-96">
@@ -406,20 +412,33 @@ const CreateQuiz = () => {
                     </div>
                 </div>
 
+                <div className="border-t-2 border-neon-green"></div>
+
                 {openPanel === 'assignAssistant' && (
-                    <Assistant quiz={quiz} />
+                    <ScrollArea className="h-[300px] w-[1350px] rounded-md border p-4">
+                        <Assistant quiz={quiz} />
+                    </ScrollArea>
                 )}
+
+
 
                 <div className="flex flex-row items-start justify-start">
                     <div>
                         {/* //questions */}
                         <div className="flex flex-row items-start justify-start ">
-                            <div className="flex flex-col items-start justify-start ">
-                                <div className="grid grid-cols-2 gap-5">
-                                    {questions ? (
-                                        questions.map((question, index) => (
+                            {/* <div className="flex flex-col items-start justify-start "> */}
+                            <div className="grid grid-cols-4 gap-1 items-start justify-start w-800px">
+                                {questions ? (
+                                    questions.map((question, index) => (
+                                        <motion.div
+                                            key={index}
+                                            className="p-0 m-0 w-24 h-32" // adjust the size of the grid items
+                                            initial={{ scale: 0.3, zIndex: 0 }} // card is initially smaller and has a z-index of 0
+                                            whileHover={{ scale: 1.1, zIndex: 1 }} // card scales up and has a z-index of 1 when hovered over
+                                            transition={{ duration: 0.3 }}
+                                        >
                                             <QuestionCard
-                                                key={index}
+                                                className="p-0 m-0"
                                                 content={question.content}
                                                 quizId={id}
                                                 questionId={question.id}
@@ -429,93 +448,112 @@ const CreateQuiz = () => {
                                                 handleUpdateQuestion={handleUpdateQuestion}
                                                 onDelete={handleDeleteQuestion}
                                             />
-                                        ))
-                                    ) : (
-                                        <h1>No questions yet</h1>
-                                    )}
-                                </div>
-
-                                {createMode && (
-                                    <div className=" border rounded-md">
-                                        <div className="p-3">
-                                            <div className="flex flex-col items-start justify-start w-500px ">
-                                                {/* the question */}
-                                                <Label htmlFor="question">Question</Label>
-                                                <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
-                                                {/* answers */}
-                                                {answers.map((answer, index) => (
-                                                    <div key={index} className="flex flex-row items-start justify-start w-96 ">
-                                                        <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)}
-                                                        />
-                                                        {/* checkbox for the rigth */}
-                                                        <div className="flex items-center justify-center ml-5">
-                                                            <input type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
-                                                        </div>
-                                                        <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
-                                                    </div>
-                                                ))}
-                                                {/* points */}
-                                                <Label htmlFor="points">Points</Label>
-                                                <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
-                                                {/* action buttons */}
-                                                <button onClick={handleAddAnswer}>Add Answer</button>
-                                                <button onClick={handleAddQuestion} disabled={loading}>
-                                                    Save
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {editingQuestion && (
-                                    <form onSubmit={() => handleUpdateQuestion(editingQuestion)}>
-                                        <input
-                                            type="text"
-                                            value={editingQuestion.content}
-                                            onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value, })} />
-                                        {/* Add more inputs for other fields */}
-                                        <button type="submit">Update Question</button>
-                                    </form>
+                                        </motion.div>
+                                    ))
+                                ) : (
+                                    <h1>No questions yet</h1>
                                 )}
                             </div>
+
+                            {createMode && (
+                                <div className=" border rounded-md">
+                                    <div className="p-3">
+                                        <div className="flex flex-col items-start justify-start w-500px ">
+                                            {/* the question */}
+                                            <Label htmlFor="question">Question</Label>
+                                            <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
+                                            {/* answers */}
+                                            {answers.map((answer, index) => (
+                                                <div key={index} className="flex flex-row items-start justify-start w-96 ">
+                                                    <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)}
+                                                    />
+                                                    {/* checkbox for the rigth */}
+                                                    <div className="flex items-center justify-center ml-5">
+                                                        <input type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
+                                                    </div>
+                                                    <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
+                                                </div>
+                                            ))}
+                                            {/* points */}
+                                            <Label htmlFor="points">Points</Label>
+                                            <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
+                                            {/* action buttons */}
+                                            <button onClick={handleAddAnswer}>Add Answer</button>
+                                            <button onClick={handleAddQuestion} disabled={loading}>
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {editingQuestion && (
+                                <form onSubmit={() => handleUpdateQuestion(editingQuestion)}>
+                                    <input
+                                        type="text"
+                                        value={editingQuestion.content}
+                                        onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value, })} />
+                                    {/* Add more inputs for other fields */}
+                                    <button type="submit">Update Question</button>
+                                </form>
+                            )}
+
                         </div>
                     </div>
 
 
-                    <div>
+                    <div className="flex flex-col items-start justify-center ml-10 mt-10">
                         {/* grading */}
-                        <div className="flex flex-col items-start justify-start">
-                            <p>Set grades (optional):</p>
-                            <p>Add indexes:</p>
-                            <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
-                            <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
-                            <p>Good: {grades.good} and above</p>
-                            <p>Satisfactory: {grades.bad} - {grades.good}</p>
-                            <p>Bad: {grades.bad} and below</p>
-                            <Button onClick={handleSetGrades}>Set Grades</Button>
+                        <div className="flex flex-col items-start justify-center">
+                            <h1 className="text-2xl font-bold mb-4"> Grading</h1>
+
+                            <div className="flex space-x-4">
+                                <div>
+                                    <p>Add indexes:</p>
+                                    <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
+                                    <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
+                                </div>
+                                <div className="flex flex-col items-center justify-center pl-20">
+                                    <p>Good: {grades.good} and above</p>
+                                    <p>Satisfactory: {grades.bad} - {grades.good}</p>
+                                    <p>Bad: {grades.bad} and below</p>
+                                    <Button onClick={handleSetGrades}>Set Grades</Button>
+                                </div>
+                            </div>
                         </div>
 
 
-                        <h1>Retake quiz permission </h1>
-                        <label className="swap">
-                            <input type="checkbox" onChange={handleRetakeSwap} />
-                            <div className="swap-on">YES</div> {/* disable */}
-                            <div className="swap-off">NO</div> {/* enable */}
-                        </label>
-                        <div className="">
-                            {quiz?.endsOn && (
-                                remainingTime > 0
-                                    ? <p>Ends On: {`${formatDate(quiz.endsOn)}`} Time left: {msToTime(remainingTime)}</p>
-                                    : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
-                            )}
-                            <DatePickerDemo
-                                selected={date}
-                                onSelect={setDate}
-                            />
-                            <button className="border" onClick={() => setEndOn(id, date)}>Save date</button>
+
+                        <div className="mt-10">
+                            <h1 className="text-2xl font-bold mb-4">Due Date</h1>
+                            <div className="flex flex-row items-center justify-start">
+                                <DatePickerDemo
+                                    selected={date}
+                                    onSelect={setDate}
+                                />
+                                <div className="ml-10">
+                                    {quiz?.endsOn && (
+                                        remainingTime > 0
+                                            ? <p>Time left: {msToTime(remainingTime)}</p>
+                                            : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <button className="" onClick={() => setEndOn(id, date)}>Save date</button>
                         </div>
 
-                        
+                        <div className="flex flex-roe items-start justify-center mt-10">
+                            <h1 className="text-2xl font-bold mb-4">Retake Quiz</h1>
+                            <div className="flex flex-row items-center justify-start">
+                                <label className="flex swap items-center align-center">
+                                    <input type="checkbox" onChange={handleRetakeSwap} />
+                                    <div className="swap-on text-2xl">YES</div> {/* disable */}
+                                    <div className="swap-off text-2xl">NO</div> {/* enable */}
+                                </label>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 

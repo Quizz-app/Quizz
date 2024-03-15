@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import { useContext} from 'react';
+import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import { deleteQuizById } from '../services/quiz-service';
 import { formatDate } from "../services/time-functions";
+
 /**
  * QuizCard component displays a card with quiz details.
  * @component
@@ -66,3 +67,4 @@ QuizCard.propTypes = {
     quiz: PropTypes.object.isRequired,
     isCompleted: PropTypes.bool
 }
+
