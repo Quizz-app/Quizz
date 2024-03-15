@@ -272,9 +272,9 @@ const CreateQuiz = () => {
     };
 
     const questionCreation = () => {
-        if (!description) {
-            return toast.error("Please provide a description.");
-        }
+        // if (!description) {
+        //     return toast.error("Please provide a description.");
+        // }
         setCreateMode(true);
     };
 
