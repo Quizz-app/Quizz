@@ -17,6 +17,10 @@ import { toast } from "react-hot-toast";
 import { formatDate, msToTime, timeRanges } from "../services/time-functions";
 import Assistant from "../components/Assistant";
 import { DatePickerDemo } from "../components/DatePicker";
+import { AiOutlineTeam } from "react-icons/ai";
+import { PiStudent } from "react-icons/pi";
+import { MdDoneAll } from "react-icons/md";
+
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -345,13 +349,14 @@ const CreateQuiz = () => {
                     {/* action buttons */}
                     <div className="flex flex-row items-center justify-center">
                         <div className="flex flex-col items-center justify-center">
-                            <Button onClick={() => handleButtonClick('assignTeam')}>Assign to group</Button>
+               
+                            <Button onClick={() => handleButtonClick('assignTeam')}> <AiOutlineTeam />   Assign to group</Button>
                         </div>
                         <div className="flex flex-col items-center justify-center">
-                            <Button onClick={() => handleButtonClick('assignUser')}>Assign to student</Button>
+                            <Button onClick={() => handleButtonClick('assignUser')}> <PiStudent /> Assign to student</Button>
                         </div>
                         <div className="flex flex-col items-center justify-center">
-                            <Button onClick={() => navigate("/my-library")}>Save Changes</Button>
+                            <Button onClick={() => navigate("/my-library")}> <MdDoneAll /> Save Changes</Button>
                         </div>
                     </div>
 
@@ -434,13 +439,13 @@ const CreateQuiz = () => {
                                 {createMode && (
                                     <div className=" border rounded-md">
                                         <div className="p-3">
-                                            <div className="flex flex-col items-start justify-start w-800px ">
+                                            <div className="flex flex-col items-start justify-start w-500px ">
                                                 {/* the question */}
                                                 <Label htmlFor="question">Question</Label>
                                                 <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
                                                 {/* answers */}
                                                 {answers.map((answer, index) => (
-                                                    <div key={index} className="flex flex-row items-start justify-start w-600px ">
+                                                    <div key={index} className="flex flex-row items-start justify-start w-96 ">
                                                         <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)}
                                                         />
                                                         {/* checkbox for the rigth */}
@@ -483,8 +488,8 @@ const CreateQuiz = () => {
                         <div className="flex flex-col items-start justify-start">
                             <p>Set grades (optional):</p>
                             <p>Add indexes:</p>
-                            <input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
-                            <input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
+                            <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
+                            <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
                             <p>Good: {grades.good} and above</p>
                             <p>Satisfactory: {grades.bad} - {grades.good}</p>
                             <p>Bad: {grades.bad} and below</p>
