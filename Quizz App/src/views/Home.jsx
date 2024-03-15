@@ -8,7 +8,7 @@ import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
 import { useNavigate } from "react-router-dom";
 import { Input } from ".././components/ui/input";
 import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
-import { getQuizByCreator, getQuizById, getAllQuizzes, listenForCategories } from "../services/quiz-service";
+import { getQuizByCreator, getTopCategories, getQuizById, getAllQuizzes, listenForCategories } from "../services/quiz-service";
 import { getUserQuizzes } from "../services/users-service";
 
 const Home = () => {
@@ -22,6 +22,7 @@ const Home = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [teacherQuizzes, setTeacherQuizzes] = useState([]);
     const [studentQuizzes, setStudentQuizzes] = useState([]);
+    const [topCategories, setTopCategories] = useState([]);
 
     useState(() => {
         listenForCategories(setCategories);
@@ -44,6 +45,19 @@ const Home = () => {
 
     const searchQuizzes = publicQuizzes.filter((quiz) =>
         quiz.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+
+    useEffect(() => {
+        const currentCategories = getTopCategories(quizzes);
+        setTopCategories(currentCategories)
+
+    }, [quizzes]);
+
+
+    const categoriesWithQuizzes = topCategories.map((category) => {
+        const categoryQuizzes = quizzes.filter(quiz => quiz.category === category);
+        return { category, quizzes: categoryQuizzes };
+    });
 
 
 
@@ -194,7 +208,18 @@ const Home = () => {
                             </div>
                         </div>
                         <div>
-                            Categories
+                            <div>
+                                {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
+                                    <div key={index}>
+                                        <h2>{categoryWithQuizzes.category}</h2>
+                                        <div className="flex flex-row">
+                                            {categoryWithQuizzes.quizzes.map((quiz, index) => (
+                                                <ThreeDCardDemo key={index} quiz={quiz} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )

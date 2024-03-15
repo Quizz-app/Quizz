@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import axios from "axios";
 import { useState } from "react";
 import { addQuestion } from "../services/questions-service";
+import { Input } from './ui/input';
 
 /**
  * @component
@@ -51,11 +52,9 @@ const Assistant = ({ quiz }) => {
   return (
     <>
       <div>
-        <input className="w-64 h-10 border" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+        <Input className="w-96 h-10 border" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
         <button onClick={handleSubmitAssistant} className="btn"> Ask </button>
-        <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-          Shimmer
-        </button>
+       
       </div>
       <div>
         {assistantResult?.questions && <div className="ml-10 mr-10">

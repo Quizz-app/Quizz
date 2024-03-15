@@ -231,3 +231,25 @@ export const getAllQuizzes = async (callback) => {
 
   return unsubscribe;
 };
+
+
+export const getTopCategories = (quizzes) => {
+        
+  const categoryCounts = quizzes.reduce((counts, quiz) => {
+      const category = quiz.category;
+      if (!counts[category]) {
+          counts[category] = 0;
+      }
+      counts[category]++;
+      return counts;
+  }, {});
+
+  
+  const topCategories = Object.entries(categoryCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(pair => pair[0]); 
+
+  return topCategories;
+}
+

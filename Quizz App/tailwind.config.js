@@ -34,6 +34,7 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        'neon-green': '#39ff14',
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -76,6 +77,8 @@ module.exports = {
       //   md: "calc(var(--radius) - 2px)",
       //   sm: "calc(var(--radius) - 4px)",
       // },
+
+      
 
       keyframes: {
         "accordion-down": {
@@ -172,3 +175,4 @@ function addVariablesForColors({ addBase, theme }) {
     ":root": newVars,
   });
 }
+
