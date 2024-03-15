@@ -1,8 +1,8 @@
-import { ref, push, get, update, remove, query } from 'firebase/database';
+import { ref, push, get, update, remove, onValue, query } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
-export const addQuestion = async (quizId, content, answers,  points, correctAnswer) => {
-    
+export const addQuestion = async (quizId, content, answers, points, correctAnswer) => {
+
     const quizSnapshot = await get(ref(db, `quizzes/${quizId}`));
     if (!quizSnapshot.exists()) {
         throw new Error('Quiz not found');
@@ -20,23 +20,29 @@ export const addQuestion = async (quizId, content, answers,  points, correctAnsw
     return question;
 };
 
-export const getQuestionsByQuizId = async (quizId) => {
-    const questionsSnapshot = await get(query(ref(db, `quizzes/${quizId}/questions`)));
 
-    if (!questionsSnapshot.exists()) {
-        throw new Error('No questions found');
-    }
+export const getQuestionsByQuizId = (quizId, callback) => {
+    const questionsRef = ref(db, `quizzes/${quizId}/questions`);
 
-    const questionsObject = questionsSnapshot.val();
-    const questionsArray = Object.keys(questionsObject).map(key => ({
-        id: key,
-        ...questionsObject[key]
-    }));
+    const unsubscribe = onValue(questionsRef, (snapshot) => {
+        if (!snapshot.exists()) {
+            callback([]);
+            return;
+        }
 
-    return questionsArray;
+        const questionsObject = snapshot.val();
+        const questionsArray = Object.keys(questionsObject).map(key => ({
+            id: key,
+            ...questionsObject[key]
+        }));
+
+        callback(questionsArray);
+    });
+
+    return () => unsubscribe();
 };
 
-export const updateQuestion = async (quizId, questionId, content, answers,  points, correctAnswer) => {
+export const updateQuestion = async (quizId, questionId, content, answers, points, correctAnswer) => {
     const questionRef = ref(db, `quizzes/${quizId}/questions/${questionId}`);
 
     const questionSnapshot = await get(questionRef);

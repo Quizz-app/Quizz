@@ -81,31 +81,22 @@ const CreateQuiz = () => {
     }, [id]);
 
     useEffect(() => {
-        (async () => {
-            try {
-                setLoading(true);
-                const fetchedQuestions = await getQuestionsByQuizId(id);
-                if (JSON.stringify(fetchedQuestions) !== JSON.stringify(questions)) {
-                    setQuestions(fetchedQuestions);
+        const unsubscribe = getQuestionsByQuizId(id, (fetchedQuestions) => {
+            if (JSON.stringify(fetchedQuestions) !== JSON.stringify(questions)) {
+                setQuestions(fetchedQuestions);
 
-                    const newTotalPoints = fetchedQuestions.reduce(
-                        (total, question) => total + Number(question.points),
-                        0
-                    );
-                    if (newTotalPoints !== totalPoints) {
-                        setTotalPoints(newTotalPoints);
-                    }
-                }
-                setLoading(false);
-            } catch (error) {
-                if (error.message === "No questions found") {
-                    setQuestions([]);
-                } else {
-                    throw error;
+                const newTotalPoints = fetchedQuestions.reduce(
+                    (total, question) => total + Number(question.points),
+                    0
+                );
+                if (newTotalPoints !== totalPoints) {
+                    setTotalPoints(newTotalPoints);
                 }
             }
-        })();
-    }, [id, refreshQuestions]);
+        });
+
+        return () => unsubscribe();
+    }, [id, questions, totalPoints]);
 
     //USE EFFECTS FOR THE TEAMS
     useEffect(() => {
