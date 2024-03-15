@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
 import { useNavigate } from "react-router-dom";
-import { getAllQuizzes, listenForCategories } from "../services/quiz-service";
+import { getAllQuizzes, getTopCategories, listenForCategories } from "../services/quiz-service";
 import { Input } from ".././components/ui/input";
 import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
 
@@ -19,6 +19,7 @@ const Home = () => {
     const [users, setUsers] = useState([]);
     const [sortedTeachersQuizzes, setSortedTeachersQuizzes] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [topCategories, setTopCategories] = useState([]);
 
     useState(() => {
         listenForCategories(setCategories);
@@ -43,35 +44,17 @@ const Home = () => {
         quiz.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
 
+    useEffect(() => {
+        const currentCategories = getTopCategories(quizzes);
+        setTopCategories(currentCategories)
 
-    const getTopCategories = (quizzes) => {
-        // Create an object to count the occurrences of each category
-        const categoryCounts = quizzes.reduce((counts, quiz) => {
-            const category = quiz.category;
-            if (!counts[category]) {
-                counts[category] = 0;
-            }
-            counts[category]++;
-            return counts;
-        }, {});
+    }, [quizzes]);
 
-        // Convert the object to an array of [category, count] pairs, sort it by count, and take the top 3
-        const topCategories = Object.entries(categoryCounts)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 3)
-            .map(pair => pair[0]);  // We only need the category names, not the counts
-
-        return topCategories;
-    }
-
-    const topCategories = getTopCategories(quizzes);
 
     const categoriesWithQuizzes = topCategories.map((category) => {
         const categoryQuizzes = quizzes.filter(quiz => quiz.category === category);
         return { category, quizzes: categoryQuizzes };
     });
-
-
 
 
 
