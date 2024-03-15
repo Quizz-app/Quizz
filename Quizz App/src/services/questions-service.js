@@ -20,8 +20,23 @@ export const addQuestion = async (quizId, content, answers, points, correctAnswe
     return question;
 };
 
+export const getQuestionsByQuizId = async (quizId) => {
+    const questionsSnapshot = await get(query(ref(db, `quizzes/${quizId}/questions`)));
 
-export const getQuestionsByQuizId = (quizId, callback) => {
+    if (!questionsSnapshot.exists()) {
+        throw new Error('No questions found');
+    }
+
+    const questionsObject = questionsSnapshot.val();
+    const questionsArray = Object.keys(questionsObject).map(key => ({
+        id: key,
+        ...questionsObject[key]
+    }));
+
+    return questionsArray;
+};
+
+export const listenForQuestions = (quizId, callback) => {
     const questionsRef = ref(db, `quizzes/${quizId}/questions`);
 
     const unsubscribe = onValue(questionsRef, (snapshot) => {

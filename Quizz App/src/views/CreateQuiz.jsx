@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate, useParams } from "react-router-dom";
-import { addQuestion, deleteQuestion, getQuestionsByQuizId, updateQuestion } from "../services/questions-service";
+import { addQuestion, deleteQuestion, getQuestionsByQuizId, listenForQuestions, updateQuestion } from "../services/questions-service";
 import QuestionCard from "./QuestionCard";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -82,22 +82,32 @@ const CreateQuiz = () => {
     }, [id]);
 
     useEffect(() => {
-        const unsubscribe = getQuestionsByQuizId(id, (fetchedQuestions) => {
-            if (JSON.stringify(fetchedQuestions) !== JSON.stringify(questions)) {
-                setQuestions(fetchedQuestions);
+        const unsubscribe = listenForQuestions(id, (fetchedQuestions) => {
+            try {
+                setLoading(true);
+                if (JSON.stringify(fetchedQuestions) !== JSON.stringify(questions)) {
+                    setQuestions(fetchedQuestions);
 
-                const newTotalPoints = fetchedQuestions.reduce(
-                    (total, question) => total + Number(question.points),
-                    0
-                );
-                if (newTotalPoints !== totalPoints) {
-                    setTotalPoints(newTotalPoints);
+                    const newTotalPoints = fetchedQuestions.reduce(
+                        (total, question) => total + Number(question.points),
+                        0
+                    );
+                    if (newTotalPoints !== totalPoints) {
+                        setTotalPoints(newTotalPoints);
+                    }
+                }
+                setLoading(false);
+            } catch (error) {
+                if (error.message === "No questions found") {
+                    setQuestions([]);
+                } else {
+                    throw error;
                 }
             }
         });
 
         return () => unsubscribe();
-    }, [id, questions, totalPoints]);
+    }, [id, refreshQuestions]);
 
     //USE EFFECTS FOR THE TEAMS
     useEffect(() => {
@@ -294,7 +304,7 @@ const CreateQuiz = () => {
     }
     , [id]);
 
-
+    
     return (
         <>
             <div className="mx-20 my-10">
