@@ -136,7 +136,6 @@ const Home = () => {
                             </Carousel>
                         </div>
                     </div>
-
                     {/* //accordion - q&a */}
                     <div>
                         <div className="flex flex-col items-center justify-center mt-20 ">
