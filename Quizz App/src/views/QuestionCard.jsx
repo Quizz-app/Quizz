@@ -1,6 +1,10 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { updateQuestion } from "../services/questions-service";
+import { CiEdit } from "react-icons/ci";
+import { RiDeleteBin2Line } from "react-icons/ri";
+import { MdDownloadDone } from "react-icons/md";
+import { Input } from "../components/ui/input";
 
 const QuestionCard = ({ quizId, questionId, content, answers, points, correctAnswer, handleUpdateQuestion, onDelete, }) => {
   const [editing, setEditing] = useState(false);
@@ -42,13 +46,12 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
       <div className="card-body">
         {editing ? (
           <>
-            <input type="text" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
+            <Input type="text" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
             {editedAnswers.map((answer, index) => (
-              <div key={index}>
-                <input type="text" value={editedAnswers[index]} onChange={(e) => {
-                  const newAnswers = [...editedAnswers]; newAnswers[index] = e.target.value; setEditedAnswers(newAnswers);
-                }} />
-                <input type="checkbox" checked={editedCorrectAnswer.includes(editedAnswers[index])}
+              <div className="flex flex-row" key={index}>
+
+
+                <input type="checkbox" defaultChecked className="checkbox checkbox-success" checked={editedCorrectAnswer.includes(editedAnswers[index])}
                   onChange={() => {
                     if (editedCorrectAnswer.includes(editedAnswers[index])) {
                       setEditedCorrectAnswer(
@@ -62,26 +65,35 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
                         editedAnswers[index],
                       ]);
                     }
-                  }}
-                />
+                  }} />
+
+                <div className="w-64">
+                  <Input type="text" value={editedAnswers[index]} onChange={(e) => {
+                    const newAnswers = [...editedAnswers]; newAnswers[index] = e.target.value; setEditedAnswers(newAnswers);
+                  }} />
+                </div>
+
               </div>
             ))}
-            <input type="number" value={editedPoints} onChange={(e) => setEditedPoints(Number(e.target.value))} />
-            <button className="btn btn-outline btn-info" onClick={handleSave}>Save</button>
+            <Input type="number" value={editedPoints} onChange={(e) => setEditedPoints(Number(e.target.value))} />
+            {/* <button className="btn btn-outline btn-info" onClick={handleSave}>Save</button> */}
+            <MdDownloadDone onClick={handleSave} />
           </>
         ) : (
           <>
             <h2 className="card-title">{content}</h2>
             <ul>
               {answers.map((answer, index) => (
-                <li className="border" key={index}>{answer}</li>
+                <li className="" key={index}>{answer}</li>
               ))}
             </ul>
             <p>Points: {points}</p>
-            <button className="btn btn-outline btn-info" onClick={handleEdit}>
+            {/* <button className="btn btn-outline btn-info" onClick={handleEdit}>
               Edit
-            </button>
-            <button className="btn btn-danger" onClick={() => onDelete(questionId)}> delete</button>
+            </button> */}
+
+            <CiEdit onClick={handleEdit} />
+            <RiDeleteBin2Line onClick={() => onDelete(questionId)} />
           </>
         )}
       </div>
