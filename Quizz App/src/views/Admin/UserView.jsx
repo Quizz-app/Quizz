@@ -1,26 +1,32 @@
 import PropTypes from "prop-types";
-import Button from "./Button";
 
-const UserView = ({ user, handleBlock, text, changeAdminStatus }) => {
+
+const UserView = ({ user, handleBlock, text, changeAdminStatus}) => {
+  
   return (
     <tr>
+      <td>
+        <div className="ml-20">
+          <img src={user.avatar} alt="User avatar" className="rounded-full w-20 h-20 mb-0 text-center" />
+        </div>
+      </td>
       <td>{user.username}</td>
       <td>{user.email}</td>
       <td onClick={() => changeAdminStatus(user.username)}>
         {user.isAdmin ? "Yes" : "No"}
       </td>
       <td>
-        <Button onClick={() => handleBlock(user.username)}>{text}</Button>
+        <button className="btn btn-primary" onClick={() => handleBlock(user.username)}>{text}</button>
       </td>
     </tr>
   );
 };
 
 UserView.propTypes = {
-  user: PropTypes.object.isRequired,
-  handleBlock: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
-  changeAdminStatus: PropTypes.func.isRequired,
+  user: PropTypes.object,
+  handleBlock: PropTypes.func,
+  text: PropTypes.string,
+  changeAdminStatus: PropTypes.func,
 };
 
 export default UserView;

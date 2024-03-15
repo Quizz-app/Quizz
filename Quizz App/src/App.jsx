@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "./context/AppContext";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Register from "./views/Register";
@@ -73,7 +73,7 @@ const App = () => {
             <Route path="/quiz/:id" element={<CreateQuiz />} />
             <Route path="/results/:id" element={<QuizResults />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={context.userData?.isAdmin ? <Admin /> : <Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </div>

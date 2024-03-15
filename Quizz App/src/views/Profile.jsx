@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { useNavigate } from "react-router-dom";
-import { getUserByUsername, updateUser, } from "../services/users-service";
+import { updateUser, } from "../services/users-service";
 import toast from "react-hot-toast";
 import {
   EmailAuthProvider,

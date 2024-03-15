@@ -16,6 +16,7 @@ const Header = ({ theme, onThemeChange }) => {
   const isChecked = theme === "synthwave";
   const [userAvatar, setUserAvatar] = useState(userData?.avatar);
 
+
   useEffect(() => {
     if (userData && userData.username) {
       getUserTeamInvites(userData.username, (invites) => {
@@ -69,9 +70,6 @@ const Header = ({ theme, onThemeChange }) => {
   //console.log(quizInvites)
   return (
     <div className="navbar bg-base-100 flex justify-between">
-
-      {/* HEADER DROPDOWN */}
-
       <div className="flex-2">
         <a className="btn btn-ghost text-xl" onClick={() => navigate("/")}>BrainBurst</a>
         <label className="flex cursor-pointer gap-2" onClick={handleClick}>
@@ -85,45 +83,28 @@ const Header = ({ theme, onThemeChange }) => {
           </svg>
         </label>
       </div>
-
       {userData && (
         <div>
           <div className="flex items-center justify-center mr-20">
-            <Link to="/home" className="font-semibold mb-4 mr-8">  Homeview </Link>
-            <Link to="/dashboard" className="font-semibold mb-4 mr-8">  Dashboard </Link>
-            <Link to="/my-library" className="font-semibold mb-4 mr-8"> Library </Link>
-
+            <Link to="/home" className="font-semibold mb-4 mr-8">Homeview</Link>
+            <Link to="/dashboard" className="font-semibold mb-4 mr-8">Dashboard</Link>
+            <Link to="/my-library" className="font-semibold mb-4 mr-8">Library</Link>
             {userData.role === 'teacher' ? (
               <>
                 <Link to="/my-teams" className="font-semibold mb-4 mr-8">Teams</Link>
-                <Link to="/my-classes" className="font-semibold mb-4 mr-8"> Classes</Link>
+                <Link to="/my-classes" className="font-semibold mb-4 mr-8">Classes</Link>
               </>
             ) : (
-              <Link to="/my-classes" className="font-semibold mb-4 mr-15"> Classes</Link>
+              <Link to="/my-classes" className="font-semibold mb-4 mr-15">Classes</Link>
             )}
           </div>
         </div>
       )}
-
-
-
-      {/* //search bar */}
-      {/* <div className="form-control flex justify-center w-3/4">
-        <input type="text" placeholder="Search" className="input input-bordered w-96" />
-      </div> */}
-
-      {/* login and register */}
       <div className="flex-none gap-2 mr-3">
         {!user ? (
-          <>
-            <button onClick={() => navigate("/login")} className="btn btn-outline btn-secondary">Log in</button>
-          </>
+          <button onClick={() => navigate("/login")} className="btn btn-outline btn-secondary">Log in</button>
         ) : (
           <>
-
-
-
-
             {userData?.role === 'teacher' && teamInvites.length > 0 && (
               <div className="indicator">
                 <span className="indicator-item badge badge-secondary">
@@ -150,8 +131,6 @@ const Header = ({ theme, onThemeChange }) => {
                 </div>
               </div>
             )}
-
-
             {userData?.role === 'student' && quizInvites.length > 0 && (
               <div className="indicator">
                 <span className="indicator-item badge badge-secondary">
@@ -178,7 +157,6 @@ const Header = ({ theme, onThemeChange }) => {
                 </div>
               </div>
             )}
-
             {userData?.role === 'student' && classInvites.length > 0 && (
               <div className="indicator">
                 <span className="indicator-item badge badge-secondary">
@@ -205,7 +183,6 @@ const Header = ({ theme, onThemeChange }) => {
                 </div>
               </div>
             )}
-
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
@@ -213,11 +190,18 @@ const Header = ({ theme, onThemeChange }) => {
                 </div>
               </div>
               <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                <li>
-                  <a className="justify-between" onClick={() => navigate("/profile")}>Profile</a>
-                </li>
                 {user && (
-                  <li onClick={logOut} role="button"><NavLink to="/">Logout</NavLink></li>
+                  <>
+                    {userData?.isAdmin ? (
+                      <>
+                        <li><a className="justify-between" onClick={() => navigate("/profile")}>Profile</a></li>
+                        <li><a className="justify-between" onClick={() => navigate("/admin")}>Admin</a></li>
+                      </>
+                    ) : (
+                      <li><a className="justify-between" onClick={() => navigate("/profile")}>Profile</a></li>
+                    )}
+                    <li onClick={logOut} role="button"><NavLink to="/">Logout</NavLink></li>
+                  </>
                 )}
               </ul>
             </div>
