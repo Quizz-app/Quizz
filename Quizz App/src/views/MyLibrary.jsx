@@ -16,7 +16,7 @@ import LabelInputContainer from "../components/ui/LabelInputContainer";
 const MyLibrary = () => {
     const { userData } = useContext(AppContext);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [myQuizzes, setMyQuizzes] = useState([]);
+    const [teacherQuizzes, setTeacherQuizzes] = useState([]);
     const [studentQuizzes, setStudentQuizzes] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [suggestions, setSuggestions] = useState('');
@@ -26,7 +26,7 @@ const MyLibrary = () => {
     useEffect(() => {
         let unsubscribeQuizByCreator;
         if (userData && (userData.role === 'teacher' || userData.isAdmin === true)) {
-            unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => setMyQuizzes(quizzes));
+            unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => setTeacherQuizzes(quizzes));
         }
         const unsubscribeUserQuizzes = getUserQuizzes(userData?.username, async (quizzes) => {
             const quizzesArray = await Promise.all(Object.entries(quizzes).map(async ([id, quiz]) => {
@@ -192,7 +192,7 @@ const MyLibrary = () => {
                         </div>
 
                         <div className="grid grid-cols-5 gap-5">
-                            {myQuizzes.map((quiz, index) => (
+                            {teacherQuizzes.map((quiz, index) => (
                                 <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
                             ))}
                         </div>

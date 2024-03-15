@@ -6,9 +6,10 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
 import { useNavigate } from "react-router-dom";
-import { getAllQuizzes, listenForCategories } from "../services/quiz-service";
 import { Input } from ".././components/ui/input";
 import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
+import { getQuizByCreator, getQuizById, getAllQuizzes, listenForCategories } from "../services/quiz-service";
+import { getUserQuizzes } from "../services/users-service";
 
 const Home = () => {
     const { userData } = useContext(AppContext);
@@ -19,7 +20,9 @@ const Home = () => {
     const [users, setUsers] = useState([]);
     const [sortedTeachersQuizzes, setSortedTeachersQuizzes] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-  
+    const [teacherQuizzes, setTeacherQuizzes] = useState([]);
+    const [studentQuizzes, setStudentQuizzes] = useState([]);
+
     useState(() => {
         listenForCategories(setCategories);
         getAllQuizzes(setQuizzes);
@@ -83,6 +86,41 @@ const Home = () => {
         setSortedTeachersQuizzes(sorted);
     }, [users]);
 
+    useEffect(() => {
+        let unsubscribeQuizByCreator;
+        if (userData && (userData.role === 'teacher' || userData.isAdmin === true)) {
+            unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => {
+                const lastFiveQuizzes = quizzes.slice(-5);
+                setTeacherQuizzes(lastFiveQuizzes);
+            });
+        }
+        const unsubscribeUserQuizzes = getUserQuizzes(userData?.username, async (quizzes) => {
+            const quizzesArray = await Promise.all(Object.entries(quizzes).map(async ([id, quiz]) => {
+                const fullQuiz = await getQuizById(id);
+                return { ...fullQuiz, ...quiz };
+            }));
+            const completedQuizzes = quizzesArray.filter(quiz => quiz.isCompleted).slice(-5);
+            setStudentQuizzes(completedQuizzes);
+        });
+
+        return () => {
+            unsubscribeUserQuizzes();
+            if (unsubscribeQuizByCreator) {
+                unsubscribeQuizByCreator();
+            }
+        };
+    }, [userData]);
+
+
+    const deleteQuiz = async (id) => {
+        try {
+            await deleteQuiz(id);
+            navigate('/my-library');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 
     return (
         <>
@@ -102,15 +140,37 @@ const Home = () => {
                                         <ThreeDCardDemo key={index} quiz={quiz} />))}
                         </div>
                         <div className="flex flex-row  w-full">
-                            <div className="border w-2/3">
-                                <div>
-                                    recent
+                            <div className="border flex flex-col w-3/4">
+                                <div id="recent" className="flex">
+                                    <div>
+                                        <h1>
+                                            Your recent quizzes
+                                        </h1>
+                                    </div>
+                                    {userData.role === 'student' ? (
+                                        <div id="student" className="flex flex-row overflow-auto">
+                                            {studentQuizzes && studentQuizzes.length > 0 ? (
+                                                studentQuizzes.map((quiz, index) => (
+                                                    <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
+                                                ))
+                                            ) : null}
+                                        </div>
+                                    ) : (
+                                        <div id='teacher' className="flex flex-row overflow-auto">
+                                            {teacherQuizzes.map((quiz, index) => (
+                                                <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                                <div>
-                                    popular
+
+                                <div id="popular" className="">
+                                    <h1>
+                                        Popular
+                                    </h1>
                                 </div>
                             </div>
-                            <div className="border w-1/3">
+                            <div className="border w-1/4">
                                 <div className="overflow-x-auto">
                                     <table className="table">
                                         <thead>
