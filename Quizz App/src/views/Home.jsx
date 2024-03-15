@@ -7,6 +7,8 @@ import { AppContext } from "../context/AppContext";
 import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
 import { useNavigate } from "react-router-dom";
 import { getAllQuizzes, listenForCategories } from "../services/quiz-service";
+import { Input } from ".././components/ui/input";
+import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
 
 const Home = () => {
     // const [date, setDate] = React.useState(new Date());
@@ -16,7 +18,8 @@ const Home = () => {
     const [quizzes, setQuizzes] = useState([]);
     const [categories, setCategories] = useState([]);
     const [users, setUsers] = useState([]);
-
+    const [searchTerm, setSearchTerm] = useState('');
+  
     useState(() => {
         listenForCategories(setCategories);
         getAllQuizzes(setQuizzes);
@@ -28,6 +31,18 @@ const Home = () => {
         const count = users.reduce((acc, user) => user.role === "teacher" ? acc + 1 : acc, 0);
         setEducatorCount(count);
     }, [users]);
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+
+    const publicQuizzes = quizzes.filter(quiz => quiz.isPublic);
+
+    const searchQuizzes = publicQuizzes.filter((quiz) =>
+        quiz.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+
 
     const words = [
         {
@@ -58,9 +73,18 @@ const Home = () => {
         <>
             {userData ?
                 (
-                    <div>
-                        <div>
-                            Tuk e search bara
+                    <div className="flex flex-col">
+                        <div className="flex justify-center w-full">
+                            <Input type="text" value={searchTerm} onChange={handleSearchChange}
+                                placeholder="Search quizzes..."
+                                className="text-center" />
+                        </div>
+                        <div className="flex flex-row">
+                            {searchTerm.length > 0 &&
+                                searchQuizzes
+                                    .filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                                    .map((quiz, index) => (
+                                        <ThreeDCardDemo key={index} quiz={quiz} />))}
                         </div>
                         <div>
                             Tuke e recent and popular quizzes
