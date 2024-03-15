@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { addQuizToTeam, getQuizById, inviteUserToQuiz, setEndOn, setOnGoing, updateQuiz, } from "../services/quiz-service";
+import { addQuizToTeam, getQuizById, inviteUserToQuiz, observeQuiz, setEndOn, setOnGoing, updateQuiz, } from "../services/quiz-service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
 import { formatDate, msToTime, timeRanges } from "../services/time-functions";
 import Assistant from "../components/Assistant";
+import { DatePickerDemo } from "../components/DatePicker";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -144,7 +145,6 @@ const CreateQuiz = () => {
         }
 
         try {
-            console.log(quiz.id);
             await addQuestion(
                 quiz.id,
                 question.content,
@@ -211,8 +211,6 @@ const CreateQuiz = () => {
     const handleSetGrades = async () => {
         if (grades.good !== 0 || grades.bad !== 0) {
             const updatedQuiz = { ...quiz, grades };
-            console.log(quiz);
-            //console.log(grades);
             try {
                 await updateQuiz(id, updatedQuiz);
                 setQuiz(updatedQuiz);
@@ -291,6 +289,10 @@ const CreateQuiz = () => {
     }, [quiz, id]);
 
 
+    useEffect(() => {
+        observeQuiz(id, setQuiz);
+    }
+    , [id]);
 
 
     return (
@@ -298,10 +300,8 @@ const CreateQuiz = () => {
             <div className="mx-20 my-10">
                 <div className="flex flex-row items-center justify-between">
                     {/* quiz title */}
-                    {quiz && <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>}
-
+                    <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
                     <p>Total points: {totalPoints}</p>
-
                     <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
                             <Button variant="outline" role="combobox" className="w-[200px] justify-between">
@@ -332,8 +332,6 @@ const CreateQuiz = () => {
                         </PopoverContent>
                     </Popover>
 
-
-
                     {/* action buttons */}
                     <div className="flex flex-row items-center justify-center">
                         <div className="flex flex-col items-center justify-center">
@@ -349,9 +347,6 @@ const CreateQuiz = () => {
 
                 </div>
 
-
-
-
                 {/* Here we can see all the teams that the current user is in*/}
                 {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
                     <div>
@@ -364,6 +359,7 @@ const CreateQuiz = () => {
                         ))}
                     </div>
                 )}
+
                 {/* Here we can see all the students that are in the system*/}
                 {openPanel === 'assignUser' && students.length > 0 && (
                     <div>
@@ -380,8 +376,6 @@ const CreateQuiz = () => {
                     </div>
                 )}
                 {/* Here we can see the assistant */}
-
-
 
                 <div className="flex flex-row items-center justify-between">
                     <div>
@@ -498,14 +492,14 @@ const CreateQuiz = () => {
                             {remainingTime > 0
                                 ? <p>Ends On: {`${formatDate(quiz?.endsOn)}`} Time left: {msToTime(remainingTime)}</p>
                                 : <p>Ended On: {`${formatDate(quiz?.endsOn)}`}</p>}
-                            <Calendar
-                                mode="single"
+                            <DatePickerDemo
                                 selected={date}
                                 onSelect={setDate}
-                                className="rounded-md border"
                             />
-                            <button onClick={() => setEndOn(id, date)}>Save</button>
+                            <button className="border" onClick={() => setEndOn(id, date)}>Save date</button>
                         </div>
+
+                        
                     </div>
                 </div>
 
