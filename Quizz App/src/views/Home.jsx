@@ -19,7 +19,7 @@ const Home = () => {
     const [users, setUsers] = useState([]);
     const [sortedTeachersQuizzes, setSortedTeachersQuizzes] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-  
+
     useState(() => {
         listenForCategories(setCategories);
         getAllQuizzes(setQuizzes);
@@ -41,6 +41,37 @@ const Home = () => {
 
     const searchQuizzes = publicQuizzes.filter((quiz) =>
         quiz.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+
+
+    const getTopCategories = (quizzes) => {
+        // Create an object to count the occurrences of each category
+        const categoryCounts = quizzes.reduce((counts, quiz) => {
+            const category = quiz.category;
+            if (!counts[category]) {
+                counts[category] = 0;
+            }
+            counts[category]++;
+            return counts;
+        }, {});
+
+        // Convert the object to an array of [category, count] pairs, sort it by count, and take the top 3
+        const topCategories = Object.entries(categoryCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(pair => pair[0]);  // We only need the category names, not the counts
+
+        return topCategories;
+    }
+
+    const topCategories = getTopCategories(quizzes);
+
+    const categoriesWithQuizzes = topCategories.map((category) => {
+        const categoryQuizzes = quizzes.filter(quiz => quiz.category === category);
+        return { category, quizzes: categoryQuizzes };
+    });
+
+
 
 
 
@@ -134,7 +165,18 @@ const Home = () => {
                             </div>
                         </div>
                         <div>
-                            Categories
+                            <div>
+                                {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
+                                    <div key={index}>
+                                        <h2>{categoryWithQuizzes.category}</h2>
+                                        <div className="flex flex-row">
+                                            {categoryWithQuizzes.quizzes.map((quiz, index) => (
+                                                <ThreeDCardDemo key={index} quiz={quiz} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )
