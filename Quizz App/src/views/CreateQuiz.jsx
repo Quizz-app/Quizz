@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { addQuizToTeam, getQuizById, inviteUserToQuiz, observeQuiz, setEndOn, setOnGoing, updateQuiz, } from "../services/quiz-service";
+import { addQuizToClass, addQuizToTeam, getQuizById, inviteUserToQuiz, observeQuiz, setEndOn, setOnGoing, updateQuiz, } from "../services/quiz-service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Command, CommandEmpty, CommandGroup, CommandItem, } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
-import { getAllStudents, getUserTeams } from "../services/users-service";
+import { getAllStudents, getUserClasses, getUserTeams } from "../services/users-service";
 import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
 import { formatDate, msToTime, timeRanges } from "../services/time-functions";
@@ -23,6 +23,7 @@ import { MdDoneAll } from "react-icons/md";
 import { ScrollArea } from "@/components/ui/scroll-area"
 // import { Separator } from "@/components/ui/separator"
 import { motion } from 'framer-motion';
+import { set } from "lodash";
 
 
 const CreateQuiz = () => {
@@ -42,6 +43,7 @@ const CreateQuiz = () => {
     const [open, setOpen] = useState(false);
     const [timeLimit, setTimeLimit] = useState(0);
     const [userTeams, setUserTeams] = useState([]);
+    const [userClasses, setUserClasses] = useState([]);
     const [students, setStudents] = useState([]);
     const navigate = useNavigate();
     const [grades, setGrades] = useState({
@@ -79,8 +81,6 @@ const CreateQuiz = () => {
                     setGrades(fetchedQuiz.grades || { good: 0, bad: 0 });
                     setDescription(fetchedQuiz.description || "");
                     setLoading(false);
-
-                    // console.log("use effect triggered");
                 }
             } catch (error) {
                 console.error(error);
@@ -120,6 +120,18 @@ const CreateQuiz = () => {
     useEffect(() => {
         getUserTeams(userData?.username, setUserTeams);
     }, [userData]);
+
+    useEffect(() => {
+        getUserClasses(userData?.username, setUserClasses);
+    }, [userData]);
+
+
+
+    const filteredClasses = userClasses.filter(
+        (classes) => classes.members[userData?.username]
+    );
+
+
     //Filter the user teams to get the teams the user is a member of
     const filteredTeams = userTeams.filter(
         (team) => team.members[userData?.username]
@@ -139,6 +151,9 @@ const CreateQuiz = () => {
         addQuizToTeam(teamId, id);
     };
 
+    const handleAddQuizToClass = async (classId) => {
+        addQuizToClass(classId, id);
+    }
 
     const handleAddQuizToStudent = async (studentId) => {
         inviteUserToQuiz(id, studentId, userData.username);
@@ -361,8 +376,13 @@ const CreateQuiz = () => {
                             <Button onClick={() => handleButtonClick('assignTeam')}> <AiOutlineTeam />   Assign to group</Button>
                         </div>
                         <div className="flex flex-col items-center justify-center">
+
+                            <Button onClick={() => handleButtonClick('assignClass')}> <AiOutlineTeam />   Assign to class</Button>
+                        </div>
+                        <div className="flex flex-col items-center justify-center">
                             <Button onClick={() => handleButtonClick('assignUser')}> <PiStudent /> Assign to student</Button>
                         </div>
+
                         <div className="flex flex-col items-center justify-center">
                             <Button onClick={() => navigate("/my-library")}> <MdDoneAll /> Save Changes</Button>
                         </div>
@@ -379,6 +399,18 @@ const CreateQuiz = () => {
                             <div key={team.id}>
                                 <p>{team.name}</p>
                                 <button onClick={() => handleAddQuizToTeam(team.id)}>Add quiz to team</button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {openPanel === 'assignClass' && filteredClasses.length > 0 && (
+                    <div>
+                        <h1>TUK SE POKAZVAT OTBORITE V KOITO UCHSTVA SLED KATO E NATISNAL Assignto group</h1>
+                        {filteredClasses.map((classes) => (
+                            <div key={classes.id}>
+                                <p>{classes.name}</p>
+                                <button onClick={() => handleAddQuizToClass(classes.id)}>Add quiz to team</button>
                             </div>
                         ))}
                     </div>

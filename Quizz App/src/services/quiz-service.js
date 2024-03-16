@@ -129,6 +129,24 @@ export const addQuizToTeam = async (teamId, quizId) => {
 
 };
 
+export const addQuizToClass = async (classId, quizId) => {
+  const quizRef = ref(db, `quizzes/${quizId}`);
+  const quizSnapshot = await get(quizRef);
+  const quizData = quizSnapshot.val();
+
+  const classRef = ref(db, `classes/${classId}`);
+  const classSnapshot = await get(classRef);
+  const classData = classSnapshot.val();
+
+  if (!classData.quizzes) {
+    classData.quizzes = {};
+  }
+
+  classData.quizzes[quizId] = quizData;
+
+  await set(classRef, classData);
+};
+
 
 export const inviteUserToQuiz = async (quizId, user, inviter) => {
 
