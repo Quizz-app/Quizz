@@ -84,7 +84,6 @@ const QuizResults = () => {
     useEffect(() => {
         let totalScore = 0;
         for (let i = 0; i < answers.length; i++) {
-         
                 const totalPoints = correctAnswers[i].reduce((total, _, index) => {
                     if (userAnswers[i][0] === 'null') {
                         return total - total;
@@ -108,7 +107,7 @@ const QuizResults = () => {
                 }, points[i]);
 
                 totalScore += totalPoints;
-            
+    
         }
         setScore(totalScore);
         

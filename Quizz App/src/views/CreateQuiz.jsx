@@ -537,16 +537,7 @@ const CreateQuiz = () => {
                                 </div>
                             )}
 
-                            {editingQuestion && (
-                                <form onSubmit={() => handleUpdateQuestion(editingQuestion)}>
-                                    <input
-                                        type="text"
-                                        value={editingQuestion.content}
-                                        onChange={(e) => setEditingQuestion({ ...editingQuestion, content: e.target.value, })} />
-                                    {/* Add more inputs for other fields */}
-                                    <button type="submit">Update Question</button>
-                                </form>
-                            )}
+                            
 
                         </div>
                     </div>

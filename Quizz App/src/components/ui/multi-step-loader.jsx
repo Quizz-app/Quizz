@@ -82,30 +82,58 @@ const LoaderCore = ({
 };
 
 export const MultiStepLoader = ({
-    loadingStates = [{
-        text: "Buying a condo",
-      },
-      {
-        text: "Travelling in a flight",
-      },
-      {
-        text: "Meeting Tyler Durden",
-      },
-      {
-        text: "He makes soap",
-      },
-      {
-        text: "We goto a bar",
-      },
-      {
-        text: "Start a fight",
-      },
-      {
-        text: "We like it",
-      },
-      {
-        text: "Welcome to F**** C***",
-      },],
+    // loadingStates = [{
+    //     text: "Buying a condo",
+    //   },
+    //   {
+    //     text: "Travelling in a flight",
+    //   },
+    //   {
+    //     text: "Meeting Tyler Durden",
+    //   },
+    //   {
+    //     text: "He makes soap",
+    //   },
+    //   {
+    //     text: "We goto a bar",
+    //   },
+    //   {
+    //     text: "Start a fight",
+    //   },
+    //   {
+    //     text: "We like it",
+    //   },
+    //   {
+    //     text: "Welcome to F**** C***",
+    //   },],
+    loadingStates = [
+        {
+            "text": "Preparing your quiz questions..."
+        },
+        {
+            "text": "Gathering brain teasers for you..."
+        },
+        {
+            "text": "Loading up some tricky trivia..."
+        },
+        {
+            "text": "Assembling your quiz challenges..."
+        },
+        {
+            "text": "Crafting the ultimate quiz experience..."
+        },
+        {
+            "text": "Polishing your quiz questions..."
+        },
+        {
+            "text": "Selecting the best questions for you..."
+        },
+        {
+            "text": "Brainstorming quiz ideas for your enjoyment..."
+        },
+        {
+            "text": "Curating a variety of quiz questions..."
+        },],
     loading,
     duration = 2000,
     loop = true,
@@ -129,7 +157,7 @@ export const MultiStepLoader = ({
 
         return () => clearTimeout(timeout);
     }, [currentState, loading, loop, loadingStates.length, duration]);
-    
+
     return (
         <AnimatePresence mode="wait">
             {loading && (

@@ -241,7 +241,6 @@ export const updateQuizCompletion = async (username, quizId, isCompleted) => {
  * @async
  * @function
  */
-
 export const respondToTeamInvite = async (username, teamId, accept) => {
   const userRef = ref(db, `users/${username}`);
   const userSnapshot = await get(userRef);
