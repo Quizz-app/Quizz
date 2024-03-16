@@ -409,10 +409,31 @@ const CreateQuiz = () => {
                         </div>
                     </div>
                     <div className="flex flex-row items-center justify-center">
-                        <button className="btn btn-outline btn-primary " onClick={questionCreation}>Add question +</button>
-                        <div className="flex flex-col items-center justify-center">
+                        {/* <button className="btn btn-outline btn-primary " onClick={questionCreation}>Add question +</button> */}
+
+
+                        <motion.button
+                            onClick={questionCreation}
+                            className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-light transition duration-200 ease-linear "
+                            initial={{ scale: 2 }}
+                            animate={{ scale: [1, 1.05, 1] }}
+                            transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                        >
+                            Add Question +
+                        </motion.button>
+
+                        {/* <div className="flex flex-col items-center justify-center">
                             <Button onClick={() => handleButtonClick('assignAssistant')}>Use Assistant ✨</Button>
-                        </div>
+                        </div> */}
+
+
+                        <button onClick={() => handleButtonClick('assignAssistant')} className="relative inline-flex h-10 overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 ml-3">
+                            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-white px-3 py-1 text-sm font-medium text-slate-950 backdrop-blur-3xl">
+                                Use Assistant ✨
+                            </span>
+                        </button>
+
                     </div>
                 </div>
 
