@@ -256,15 +256,6 @@ const CreateQuiz = () => {
         }
     };
 
-    const handleRetakeSwap = async () => {
-        const updatedQuiz = { ...quiz, retakeOption: !quiz.retakeOption };
-        try {
-            await updateQuiz(id, updatedQuiz);
-            setQuiz(updatedQuiz);
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     //STATE HANDLERS
     const handleQuestionChange = (e) => {
@@ -602,16 +593,6 @@ const CreateQuiz = () => {
                             <button className="" onClick={() => setEndOn(id, date)}>Save date</button>
                         </div>
 
-                        <div className="flex flex-roe items-start justify-center mt-10">
-                            <h1 className="text-2xl font-bold mb-4">Retake Quiz</h1>
-                            <div className="flex flex-row items-center justify-start">
-                                <label className="flex swap items-center align-center">
-                                    <input type="checkbox" onChange={handleRetakeSwap} />
-                                    <div className="swap-on text-2xl">YES</div> {/* disable */}
-                                    <div className="swap-off text-2xl">NO</div> {/* enable */}
-                                </label>
-                            </div>
-                        </div>
 
                     </div>
                 </div>
