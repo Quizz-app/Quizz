@@ -7,6 +7,9 @@ import { emailPattern } from "../constants/constants";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase-config";
 import { Input } from ".././components/ui/input";
+import LabelInputContainer from "../components/ui/LabelInputContainer";
+import { Label } from "@radix-ui/react-label";
+import { BottomGradient } from "./Register";
 
 const Login = () => {
   const { user, userData, setContext } = useContext(AppContext);
@@ -23,7 +26,7 @@ const Login = () => {
       );
     } catch (error) {
       console.error(error);
-      toast.error("Failed to send password reset email. Please try again.");
+      toast.error("Please ensure you've entered a valid email in the Email address field and try again.");
     }
   };
 
@@ -45,67 +48,61 @@ const Login = () => {
   }, [user, userData]);
 
   const login = async () => {
-    if (!form.email) {
-      return toast.error(`Email is required!`);
-    } else if (!emailPattern.test(form.email)) {
-      return toast.error(`Email does not match the required format!`);
-    }
 
-    if (!form.password) {
-      return toast.error(`Password is required!`);
-    } else if (!emailPattern.test(form.email)) {
-      return toast.error(`Email does not match the required format!`);
-    } else if (form.password.length < 6) {
-      return toast.error("Password must be at least 8 characters long!");
-    }
+    // if (!emailPattern.test(form.email) && form.password.length < 6) {
+    //   return toast.error("Incorrect email or password. Please try again.");
+    // }
 
     try {
       const credentials = await loginUser(form.email, form.password);
       setContext({ user: credentials.user, userData: null });
     } catch (err) {
       console.log(err.message);
-      if (err.code === "auth/user-not-found") {
+      if (err.code === "auth/user-not-found" || err.code === "auth/missing-password") {
         return toast.error("Wrong email or password.");
       }
-      return toast.error("Please enter the correct password.");
     }
   };
 
   return (
-    <div>
-      {/* <h1>Login</h1>
-            <input type="text" placeholder="Email" onChange={updateForm('email')} />
-            <input type="password" placeholder="Password" onChange={updateForm('password')} />
-            <button onClick={login}>Login</button> */}
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content flex-col lg:flex-row-reverse">
-          <div className="text-center lg:text-left"></div>
-          <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-            <div className="card-body">
-              <div className="form-control">
-                <label htmlFor="email">
-                  <span className="label-text">Email</span>
-                </label>
-                <Input value={form.email} onChange={updateForm("email")} type="email" placeholder="email" className="input input-bordered" />
-              </div>
-              <div className="form-control">
-                <label htmlFor="password">
-                  <span className="label-text">Password</span>
-                </label>
-                <Input value={form.password} onChange={updateForm("password")} type="password" placeholder="password" className="input input-bordered" />
-                <label className="label">
-                  <a href="#" className="label-text-alt link link-hover" onClick={forgotPassword}>Forgot password?</a>
-                </label>
-              </div>
-              <div className="form-control mt-6">
-                <button onClick={login} className="btn btn-primary">Login</button>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 mb-5">
+        Welcome to BrainBurst
+      </h2>
+      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300 mb-5">
+        Unlock your potential with each quiz. Start your adventure in learning now!
+      </p>
+      <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
       </div>
+      <LabelInputContainer className="mb-4">
+        <Label htmlFor="email">Email address</Label>
+        <Input id="email" placeholder="your-email-here@bb.com" type="email" value={form.email} onChange={updateForm("email")} />
+      </LabelInputContainer>
+      <LabelInputContainer className="mb-4">
+        <Label htmlFor="password">Password</Label>
+        <Input id="password" placeholder="••••••••" type="password" value={form.password} onChange={updateForm("password")} />
+        <label className="label">
+          <a href="#" className="label-text-alt link link-hover" onClick={forgotPassword}>Forgot password?</a>
+        </label>
+
+      </LabelInputContainer>
+      <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4 justify-center items-center">
+      </div>
+
+      <button
+        className=" mt-5 bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+        type="submit"
+        onClick={login}
+      >
+        Login &rarr;
+        <BottomGradient />
+      </button>
+      <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+
     </div>
+
   );
 };
 
 export default Login;
+
