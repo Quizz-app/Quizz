@@ -18,8 +18,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 const QuizSolve = () => {
     const { user, userData } = useContext(AppContext);
@@ -30,40 +32,39 @@ const QuizSolve = () => {
     const [answeredQuestionsCount, setAnsweredQuestionsCount] = useState(0);
     const [countdownTime, setCountdownTime] = useState(0);
     const [isCountdownFinished, setIsCountdownFinished] = useState(false);
-
+    const [endTime, setEndTime] = useState(null);
 
 
     const navigate = useNavigate();
 
     //THINGS TO BE ADDED TO THE USER'S QUIZZ OBJ: score, time for solving, grade, feedback
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const quiz = await getQuizById(id);
                 const questions = await getQuestionsByQuizId(id);
-    
-                
+
                 questions.sort(() => Math.random() - 0.5);
-    
+
                 setQuiz(quiz);
                 setQuestions(questions);
-    
-                const savedCountdownTime = localStorage.getItem(`countdownTime-${id}`)
-                if (savedCountdownTime) {
-                    setCountdownTime(Number(savedCountdownTime))
+
+                const savedEndTime = localStorage.getItem(`endTime-${id}`)
+                if (savedEndTime) {
+                    setEndTime(Number(savedEndTime));
                 } else {
                     const countdownTime = quiz.quizTime * 60 * 1000;
-                    localStorage.setItem(`countdownTime-${id}`, countdownTime.toString())
-                    setCountdownTime(countdownTime);
+                    const endTime = Date.now() + countdownTime;
+                    localStorage.setItem(`endTime-${id}`, endTime.toString())
+                    setEndTime(endTime);
                 }
             } catch (error) {
                 console.error(error);
             }
         };
-    
+
         fetchData();
-    }, [id, countdownTime]);
+    }, [id]); // Removed countdownTime from the dependency array
 
 
     const handleCountdownEnd = async () => {
@@ -76,7 +77,10 @@ const QuizSolve = () => {
     };
 
 
-    console.log(questions)
+    const variants = {
+        hidden: { opacity: 0, scale: 0.9 },
+        visible: { opacity: 1, scale: 1 },
+    };
 
     return (
         <>
@@ -84,9 +88,19 @@ const QuizSolve = () => {
                 {!isCountdownFinished ? (
                     questions[currentQuestionIndex] && (
                         <>
-                            <QuizSolveCard question={questions[currentQuestionIndex]} quizId={id} />
-                            <Countdown date={Date.now() + countdownTime} onComplete={handleCountdownEnd} onTick={({ total }) => 
-                            localStorage.setItem(`countdownTime-${id}`, total.toString())} />
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentQuestionIndex}
+                                    initial={{ opacity: 0, x: 50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -50 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <QuizSolveCard question={questions[currentQuestionIndex]} quizId={id} />
+                                </motion.div>
+                            </AnimatePresence>
+                            <Countdown date={endTime} onComplete={handleCountdownEnd} onTick={({ total }) =>
+                                localStorage.setItem(`endTime-${id}`, (Date.now() + total).toString())} />
 
                             {currentQuestionIndex < questions.length - 1 ? (
                                 <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}>Next</button>
