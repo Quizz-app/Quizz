@@ -11,6 +11,7 @@ import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
 import { getQuizByCreator, getTopCategories, getQuizById, getAllQuizzes, listenForCategories } from "../services/quiz-service";
 import { getUserQuizzes } from "../services/users-service";
 import { get } from "firebase/database";
+import QuizCardPaginated from "../components/QuizCardPaginated";
 
 const Home = () => {
     const { userData } = useContext(AppContext);
@@ -105,7 +106,7 @@ const Home = () => {
         let unsubscribeQuizByCreator;
         if (userData && (userData.role === 'teacher' || userData.isAdmin === true)) {
             unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => {
-                const lastFiveQuizzes = quizzes.slice(-5);
+                const lastFiveQuizzes = quizzes.slice(-5).reverse();
                 setTeacherQuizzes(lastFiveQuizzes);
             });
         }
@@ -135,7 +136,7 @@ const Home = () => {
         }
     }
 
-    const popularQuizzes = quizzes.sort((a, b) => b.finishedCount - a.finishedCount);
+    const popularQuizzes = quizzes.sort((a, b) => b.finishedCount - a.finishedCount).slice(0, 5);
 
     return (
         <>
@@ -154,66 +155,68 @@ const Home = () => {
                                     .map((quiz, index) => (
                                         <ThreeDCardDemo key={index} quiz={quiz} />))}
                         </div>
-                        <div className="flex flex-row  w-full">
-                            <div className="border flex flex-col w-3/4">
-                                <div id="recent" className="flex">
+                        <div className="flex flex-row w-full">
+                            <div className=" flex flex-col w-full">
+                                <div id="recent" className="flex flex-col">
                                     <div>
                                         <h1>
                                             Your recent quizzes
                                         </h1>
                                     </div>
-                                    {userData.role === 'student' ? (
-                                        <div id="student" className="flex flex-row overflow-auto">
-                                            {studentQuizzes && studentQuizzes.length > 0 ? (
-                                                studentQuizzes.map((quiz, index) => (
-                                                    <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
-                                                ))
-                                            ) : null}
+                                    <div className="flex flex-row">
+                                        <div id="your-recent">
+                                            {userData.role === 'student' ? (
+                                                <div id="student" className="flex flex-row overflow-auto">
+                                                    {studentQuizzes && studentQuizzes.length > 0 ? (
+                                                        studentQuizzes.map((quiz, index) => (
+                                                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
+                                                        ))
+                                                    ) : null}
+                                                </div>
+                                            ) : (
+                                                <div id='teacher' className="flex flex-row overflow-auto">
+                                                    {teacherQuizzes.map((quiz, index) => (
+                                                        <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <div id='teacher' className="flex flex-row overflow-auto">
-                                            {teacherQuizzes.map((quiz, index) => (
-                                                <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
-                                            ))}
+                                        <div id="table" className="">
+                                            <div className="overflow-x-auto">
+                                                <table className="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>Teacher</th>
+                                                            <th>Created Quizzes</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {sortedTeachersQuizzes.map((teacher, index) => (
+                                                            <tr key={index}>
+                                                                <th>{index + 1}</th>
+                                                                <td>{teacher.name}</td>
+                                                                <td>{teacher.quizCount}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
-
-                                <div id="popular" className="flex">
-                                    <div>
+                                <div id="popular" className="flex flex-col  justify-start w-full ml-10">
+                                    <div className="flex">
                                         <h1>
                                             Popular
                                         </h1>
                                     </div>
-                                    <div id="popular" className="flex flex-row overflow-auto">
-                                        {popularQuizzes.map((quiz, index) => (
-                                            <ThreeDCardDemo key={index} quiz={quiz} />
-                                        ))}
+                                    <div className="flex flex-row">
+                                        <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={5} deleteQuiz={deleteQuiz} />
                                     </div>
                                 </div>
                             </div>
-                            <div className="border w-1/4">
-                                <div className="overflow-x-auto">
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Teacher</th>
-                                                <th>Created Quizzes</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {sortedTeachersQuizzes.map((teacher, index) => (
-                                                <tr key={index}>
-                                                    <th>{index + 1}</th>
-                                                    <td>{teacher.name}</td>
-                                                    <td>{teacher.quizCount}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+
                         </div>
                         <div>
                             <div>
