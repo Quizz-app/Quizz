@@ -216,14 +216,14 @@ const Home = () => {
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <div>
                             <div>
+                                <h2 className="text-center text-3xl mr-5">Trending Categories</h2>
                                 {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
                                     <div key={index}>
-                                        <h2>{categoryWithQuizzes.category}</h2>
-                                        <div className="flex flex-row">
+                                        <h2 className="ml-10">{categoryWithQuizzes.category}</h2>
+                                        <div className="flex flex-row justify-start w-full ml-10">
                                             {categoryWithQuizzes.quizzes.map((quiz, index) => (
                                                 <ThreeDCardDemo key={index} quiz={quiz} />
                                             ))}
