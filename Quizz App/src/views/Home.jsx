@@ -96,7 +96,7 @@ const Home = () => {
         },
     ];
 
-   
+
 
 
     useEffect(() => {
@@ -152,7 +152,7 @@ const Home = () => {
         <>
             {userData ?
                 (
-                    <div className="flex flex-col">
+                    <div className="flex flex-col mt-12">
                         <div className="flex justify-center w-full mb-5">
                             <Input type="text" value={searchTerm} onChange={handleSearchChange}
                                 placeholder="Search quizzes..."
@@ -184,11 +184,11 @@ const Home = () => {
                         <div className="flex flex-row w-full">
                             <div className=" flex flex-col w-full">
                                 <div id="recent" className="flex flex-col">
+                                    <h1 className="text-2xl ml-10 my-10" style={{ margin: "-30px 45px" }}>
+                                        Your Recent Quizzes
+                                    </h1>
                                     <div className="flex flex-row w-full justify-between">
                                         <div id="your-recent" className="ml-10">
-                                            <h1 className="text-2xl">
-                                                Your Recent Quizzes
-                                            </h1>
                                             {userData.role === 'student' ? (
                                                 <div id="student" className="flex flex-row overflow-auto">
                                                     {studentQuizzes && studentQuizzes.length > 0 ? (
