@@ -6,6 +6,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import LabelInputContainer from "../components/ui/LabelInputContainer";
+import { BottomGradient } from "./MyLibrary";
 
 
 const MyClassesView = () => {
@@ -63,38 +65,36 @@ const MyClassesView = () => {
         <div>
             <Dialog onClose={handleCloseDialog}>
                 <DialogTrigger asChild>
-                    {userData?.role === 'teacher' &&
-                        <Button variant="outline" onClick={handleButtonClick} >
-                            New Class +
-                        </Button>
-                    }
+                    <Button variant="outline" onClick={handleButtonClick}> New Class +</Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-white dark:bg-neutral text-black dark:text-white">
-                    <DialogHeader>
-                        <DialogTitle>Create class</DialogTitle>
-                        <DialogDescription>
-                            {`Create your own class of students.`}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="title" className="text-right">
-                                Class name
-                            </Label>
-                            <Input id="title" value={classData.name} onChange={updateForm('name')} className="col-span-3" />
-                        </div>
-
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="category" className="text-right">
-                                Class description
-                            </Label>
-                            <Input id="category" value={classData.description} onChange={updateForm('description')} className="col-span-3" />
-                        </div>
+                <DialogContent className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+                    <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 ">
+                        Create class
+                    </h2>
+                    <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300 mb-3">
+                        Create your own class of students.
+                    </p>
+                    <LabelInputContainer className="mb-3">
+                        <Label htmlFor="name">Class name</Label>
+                        <Input id="name" type="text" value={classData.name} onChange={updateForm("name")} />
+                    </LabelInputContainer>
+                    <LabelInputContainer className="mb-3">
+                        <Label htmlFor="description">Class description</Label>
+                        <Input id="description" type="text" value={classData.description} onChange={updateForm("description")} />
+                    </LabelInputContainer>
+                    <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-3">
                     </div>
-                    <DialogFooter>
-                        <Button type="submit" onClick={handleCreateClass}>Create Class</Button>
-                    </DialogFooter>
+                    <button
+                        className=" mt-5 bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 
+                                            to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium 
+                                            shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] 
+                                            dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                        type="submit"
+                        onClick={handleCreateClass}>
+                        Create class &rarr;
+                        <BottomGradient />
+                    </button>
+                    <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
                 </DialogContent>
             </Dialog>
 
