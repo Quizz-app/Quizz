@@ -10,6 +10,7 @@ import { Input } from ".././components/ui/input";
 import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
 import { getQuizByCreator, getTopCategories, getQuizById, getAllQuizzes, listenForCategories } from "../services/quiz-service";
 import { getUserQuizzes } from "../services/users-service";
+import { get } from "firebase/database";
 
 const Home = () => {
     const { userData } = useContext(AppContext);
@@ -125,7 +126,6 @@ const Home = () => {
         };
     }, [userData]);
 
-
     const deleteQuiz = async (id) => {
         try {
             await deleteQuiz(id);
@@ -135,6 +135,7 @@ const Home = () => {
         }
     }
 
+    const popularQuizzes = quizzes.sort((a, b) => b.finishedCount - a.finishedCount);
 
     return (
         <>
@@ -178,10 +179,17 @@ const Home = () => {
                                     )}
                                 </div>
 
-                                <div id="popular" className="">
-                                    <h1>
-                                        Popular
-                                    </h1>
+                                <div id="popular" className="flex">
+                                    <div>
+                                        <h1>
+                                            Popular
+                                        </h1>
+                                    </div>
+                                    <div id="popular" className="flex flex-row overflow-auto">
+                                        {popularQuizzes.map((quiz, index) => (
+                                            <ThreeDCardDemo key={index} quiz={quiz} />
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                             <div className="border w-1/4">
