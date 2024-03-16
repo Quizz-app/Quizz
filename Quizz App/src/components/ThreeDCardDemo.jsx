@@ -25,14 +25,12 @@ export const ThreeDCardDemo = ({ quiz, onButtonClick }) => {
   const { userData } = useContext(AppContext);
 
   const navigate = useNavigate();
-  const isTeacherOrAdmin = (userData.role === 'teacher' && quiz.creator === userData.username)
-  const buttonText = isTeacherOrAdmin ? 'See quiz' : 'Start quiz';
-  const buttonClickPath = isTeacherOrAdmin ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
-
-
+  const isTeacherOrCreator = (userData.role === 'teacher' && quiz.creator === userData.username)
+  const buttonText = isTeacherOrCreator ? 'See quiz' : 'Start quiz';
+  const buttonClickPath = isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
 
   return (
-    <CardContainer className="inter-var mr-10 w-64 h-64 flex-shrink-0">
+    <CardContainer className="inter-var w-64 h-64 flex-shrink-0 mr-5">
       <CardBody className="bg-gradient-to-r from-cyan-500 to-blue-500 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border transform:">
         <CardItem
           translateZ="50"
@@ -43,12 +41,13 @@ export const ThreeDCardDemo = ({ quiz, onButtonClick }) => {
         <CardItem
           as="p"
           translateZ="60"
-          className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-5 truncate"
+          className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-5 truncate overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs h-20"
         >
           {quiz.description}
         </CardItem>
+
         <div className="flex justify-between items-center mt-10">
-          {isTeacherOrAdmin && <CardItem
+          {isTeacherOrCreator && <CardItem
             translateZ={20}
             as="button"
             target="__blank"

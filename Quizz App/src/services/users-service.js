@@ -1,5 +1,5 @@
 import {
-  get, set, ref, query, equalTo, orderByChild, update, onValue,
+  get, set, ref, query, equalTo, orderByChild, update, onValue, remove,
 } from "firebase/database";
 import { db } from "../config/firebase-config.js";
 import { getQuizById } from "./quiz-service.js";
@@ -191,7 +191,7 @@ export const removeQuizFromAllUsers = async (quizId) => {
 
   for (const username in usersData) {
     const userRef = ref(db, `users/${username}/quizzes/${quizId}`);
-    await set(userRef, null);
+    await remove(userRef);
   }
 
 }

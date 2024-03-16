@@ -14,6 +14,8 @@ import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 
 
+import { get } from "firebase/database";
+import QuizCardPaginated from "../components/QuizCardPaginated";
 
 const Home = () => {
     const { userData } = useContext(AppContext);
@@ -52,7 +54,7 @@ const Home = () => {
     const publicQuizzes = quizzes.filter(quiz => quiz.isPublic);
 
     const searchQuizzes = publicQuizzes.filter((quiz) =>
-        quiz.title.toLowerCase().includes(searchTerm.toLowerCase()));
+        quiz.title.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, 5);
 
 
     useEffect(() => {
@@ -105,7 +107,7 @@ const Home = () => {
                 quizCount: teacher.createdQuizzes ? Object.values(teacher.createdQuizzes).length : 0
             };
         });
-        const sorted = teachersQuizes.sort((a, b) => b.quizCount - a.quizCount);
+        const sorted = teachersQuizes.sort((a, b) => b.quizCount - a.quizCount).slice(0, 5);
         setSortedTeachersQuizzes(sorted);
     }, [users]);
 
@@ -113,7 +115,7 @@ const Home = () => {
         let unsubscribeQuizByCreator;
         if (userData && (userData.role === 'teacher' || userData.isAdmin === true)) {
             unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => {
-                const lastFiveQuizzes = quizzes.slice(-5);
+                const lastFiveQuizzes = quizzes.slice(-5).reverse();
                 setTeacherQuizzes(lastFiveQuizzes);
             });
         }
@@ -122,7 +124,7 @@ const Home = () => {
                 const fullQuiz = await getQuizById(id);
                 return { ...fullQuiz, ...quiz };
             }));
-            const completedQuizzes = quizzesArray.filter(quiz => quiz.isCompleted).slice(-5);
+            const completedQuizzes = quizzesArray.filter(quiz => quiz.isCompleted).slice(-5).reverse();
             setStudentQuizzes(completedQuizzes);
         });
 
@@ -134,7 +136,6 @@ const Home = () => {
         };
     }, [userData]);
 
-
     const deleteQuiz = async (id) => {
         try {
             await deleteQuiz(id);
@@ -144,6 +145,7 @@ const Home = () => {
         }
     }
 
+    const popularQuizzes = quizzes.sort((a, b) => b.finishedCount - a.finishedCount).slice(0, 5);
 
 
     return (
@@ -151,78 +153,110 @@ const Home = () => {
             {userData ?
                 (
                     <div className="flex flex-col">
-                        <div className="flex justify-center w-full">
+                        <div className="flex justify-center w-full mb-5">
                             <Input type="text" value={searchTerm} onChange={handleSearchChange}
                                 placeholder="Search quizzes..."
                                 className="text-center" />
                         </div>
-                        <div className="flex flex-row">
-                            {searchTerm.length > 0 &&
-                                searchQuizzes
-                                    .filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
-                                    .map((quiz, index) => (
-                                        <ThreeDCardDemo key={index} quiz={quiz} />))}
-                        </div>
-                        <div className="flex flex-row  w-full">
-                            <div className="border flex flex-col w-3/4">
-                                <div id="recent" className="flex">
-                                    <div>
-                                        <h1>
-                                            Your recent quizzes
+                        <div className="flex justify-center mb-10">
+                            {searchTerm.length > 2 &&
+                                <div className="flex flex-col bg-base-200 border rounded-2xl mb-5">
+                                    <div className="flex flex-row justify-center">
+                                        <h1 className="mt-5 text-2xl ml-5 mr-5">
+                                            Search results
                                         </h1>
                                     </div>
-                                    {userData.role === 'student' ? (
-                                        <div id="student" className="flex flex-row overflow-auto">
-                                            {studentQuizzes && studentQuizzes.length > 0 ? (
-                                                studentQuizzes.map((quiz, index) => (
-                                                    <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
-                                                ))
-                                            ) : null}
+                                    <div className="flex flex-row ml-5">
+                                        {searchTerm.length > 2 &&
+                                            searchQuizzes
+                                                .filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                                                .map((quiz, index) => (
+                                                    <ThreeDCardDemo key={index} quiz={quiz} />
+                                                ))}
+                                    </div>
+                                    {searchQuizzes.filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 &&
+                                        <div className="flex justify-center mt-5 mb-5">
+                                            <h2 className=" text-2xl ml-5 mr-5">No results found. Sorry :(</h2>
                                         </div>
-                                    ) : (
-                                        <div id='teacher' className="flex flex-row overflow-auto">
-                                            {teacherQuizzes.map((quiz, index) => (
-                                                <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
-                                            ))}
+                                    }
+                                </div>}
+                        </div>
+                        <div className="flex flex-row w-full">
+                            <div className=" flex flex-col w-full">
+                                <div id="recent" className="flex flex-col">
+                                    <div className="flex flex-row w-full justify-between">
+                                        <div id="your-recent" className="ml-10">
+                                            <h1 className="text-2xl">
+                                                Your Recent Quizzes
+                                            </h1>
+                                            {userData.role === 'student' ? (
+                                                <div id="student" className="flex flex-row overflow-auto">
+                                                    {studentQuizzes && studentQuizzes.length > 0 ? (
+                                                        studentQuizzes.map((quiz, index) => (
+                                                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
+                                                        ))
+                                                    ) :
+                                                        (
+                                                            <div className="flex flex-row justify-center">
+                                                                <p className="text-2xl">No Quiz Contributions Yet</p>
+                                                            </div>
+                                                        )}
+                                                </div>
+                                            ) : (
+                                                <div id='teacher' className="flex flex-row overflow-auto">
+                                                    {teacherQuizzes.map((quiz, index) => (
+                                                        <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
 
-                                <div id="popular" className="">
-                                    <h1>
-                                        Popular
-                                    </h1>
+                                        <div id="table" className="mr-10">
+                                            <h1 className="text-2xl">
+                                                Our Top 5 Quizcrafters
+                                            </h1>
+                                            <div className="overflow-x-auto">
+                                                <table className="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>Teacher</th>
+                                                            <th>Created Quizzes</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {sortedTeachersQuizzes.map((teacher, index) => (
+                                                            <tr key={index}>
+                                                                <th>{index + 1}</th>
+                                                                <td>{teacher.name}</td>
+                                                                <td>{teacher.quizCount}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="border w-1/4">
-                                <div className="overflow-x-auto">
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Teacher</th>
-                                                <th>Created Quizzes</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {sortedTeachersQuizzes.map((teacher, index) => (
-                                                <tr key={index}>
-                                                    <th>{index + 1}</th>
-                                                    <td>{teacher.name}</td>
-                                                    <td>{teacher.quizCount}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                <div id="popular" className="flex flex-col  justify-start w-full ml-10">
+                                    <div className="flex mt-15" style={{ margin: '-30px 10px' }}>
+                                        <h1 className="text-2xl">
+                                            Popular
+                                        </h1>
+                                    </div>
+                                    <div className="flex flex-row">
+                                        <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={5} deleteQuiz={deleteQuiz} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <div>
+                                <h2 className="text-center text-3xl mr-5 mb-10">Trending Categories</h2>
                                 {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
                                     <div key={index}>
-                                        <h2>{categoryWithQuizzes.category}</h2>
-                                        <div className="flex flex-row">
+                                        <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
+                                        <div className="flex flex-row justify-start w-full ml-10" style={{ margin: '-30px 30px' }}>
                                             {categoryWithQuizzes.quizzes.map((quiz, index) => (
                                                 <ThreeDCardDemo key={index} quiz={quiz} />
                                             ))}

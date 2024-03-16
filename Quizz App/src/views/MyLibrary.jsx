@@ -11,6 +11,7 @@ import { addQuizToCreator, getUserQuizzes } from "../services/users-service";
 import { ThreeDCardDemo } from "../components/ThreeDCardDemo";
 import { cn } from "@/utils/cn";
 import LabelInputContainer from "../components/ui/LabelInputContainer";
+import QuizCardPaginated from "../components/QuizCardPaginated";
 
 
 const MyLibrary = () => {
@@ -20,6 +21,8 @@ const MyLibrary = () => {
     const [studentQuizzes, setStudentQuizzes] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [suggestions, setSuggestions] = useState('');
+    const quizzesPerPageTeacher = 10;
+    const quizzesPerPageStudent = 5;
     const navigate = useNavigate();
 
 
@@ -98,16 +101,18 @@ const MyLibrary = () => {
         }
     }
 
+    console.log(studentQuizzes?.completed)
+
     return (
         <>
             <div className="m-10">
                 {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
                     <>
-                        <div className="flex flex-row h-full items-start justify-between ">
-                            <div>
+                        <div className="flex flex-row h-full items-start justify-between ml-5">
+                            <div className="">
                                 <h2 className="text-4xl font-bold mb-4">My Quizzes</h2>
                             </div>
-                            <div>
+                            <div className="">
                                 <Dialog onClose={handleCloseDialog}>
                                     <DialogTrigger asChild>
                                         <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button>
@@ -143,7 +148,7 @@ const MyLibrary = () => {
                                                            dark:shadow-[0px_0px_1px_1px_var(--neutral-700)]
                                                            group-hover/input:shadow-none transition duration-400
                                                            `)}
-                                                           placeholder="Choose category">
+                                                            placeholder="Choose category">
                                                             <option value="">Choose category</option>
                                                             {suggestions.length > 0 && suggestions.map((suggestion, index) => (
                                                                 <option key={index} value={suggestion}>{suggestion}</option>
@@ -190,32 +195,19 @@ const MyLibrary = () => {
                                 </Dialog>
                             </div>
                         </div>
-
-                        <div className="grid grid-cols-5 gap-5">
-                            {teacherQuizzes.map((quiz, index) => (
-                                <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
-                            ))}
+                        <div>
+                            <QuizCardPaginated currentQuiz={teacherQuizzes} quizzesPerPage={quizzesPerPageTeacher} deleteQuiz={() => deleteQuiz(quiz.id)} />
                         </div>
                     </>
                 ) : (
-                    <div className="flex flex-col h-full items-start justify-start p-6">
+                    <>
                         <h2 className="text-4xl font-bold mb-4">Completed</h2>
-                        {studentQuizzes.completed && studentQuizzes.completed.length > 0 ? (
-                            studentQuizzes.completed.map((quiz, index) => (
-                                <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
-                            ))
-                        ) : (
-                            <p>No completed quizzes yet.</p>
-                        )}
+                        {studentQuizzes?.completed &&
+                            <QuizCardPaginated currentQuiz={studentQuizzes?.completed} quizzesPerPage={quizzesPerPageStudent} />}
                         <h2 className="text-4xl font-bold mb-4">Todo</h2>
-                        {studentQuizzes.nonCompleted && studentQuizzes.nonCompleted.length > 0 ? (
-                            studentQuizzes.nonCompleted.map((quiz, index) => (
-                                <ThreeDCardDemo key={index} quiz={quiz} isCompleted={false} />
-                            ))
-                        ) : (
-                            <p>No quizzes to do yet.</p>
-                        )}
-                    </div>
+                        {studentQuizzes?.nonCompleted &&
+                            <QuizCardPaginated currentQuiz={studentQuizzes?.nonCompleted} quizzesPerPage={quizzesPerPageStudent} />}
+                    </>
                 )}
             </div>
         </>
