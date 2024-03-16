@@ -46,7 +46,7 @@ const Home = () => {
     const publicQuizzes = quizzes.filter(quiz => quiz.isPublic);
 
     const searchQuizzes = publicQuizzes.filter((quiz) =>
-        quiz.title.toLowerCase().includes(searchTerm.toLowerCase()));
+        quiz.title.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, 5);
 
 
     useEffect(() => {
@@ -143,33 +143,54 @@ const Home = () => {
             {userData ?
                 (
                     <div className="flex flex-col">
-                        <div className="flex justify-center w-full">
+                        <div className="flex justify-center w-full mb-5">
                             <Input type="text" value={searchTerm} onChange={handleSearchChange}
                                 placeholder="Search quizzes..."
                                 className="text-center" />
                         </div>
-                        <div className="flex flex-row">
-                            {searchTerm.length > 0 &&
-                                searchQuizzes
-                                    .filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
-                                    .map((quiz, index) => (
-                                        <ThreeDCardDemo key={index} quiz={quiz} />))}
+                        <div className="flex justify-center mb-10">
+                            {searchTerm.length > 2 &&
+                                <div className="flex flex-col bg-base-200 border rounded-2xl mb-5">
+                                    <div className="flex flex-row justify-center">
+                                        <h1 className="mt-5 text-2xl ml-5 mr-5">
+                                            Search results
+                                        </h1>
+                                    </div>
+                                    <div className="flex flex-row ml-5">
+                                        {searchTerm.length > 2 &&
+                                            searchQuizzes
+                                                .filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                                                .map((quiz, index) => (
+                                                    <ThreeDCardDemo key={index} quiz={quiz} />
+                                                ))}
+                                    </div>
+                                    {searchQuizzes.filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 &&
+                                        <div className="flex justify-center mt-5 mb-5">
+                                            <h2 className=" text-2xl ml-5 mr-5">No results found. Sorry :(</h2>
+                                        </div>
+                                    }
+                                </div>}
                         </div>
                         <div className="flex flex-row w-full">
                             <div className=" flex flex-col w-full">
                                 <div id="recent" className="flex flex-col">
                                     <div className="flex flex-row w-full justify-between">
                                         <div id="your-recent" className="ml-10">
-                                        <h1 className="text-2xl">
-                                        Your Recent Quizzes
-                                        </h1>
+                                            <h1 className="text-2xl">
+                                                Your Recent Quizzes
+                                            </h1>
                                             {userData.role === 'student' ? (
                                                 <div id="student" className="flex flex-row overflow-auto">
                                                     {studentQuizzes && studentQuizzes.length > 0 ? (
                                                         studentQuizzes.map((quiz, index) => (
                                                             <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
                                                         ))
-                                                    ) : null}
+                                                    ) :
+                                                        (
+                                                            <div className="flex flex-row justify-center">
+                                                                <p className="text-2xl">No Quiz Contributions Yet</p>
+                                                            </div>
+                                                        )}
                                                 </div>
                                             ) : (
                                                 <div id='teacher' className="flex flex-row overflow-auto">
@@ -179,11 +200,11 @@ const Home = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        
+
                                         <div id="table" className="mr-10">
-                                        <h1 className="text-2xl">
-                                        Our Top 5 Quizcrafters
-                                        </h1>
+                                            <h1 className="text-2xl">
+                                                Our Top 5 Quizcrafters
+                                            </h1>
                                             <div className="overflow-x-auto">
                                                 <table className="table">
                                                     <thead>

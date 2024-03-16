@@ -28,9 +28,9 @@ export const QuizCardPaginated = ({ currentQuiz, quizzesPerPage, deleteQuiz }) =
                 <div className="justify-center flex mt-5 mb-3">
                     {currentPage > 1 && <button className="join-item btn btn-outline mr-2" onClick={() => paginate(currentPage - 1)}>Previous</button>}
                     {pageNumbers.map(number => (
-                        <button key={number} className={`join-item btn mr-2 ${number === currentPage ? 'btn-primary' : ''}`} onClick={() => paginate(number)}>{number}</button>
+                        <button key={number} className={`join-item btn mr-2 ${number === currentPage ? 'btn bg-gradient-to-r from-cyan-500 to-blue-500' : ''}`} onClick={() => paginate(number)}>{number}</button>
                     ))}
-                    {currentPage < totalPages && <button className="join-item btn btn-outline" onClick={() => paginate(currentPage + 1)}>Next</button>}
+                    {currentPage < totalPages && <button className="join-item btn " onClick={() => paginate(currentPage + 1)}>Next</button>}
                 </div>
             )}
         </>

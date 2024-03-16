@@ -108,11 +108,11 @@ const MyLibrary = () => {
             <div className="m-10">
                 {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
                     <>
-                        <div className="flex flex-row h-full items-start justify-between ">
-                            <div>
+                        <div className="flex flex-row h-full items-start justify-between ml-5">
+                            <div className="">
                                 <h2 className="text-4xl font-bold mb-4">My Quizzes</h2>
                             </div>
-                            <div>
+                            <div className="">
                                 <Dialog onClose={handleCloseDialog}>
                                     <DialogTrigger asChild>
                                         <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button>

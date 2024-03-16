@@ -25,9 +25,9 @@ export const ThreeDCardDemo = ({ quiz, onButtonClick }) => {
   const { userData } = useContext(AppContext);
 
   const navigate = useNavigate();
-  const isTeacherOrAdmin = (userData.role === 'teacher' && quiz.creator === userData.username)
-  const buttonText = isTeacherOrAdmin ? 'See quiz' : 'Start quiz';
-  const buttonClickPath = isTeacherOrAdmin ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
+  const isTeacherOrCreator = (userData.role === 'teacher' && quiz.creator === userData.username)
+  const buttonText = isTeacherOrCreator ? 'See quiz' : 'Start quiz';
+  const buttonClickPath = isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
 
   return (
     <CardContainer className="inter-var w-64 h-64 flex-shrink-0 mr-5">
@@ -43,10 +43,11 @@ export const ThreeDCardDemo = ({ quiz, onButtonClick }) => {
           translateZ="60"
           className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-5 truncate overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs h-20"
         >
-  
+          {quiz.description}
         </CardItem>
+
         <div className="flex justify-between items-center mt-10">
-          {isTeacherOrAdmin && <CardItem
+          {isTeacherOrCreator && <CardItem
             translateZ={20}
             as="button"
             target="__blank"
