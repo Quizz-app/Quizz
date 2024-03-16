@@ -419,7 +419,9 @@ const CreateQuiz = () => {
                 {/* Here we can see all the students that are in the system*/}
                 {openPanel === 'assignUser' && students.length > 0 && (
                     <div>
-                        <input className="input input-bordered w-24 md:w-auto mt-2 mb-2" type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search for student" />
+                        <div className="w-96">
+                            <Input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
+                        </div>
                         {searchTerm.length > 2 &&
                             filteredStudents.map((student, index) => (
                                 <div key={index}>
@@ -468,14 +470,14 @@ const CreateQuiz = () => {
 
                     </div>
                 </div>
-
-                <div className="border-t-2 border-neon-green"></div>
-
-                {openPanel === 'assignAssistant' && (
-                    <ScrollArea className="h-[300px] w-[1350px] rounded-md border p-4">
-                        <Assistant quiz={quiz} />
-                    </ScrollArea>
-                )}
+                <div className="border-t-2 border-neon-green mb-5"></div>
+                <div className='flex justify-center items-center'>
+                    {openPanel === 'assignAssistant' && (
+                        <ScrollArea className="flex flex-grow h-[300px] w-[1350px] rounded-xl border p-4 justify-center items-center">
+                            <Assistant quiz={quiz} questions={questions} />
+                        </ScrollArea>
+                    )}
+                </div>
 
 
 

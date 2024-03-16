@@ -139,7 +139,7 @@ const CreateClass = () => {
                     </div>
                     <div>
                         {userData && currentClass.creator && (userData.isAdmin || userData.username === currentClass.creator.username) &&
-                            <button className="btn btn-secondary" onClick={() => handleDeleteClass()}>Delete team</button>
+                            <button className="btn btn-secondary" onClick={() => handleDeleteClass()}>Delete class</button>
                         }
                     </div>
                 </div>
