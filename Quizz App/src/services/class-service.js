@@ -217,9 +217,12 @@ export const getUserClasses = async (username, callback) => {
 
 export const getClassMemebersByRanking = async (classId) => {
 
+    try{
+    console.log(classId);
     const classRef = ref(db, `classes/${classId}/members`);
     const classSnapshot = await get(classRef);
     const classData = classSnapshot.val();
+    
 
     if (!classSnapshot.exists()) {
         console.error(`Class with id ${classId} does not exist`);
@@ -233,7 +236,7 @@ export const getClassMemebersByRanking = async (classId) => {
 
             if (member.avatar) {
                 return {
-                   username: member.username,
+                    username: member.username,
                     firstName: member.firstName,
                     lastName: member.lastName,
                     avatar: member.avatar, // This will be undefined if the member does not have an avatar
@@ -252,7 +255,12 @@ export const getClassMemebersByRanking = async (classId) => {
 
     const sortedMembers = membersArray.sort((a, b) => b.averageScore - a.averageScore);
     return Object.values(sortedMembers);
+    }catch(error){
+        console.error(error);
+    }
+
 }
+
 
 
 export const removeQuizFromAllClasses = async (quizId) => {

@@ -74,7 +74,9 @@ const Dashboard = () => {
     useEffect(() => {
         (async () => {
             if (id || (classes && classes[0]) && userData && userData.role === 'student') {
+                console.log(classes[0].id)
                 const classMembers = await getClassMemebersByRanking(id || classes[0].id);
+                console.log(classMembers);
                 setRankedMembers(classMembers);
 
 
@@ -121,6 +123,7 @@ const Dashboard = () => {
         return () => clearInterval(intervalId);
     }, [userData, weeklyScoreData]); // Re-run the effect if userData or weeklyScoreData changes
 
+      
     const currentUserPosition = rankedMembers.findIndex(member => member.username === userData.username) + 1;
 
     const quizOptions = quizzes.map((quiz) => { return { label: quiz.title, value: quiz.id }; });
@@ -129,7 +132,7 @@ const Dashboard = () => {
         return { label: clasz.name, value: clasz.id };
     });
 
-    console.log(rankedQuizSolvers);
+    // console.log(rankedQuizSolvers);
     return (
         <div className="flex flex-col h-full items-start justify-start p-6">
             <h1>Dashboard</h1>
@@ -188,15 +191,7 @@ const Dashboard = () => {
                 </>)}
 
             {/* table */}
-            {userData && (userData.role === 'teacher' || userData.isAdmin === true)
-                ?
-                (<BarChart data={experimentalData} />)
-                :
-                (<BarChart data={weeklyScoreData} />)}
-
-
-
-
+            {userData && (userData.role === 'student' ) &&  (<BarChart data={weeklyScoreData} />)}
 
             {userData && (userData.role === 'student') ?
                 (<Popover open={open} onOpenChange={setOpen}>

@@ -21,7 +21,6 @@ const QuizResults = () => {
     const [points, setPoints] = useState([]);
     const [userQuestions, setUserQuestions] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [retakeOption, setRetakeOption] = useState(false);
     const [grades, setGrades] = useState({});
     const navigate = useNavigate();
 
@@ -37,7 +36,6 @@ const QuizResults = () => {
 
             if (quiz) {
                 const questionsArray = Object.values(quiz.questions);
-                const retake = quiz.retakeOption;
                 const userAnswersObject = quiz.userAnswers;
                 const grades = quiz.grades;
 
@@ -52,7 +50,7 @@ const QuizResults = () => {
                 setTotalPoints(questionsArray.reduce((total, question) => total + Number(question.points), 0));
                 setPoints(questionsArray.map(question => question.points));
                 setGrades(grades);
-                setRetakeOption(retake);
+               
             }
         })();
     }, [id, userData]);
@@ -185,8 +183,7 @@ const QuizResults = () => {
 
                     {/* Feedback */}
                     <button className="btn btn-primary" onClick={() => navigate('/my-library')}>Finish</button>
-                    {retakeOption &&
-                        <button className="btn btn-primary" onClick={() => navigate(`/quiz-solve/${id}`)}>Retake Quiz</button>}
+                   
 
                 </>
             )}
