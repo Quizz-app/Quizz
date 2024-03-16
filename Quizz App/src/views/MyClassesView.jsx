@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { createClass, getClassesByCreator, getUserClasses } from "../services/class-service";
+import { createClass, getUserClasses } from "../services/class-service";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
@@ -31,12 +31,12 @@ const MyClassesView = () => {
     useEffect(() => {
         if (userData) {
             getUserClasses(userData.username, setClasses);
-          
+
         }
 
     }, [userData])
 
-     console.log(Object.values(classes));
+    console.log((classes));
 
     const handleCreateClass = async () => {
         try {
@@ -58,12 +58,16 @@ const MyClassesView = () => {
     const handleCloseDialog = () => {
         setIsDialogOpen(false);
     };
-    
+
     return (
         <div>
             <Dialog onClose={handleCloseDialog}>
                 <DialogTrigger asChild>
-                    <Button variant="outline" onClick={handleButtonClick} > New Class +</Button>
+                    {userData?.role === 'teacher' &&
+                        <Button variant="outline" onClick={handleButtonClick} >
+                            New Class +
+                        </Button>
+                    }
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] bg-white dark:bg-neutral text-black dark:text-white">
                     <DialogHeader>
@@ -99,9 +103,8 @@ const MyClassesView = () => {
                     {classes.map((classItem, index) => (
                         classItem && classItem.name && classItem.description ? (
                             <div key={index} className="card w-96 bg-base-100 shadow-xl image-full">
-                               
                                 <div className="justify-end card-body">
-                                    <h2 className="card-title">{classItem.name}</h2> 
+                                    <h2 className="card-title">{classItem.name}</h2>
                                     <p>{classItem.description}</p>
                                     <div className="card-actions">
                                         <Button variant="outline" onClick={() => navigate(`/class/${classItem.id}`)}>Go to class</Button>

@@ -166,7 +166,7 @@ const Home = () => {
                                     </div>
                                     {searchQuizzes.filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 &&
                                         <div className="flex justify-center mt-5 mb-5">
-                                            <h2 className=" text-2xl ml-5 mr-5">No results found. Sorry :(</h2>
+                                            <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
                                         </div>
                                     }
                                 </div>}
