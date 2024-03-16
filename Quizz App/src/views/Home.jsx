@@ -209,7 +209,7 @@ const Home = () => {
                                     </div>
                                 </div>
                                 <div id="popular" className="flex flex-col  justify-start w-full ml-10">
-                                    <div className="flex">
+                                    <div className="flex mt-15" style={{ margin: '-30px 10px' }}>
                                         <h1 className="text-2xl">
                                             Popular
                                         </h1>
@@ -222,11 +222,11 @@ const Home = () => {
                         </div>
                         <div>
                             <div>
-                                <h2 className="text-center text-3xl mr-5">Trending Categories</h2>
+                                <h2 className="text-center text-3xl mr-5 mb-10">Trending Categories</h2>
                                 {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
                                     <div key={index}>
-                                        <h2 className="ml-10">{categoryWithQuizzes.category}</h2>
-                                        <div className="flex flex-row justify-start w-full ml-10">
+                                        <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
+                                        <div className="flex flex-row justify-start w-full ml-10" style={{ margin: '-30px 30px' }}>
                                             {categoryWithQuizzes.quizzes.map((quiz, index) => (
                                                 <ThreeDCardDemo key={index} quiz={quiz} />
                                             ))}
