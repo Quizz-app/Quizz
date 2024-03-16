@@ -158,15 +158,18 @@ const Home = () => {
                         <div className="flex flex-row w-full">
                             <div className=" flex flex-col w-full">
                                 <div id="recent" className="flex flex-col">
-                                    <div>
-                                        <h1>
+                                    <div className="flex flex-row w-full justify-between">
+                                        <h1 className="text-2xl ml-10">
                                             Your recent quizzes
                                         </h1>
+                                        <h1>
+                                            Top 5 teachers with most quizzes
+                                        </h1>
                                     </div>
-                                    <div className="flex flex-row">
-                                        <div id="your-recent">
+                                    <div className="flex flex-row w-full justify-between">
+                                        <div id="your-recent" className="">
                                             {userData.role === 'student' ? (
-                                                <div id="student" className="flex flex-row overflow-auto">
+                                                <div id="student" className="flex flex-row overflow-auto ml-10">
                                                     {studentQuizzes && studentQuizzes.length > 0 ? (
                                                         studentQuizzes.map((quiz, index) => (
                                                             <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
@@ -207,7 +210,7 @@ const Home = () => {
                                 </div>
                                 <div id="popular" className="flex flex-col  justify-start w-full ml-10">
                                     <div className="flex">
-                                        <h1>
+                                        <h1 className="text-2xl">
                                             Popular
                                         </h1>
                                     </div>
