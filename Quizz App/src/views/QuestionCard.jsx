@@ -16,6 +16,8 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
       ? correctAnswer.map((index) => answers[index])
       : [answers[correctAnswer]]
   );
+  
+ 
 
   const handleEdit = () => {
     setEditing(true);
@@ -41,7 +43,7 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
     setEditing(false);
   };
 
-  console.log(editedCorrectAnswer)
+  
 
   return (
     <div className="card w-96 bg-gradient-to-br from-white to-gray-100 shadow-xl p-0 m-0">

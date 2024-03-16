@@ -73,11 +73,10 @@ const CreateQuiz = () => {
             try {
                 setLoading(true);
                 const fetchedQuiz = await getQuizById(id);
-                console.log(fetchedQuiz);
+                
                 if (JSON.stringify(fetchedQuiz) !== JSON.stringify(quiz)) {
                     setQuiz(fetchedQuiz);
                     setTimeLimit(fetchedQuiz.quizTime || 0);
-                    console.log(timeLimit);
                     setGrades(fetchedQuiz.grades || { good: 0, bad: 0 });
                     setDescription(fetchedQuiz.description || "");
                     setLoading(false);
@@ -94,6 +93,7 @@ const CreateQuiz = () => {
                 setLoading(true);
                 if (JSON.stringify(fetchedQuestions) !== JSON.stringify(questions)) {
                     setQuestions(fetchedQuestions);
+                    
 
                     const newTotalPoints = fetchedQuestions.reduce(
                         (total, question) => total + Number(question.points),
@@ -321,7 +321,7 @@ const CreateQuiz = () => {
     }
         , [id]);
 
-
+  
 
     return (
         <>
@@ -493,7 +493,7 @@ const CreateQuiz = () => {
                                                 quizId={id}
                                                 questionId={question.id}
                                                 answers={question.answers}
-                                                correctAnswers={question.correctAnswers}
+                                                correctAnswer={question.correctAnswer}
                                                 points={Number(question.points)}
                                                 handleUpdateQuestion={handleUpdateQuestion}
                                                 onDelete={handleDeleteQuestion}
