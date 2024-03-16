@@ -98,7 +98,7 @@ const Home = () => {
                 quizCount: teacher.createdQuizzes ? Object.values(teacher.createdQuizzes).length : 0
             };
         });
-        const sorted = teachersQuizes.sort((a, b) => b.quizCount - a.quizCount);
+        const sorted = teachersQuizes.sort((a, b) => b.quizCount - a.quizCount).slice(0, 5);
         setSortedTeachersQuizzes(sorted);
     }, [users]);
 
@@ -115,7 +115,7 @@ const Home = () => {
                 const fullQuiz = await getQuizById(id);
                 return { ...fullQuiz, ...quiz };
             }));
-            const completedQuizzes = quizzesArray.filter(quiz => quiz.isCompleted).slice(-5);
+            const completedQuizzes = quizzesArray.filter(quiz => quiz.isCompleted).slice(-5).reverse();
             setStudentQuizzes(completedQuizzes);
         });
 
@@ -159,17 +159,12 @@ const Home = () => {
                             <div className=" flex flex-col w-full">
                                 <div id="recent" className="flex flex-col">
                                     <div className="flex flex-row w-full justify-between">
-                                        <h1 className="text-2xl ml-10">
-                                            Your recent quizzes
+                                        <div id="your-recent" className="ml-10">
+                                        <h1 className="text-2xl">
+                                        Your Recent Quizzes
                                         </h1>
-                                        <h1>
-                                            Top 5 teachers with most quizzes
-                                        </h1>
-                                    </div>
-                                    <div className="flex flex-row w-full justify-between">
-                                        <div id="your-recent" className="">
                                             {userData.role === 'student' ? (
-                                                <div id="student" className="flex flex-row overflow-auto ml-10">
+                                                <div id="student" className="flex flex-row overflow-auto">
                                                     {studentQuizzes && studentQuizzes.length > 0 ? (
                                                         studentQuizzes.map((quiz, index) => (
                                                             <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
@@ -184,7 +179,11 @@ const Home = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        <div id="table" className="">
+                                        
+                                        <div id="table" className="mr-10">
+                                        <h1 className="text-2xl">
+                                        Our Top 5 Quizcrafters
+                                        </h1>
                                             <div className="overflow-x-auto">
                                                 <table className="table">
                                                     <thead>
