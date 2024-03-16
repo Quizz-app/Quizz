@@ -19,20 +19,22 @@ export const QuizCardPaginated = ({ currentQuiz, quizzesPerPage, deleteQuiz }) =
 
     return (
         <>
-            <div className="grid grid-cols-5">
-                {currentQuizzes.map((quiz, index) => (
-                    <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={deleteQuiz} />
-                ))}
-            </div>
-            {totalPages > 1 && (
-                <div className="justify-center flex mt-5 mb-3">
-                    {currentPage > 1 && <button className="join-item btn btn-outline mr-2" onClick={() => paginate(currentPage - 1)}>Previous</button>}
-                    {pageNumbers.map(number => (
-                        <button key={number} className={`join-item btn mr-2 ${number === currentPage ? 'btn bg-gradient-to-r from-cyan-500 to-blue-500' : ''}`} onClick={() => paginate(number)}>{number}</button>
+            <div className="flex flex-col">
+                <div className="grid grid-cols-5">
+                    {currentQuizzes.map((quiz, index) => (
+                        <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={deleteQuiz} />
                     ))}
-                    {currentPage < totalPages && <button className="join-item btn " onClick={() => paginate(currentPage + 1)}>Next</button>}
                 </div>
-            )}
+                {totalPages > 1 && (
+                    <div className="justify-center flex mt-5 mb-5">
+                        {currentPage > 1 && <button className="join-item btn btn-outline mr-2" onClick={() => paginate(currentPage - 1)}>Previous</button>}
+                        {pageNumbers.map(number => (
+                            <button key={number} className={`join-item btn mr-2 ${number === currentPage ? 'btn bg-gradient-to-r from-cyan-500 to-blue-500' : ''}`} onClick={() => paginate(number)}>{number}</button>
+                        ))}
+                        {currentPage < totalPages && <button className="join-item btn " onClick={() => paginate(currentPage + 1)}>Next</button>}
+                    </div>
+                )}
+            </div>
         </>
     )
 };
