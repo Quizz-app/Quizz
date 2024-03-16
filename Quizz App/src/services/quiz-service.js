@@ -19,7 +19,6 @@ export const createQuiz = async (creator, title, category, isPublic, questionTyp
     category,
     isPublic,
     createdOn: new Date().toString(),
-    retakeOption: false,
     questionTypes,
     onGoing: true,
     endsOn: null,
