@@ -103,6 +103,11 @@ module.exports = {
           to: { height: "0" },
         },
 
+        scroll: {
+          to: {
+            transform: "translate(calc(-50% - 0.5rem))",
+          },
+        },
 
         shimmer: {
           from: {
@@ -125,6 +130,8 @@ module.exports = {
         fifth: "moveInCircle 20s ease infinite",
         shimmer: "shimmer 2s linear infinite",
 
+        scroll:
+        "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
         
 
       },
