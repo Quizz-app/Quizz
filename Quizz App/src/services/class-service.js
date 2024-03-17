@@ -202,6 +202,7 @@ export const getUserClasses = async (username, callback) => {
         Promise.all(classPromises)  //get the data of the classes
             .then((snapshots) => {
                 const classes = snapshots.map((snapshot, index) => {
+                    
                     return {
                         id: classesIds[index],
                         ...snapshot.val(),

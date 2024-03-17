@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { createClass, getUserClasses } from "../services/class-service";
 import { AppContext } from "../context/AppContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger, } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -39,8 +39,6 @@ const MyClassesView = () => {
         }
 
     }, [userData])
-
-    console.log((classes));
 
     const handleCreateClass = async () => {
         try {
@@ -117,7 +115,7 @@ const MyClassesView = () => {
                             <div className="flex flex-col">
                                 <div className="grid grid-cols-5">
                                     {classes.map((claz, index) => (
-                                        <TeamCard key={index} team={claz} type={'class'} />
+                                        <TeamCard key={index} team={claz} type={'class'} path={'class'} />
                                     ))}
                                 </div>
                             </div>
