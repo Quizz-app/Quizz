@@ -229,7 +229,14 @@ const Home = () => {
         <>
             {userData ?
                 <>
-                  
+                   <div className="hero min-h-screen bg-base-200 flex flex-col items-center justify-center mx-auto">
+                   <AnimatePresence mode='wait'>
+                        <motion.div
+                            initial={{ opacity: 0, x: -200 }} // Starts from the left
+                            animate={{ opacity: 1, x: 0 }} // Moves to the center
+                            exit={{ opacity: 0, x: 200 }} // Exits to the right
+                            transition={{ duration: 0.99 }}
+                        >
                     <div className="flex flex-col mt-12 mx-10">
                         <div className="flex justify-start w-full mb-5 ml-10">
                             <Input type="text" value={searchTerm} onChange={handleSearchChange}
@@ -351,17 +358,12 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
+                    </motion.div>
+                    </AnimatePresence>
+                    </div>
                 </>
                 :
                 <>
-
-                    <AnimatePresence mode='wait'>
-                        <motion.div
-                            initial={{ opacity: 0, x: -200 }} // Starts from the left
-                            animate={{ opacity: 1, x: 0 }} // Moves to the center
-                            exit={{ opacity: 0, x: 200 }} // Exits to the right
-                            transition={{ duration: 0.99 }}
-                        >
 
                             <div>
                                 <div className="flex flex-col items-center justify-center mt-20 ">
@@ -446,6 +448,7 @@ const Home = () => {
                             </div>
                         </div> */}
 
+
                                 <div className="mt-40 ">
                                     <div className="flex flex-col items-start justify-center ml-40">
                                         <h1 className="text-3xl text-start font-bold ">Evolution of the way we teach and learn</h1>
@@ -528,8 +531,7 @@ const Home = () => {
                                 </footer>
 
                             </div>
-                        </motion.div>
-                    </AnimatePresence>
+                     
 
                 </>}
         </>
