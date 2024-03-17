@@ -180,7 +180,7 @@ const Profile = () => {
               </div>
             </div>
             <div className="absolute bottom-0 inset-x-0 flex items-center justify-center mb-0">
-              <button type="submit" className="btn btn-primary" style={{ marginBottom: '-20px' }} >Save changes</button>
+              <button type="submit" className="bg-blue-500 text-white rounded cursor-pointer p-2 ml-5" style={{ marginBottom: '-20px' }} >Save changes</button>
             </div>
           </form>
         </div>
