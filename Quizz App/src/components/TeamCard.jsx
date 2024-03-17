@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
-const TeamCard = ({ team, handleClick }) => {
+const TeamCard = ({ team, handleClick, type }) => {
 
     const navigate = useNavigate();
 
@@ -11,8 +11,8 @@ const TeamCard = ({ team, handleClick }) => {
                 <h2 className="card-title">{team.name}</h2>
                 <p>{team.description}</p>
                 <div className="card-actions justify-between mt-5">
-                    <button className="btn btn-sm bg-base-300 shadow-xl" onClick={() => navigate(`/team/${team.id}`)}>Go to team</button>
-                    <button className="btn btn-sm bg-base-300 shadow-xl" onClick={handleClick}>Leave team</button>
+                    <button className="btn btn-sm bg-base-300 shadow-xl" onClick={() => navigate(`/team/${team.id}`)}>Go to {type}</button>
+                    {handleClick && <button className="btn btn-sm bg-base-300 shadow-xl" onClick={handleClick}>Leave team</button>}
                 </div>
             </div>
         </div>
@@ -22,6 +22,7 @@ const TeamCard = ({ team, handleClick }) => {
 TeamCard.propTypes = {
     team: PropTypes.object,
     handleClick: PropTypes.func,
+    type: PropTypes.string,
 };
 
 export default TeamCard;

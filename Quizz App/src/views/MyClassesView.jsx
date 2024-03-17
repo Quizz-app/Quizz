@@ -117,7 +117,7 @@ const MyClassesView = () => {
                             <div className="flex flex-col">
                                 <div className="grid grid-cols-5">
                                     {classes.map((claz, index) => (
-                                        <TeamCard key={index} team={claz} />
+                                        <TeamCard key={index} team={claz} type={'class'} />
                                     ))}
                                 </div>
                             </div>

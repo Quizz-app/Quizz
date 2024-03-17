@@ -95,7 +95,7 @@ const Home = () => {
         },
         {
             text: "BrainBurst.",
-            className: "text-neon-green dark:text-lime-500",
+            className: "text-blue-500 dark:text-lime-500",
         },
     ];
 

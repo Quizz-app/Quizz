@@ -111,13 +111,12 @@ const MyTeamsView = () => {
                             <div className="flex flex-col">
                                 <div className="grid grid-cols-5">
                                     {teams.map((team, index) => (
-                                        <TeamCard key={index} team={team} handleClick={() => userLeaveTeam(userData.username, team.id)} />
+                                        <TeamCard key={index} team={team} handleClick={() => userLeaveTeam(userData.username, team.id)} type={'team'} />
                                     ))}
                                 </div>
                             </div>
                         )}
                     </div>
-
 
                 </div>
             </motion.div>
