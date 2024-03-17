@@ -17,9 +17,8 @@ import { formatDate, msToTime, timeRanges } from "../services/time-functions";
 import Assistant from "../components/Assistant";
 import { DatePickerDemo } from "../components/DatePicker";
 import { AiOutlineTeam } from "react-icons/ai";
-import { MdCancel } from "react-icons/md";
+import { MdCancel, MdDoneAll } from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
-import { MdDoneAll } from "react-icons/md";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from 'framer-motion';
 import { CiEdit } from "react-icons/ci";
@@ -327,7 +326,7 @@ const CreateQuiz = () => {
                 <div className="flex flex-row items-center justify-between">
                     {/* quiz title */}
                     <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
-                    <p>Total points: {totalPoints}</p>
+
                     {/* action buttons */}
                     <div className="flex flex-row items-center justify-center">
                         <div className="flex flex-col items-center justify-center">
@@ -405,7 +404,6 @@ const CreateQuiz = () => {
                         >
                             Add Question +
                         </motion.button>
-
                         <button onClick={() => handleButtonClick('assignAssistant')} className="relative inline-flex h-10 overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 ml-3">
                             <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
                             <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-white px-3 py-1 text-sm font-medium text-slate-950 backdrop-blur-3xl">
@@ -413,8 +411,11 @@ const CreateQuiz = () => {
                             </span>
                         </button>
                     </div>
+                    <div className="ml-10">
+                        <p className="">Quiz management:</p>
+                    </div>
                     <div>
-                        <p style={{ marginRight: '500px' }}>Quiz management:</p>
+
                     </div>
                 </div>
                 <div className="border-t-2 border-neon-green mb-5"></div>
@@ -425,140 +426,142 @@ const CreateQuiz = () => {
                         </ScrollArea>
                     )}
                 </div>
-
-
-
-                <div className="flex flex-row justify-between">
-                    <div className="flex flex-row items-start justify-start ">
-                        <div className="grid grid-cols-3 items-start justify-start w-800px">
-                            {questions ? (
-                                questions.map((question, index) => (
-                                    <motion.div
-                                        key={index}
-                                        className="p-0 m-0 w-24 h-32" // adjust the size of the grid items
-                                        initial={{ scale: 0.3, zIndex: 0 }} // card is initially smaller and has a z-index of 0
-                                        whileHover={{ scale: 1.1, zIndex: 1 }} // card scales up and has a z-index of 1 when hovered over
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        <QuestionCard
-                                            className="p-0 m-0"
-                                            content={question.content}
-                                            quizId={id}
-                                            questionId={question.id}
-                                            answers={question.answers}
-                                            correctAnswer={question.correctAnswer}
-                                            points={Number(question.points)}
-                                            handleUpdateQuestion={handleUpdateQuestion}
-                                            onDelete={handleDeleteQuestion}
-                                        />
-                                    </motion.div>
-                                ))
-                            ) : (
-                                <h1>No questions yet</h1>
-                            )}
-                        </div>
-                        <div>
-                            {createMode && (
-                                <div className="card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl ">
-                                    <div className="card-body">
-                                        <Label htmlFor="question">Question</Label>
-                                        <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
-                                        <Label htmlFor="question">Add answer:</Label>
-                                        {answers.map((answer, index) => (
-                                            <div key={index} className="flex flex-row justify-between">
-                                                <input className="checkbox checkbox-success mr-2" type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
-                                                <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)} />
-                                                <button className="btn btn-xs ml-2" onClick={() => handleRemoveAnswer(index)}>Remove</button>
-                                            </div>
-                                        ))}
-                                        <button className="btn btn-xs bg-[#90ee90]" onClick={handleAddAnswer}>Include Answer</button>
-                                        <Label htmlFor="points">Set points:</Label>
-                                        <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
-                                        <div className="flex mt-3">
-                                            <CiEdit className="mr-5" onClick={handleAddQuestion} />
-                                            <MdCancel onClick={() => setCreateMode(false)} />
-                                        </div>
-
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                <div className="flex flex-col justify-between">
+                    <div>
+                        <p>Total question points: {totalPoints}</p>
                     </div>
+                    <div className="flex flex-row">
+                        <div className="flex flex-row items-start justify-start ">
+                            <div className="grid grid-cols-3 items-start justify-start w-800px">
 
-                    <div className="flex flex-col mt-7">
-                        <div className="mb-10">
-                            <p className="">Quiz Description</p>
-                            <div className="w-96">
-                                <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
+                                {questions ? (
+                                    questions.map((question, index) => (
+                                        <motion.div
+                                            key={index}
+                                            className="p-0 m-0 w-24 h-32" // adjust the size of the grid items
+                                            initial={{ scale: 0.3, zIndex: 0 }} // card is initially smaller and has a z-index of 0
+                                            whileHover={{ scale: 1.1, zIndex: 1 }} // card scales up and has a z-index of 1 when hovered over
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <QuestionCard
+                                                className="p-0 m-0"
+                                                content={question.content}
+                                                quizId={id}
+                                                questionId={question.id}
+                                                answers={question.answers}
+                                                correctAnswer={question.correctAnswer}
+                                                points={Number(question.points)}
+                                                handleUpdateQuestion={handleUpdateQuestion}
+                                                onDelete={handleDeleteQuestion}
+                                            />
+                                        </motion.div>
+                                    ))
+                                ) : (
+                                    <h1>No questions yet</h1>
+                                )}
                             </div>
-                        </div>
-                        <div className="flex flex-row justify-between mb-5">
-                            <div className="flex flex-col">
-                                <label className="mb-2">Time Limit</label>
-                                <Popover open={open} onOpenChange={setOpen}>
-                                    <PopoverTrigger asChild>
-                                        <Button variant="outline" role="combobox" className="w-[200px] justify-between">
-                                            {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
-                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-[200px] p-0">
-                                        <Command>
-                                            <CommandGroup>
-                                                {timeRanges.map((timeRange) => (
-                                                    <CommandItem
-                                                        key={timeRange.value}
-                                                        value={timeRange.value}
-                                                        onSelect={async (currentValue) => {
-                                                            setTimeLimit(Number(currentValue));
-                                                            setOpen(false);
-                                                            await handleSetTime(currentValue);
-                                                        }}>
-                                                        <Check className={cn("mr-2 h-5 w-4", timeLimit === timeRange.value ? "opacity-100" : "opacity-0")} />
-                                                        {timeRange.label}
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </Command>
-                                    </PopoverContent>
-                                </Popover>
-                            </div>
-                            <div className="ml-5 mb-10">
-                                <label className="mb-2">Quiz Deadline</label>
-                                <div className="flex flex-row mt-2 mb-5">
-                                    <DatePickerDemo
-                                        selected={date}
-                                        onSelect={setDate}
-                                    />
-                                </div>
-                                <div className="">
-                                    {quiz?.endsOn && (
-                                        remainingTime > 0
-                                            ? <p>Time left: {msToTime(remainingTime)}</p>
-                                            : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
-                                    )}
-                                </div>
-
-                                <button className="" onClick={() => setEndOn(id, date)}>Save date</button>
-                            </div>
-
-                        </div>
-                        <div className="flex flex-row">
                             <div>
-                                <h1 className="mb-4">Grading System &rarr;</h1>
-                                <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
-                                <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
-                            </div>
-                            <div className="flex flex-col ml-8">
-                                <p>Good: {grades.good} and above</p>
-                                <p>Satisfactory: {grades.bad} - {grades.good}</p>
-                                <p>Bad: {grades.bad} and below</p>
+                                {createMode && (
+                                    <div className="card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl ">
+                                        <div className="card-body">
+                                            <Label htmlFor="question">Question</Label>
+                                            <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
+                                            <Label htmlFor="question">Add answer:</Label>
+                                            {answers.map((answer, index) => (
+                                                <div key={index} className="flex flex-row justify-between">
+                                                    <input className="checkbox checkbox-success mr-2" type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
+                                                    <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)} />
+                                                    <button className="btn btn-xs ml-2" onClick={() => handleRemoveAnswer(index)}>Remove</button>
+                                                </div>
+                                            ))}
+                                            <button className="btn btn-xs bg-[#90ee90]" onClick={handleAddAnswer}>Include Answer</button>
+                                            <Label htmlFor="points">Set points:</Label>
+                                            <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
+                                            <div className="flex mt-3">
+                                                <CiEdit className="mr-5" onClick={handleAddQuestion} />
+                                                <MdCancel onClick={() => setCreateMode(false)} />
+                                            </div>
 
-                                <Button onClick={handleSetGrades}>Set Grades</Button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
+                        <div className="flex flex-col mt-7">
+                            <div className="mb-10">
+                                <p className="">Quiz Description</p>
+                                <div className="w-96">
+                                    <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
+                                </div>
+                            </div>
+                            <div className="flex flex-row justify-between mb-5">
+                                <div className="flex flex-col">
+                                    <label className="mb-2">Time Limit</label>
+                                    <Popover open={open} onOpenChange={setOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" role="combobox" className="w-[200px] justify-between">
+                                                {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
+                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[200px] p-0">
+                                            <Command>
+                                                <CommandGroup>
+                                                    {timeRanges.map((timeRange) => (
+                                                        <CommandItem
+                                                            key={timeRange.value}
+                                                            value={timeRange.value}
+                                                            onSelect={async (currentValue) => {
+                                                                setTimeLimit(Number(currentValue));
+                                                                setOpen(false);
+                                                                await handleSetTime(currentValue);
+                                                            }}>
+                                                            <Check className={cn("mr-2 h-5 w-4", timeLimit === timeRange.value ? "opacity-100" : "opacity-0")} />
+                                                            {timeRange.label}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                                <div className="ml-5 mb-10">
+                                    <label className="mb-2">Quiz Deadline</label>
+                                    <div className="flex flex-row mt-2 mb-5">
+                                        <DatePickerDemo
+                                            selected={date}
+                                            onSelect={setDate}
+                                        />
+                                    </div>
+                                    <div className="">
+                                        {quiz?.endsOn && (
+                                            remainingTime > 0
+                                                ? <p>Time left: {msToTime(remainingTime)}</p>
+                                                : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
+                                        )}
+                                    </div>
+
+                                    <button className="" onClick={() => setEndOn(id, date)}>Save date</button>
+                                </div>
+
+                            </div>
+                            <div className="flex flex-row">
+                                <div>
+                                    <h1 className="mb-4">Grading System &rarr;</h1>
+                                    <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
+                                    <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
+                                </div>
+                                <div className="flex flex-col ml-8">
+                                    <p>Good: {grades.good} and above</p>
+                                    <p>Satisfactory: {grades.bad} - {grades.good}</p>
+                                    <p>Bad: {grades.bad} and below</p>
+                                    <Button onClick={handleSetGrades}>Set Grades</Button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </div >
+                </div>
             </div >
         </>
     );
