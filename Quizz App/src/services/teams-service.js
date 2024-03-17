@@ -253,3 +253,14 @@ export const getAllTeamQuizzes = (teamId, callback) => {
 }
 
 
+export const areUsersInSameTeam = async (username1, username2, teamId) => {
+    const teamSnapshot = await get(ref(db, `teams/${teamId}`));
+    const teamData = teamSnapshot.val();
+
+    if (!teamData.members) {
+        return false;
+    }
+
+    const members = Object.keys(teamData.members);
+    return members.includes(username1) && members.includes(username2);
+}

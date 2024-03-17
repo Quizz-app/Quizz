@@ -1,8 +1,9 @@
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import { areUsersInSameTeam } from "../services/teams-service";
 
 /**
  * QuizCard component displays a card with quiz details.
@@ -20,14 +21,20 @@ import { AppContext } from "../context/AppContext";
 * time: number 
 * }, isCompleted: boolean, onButtonClick: function }} param0 - Props that are passed to the QuizCard component.
 */
-export const ThreeDCardDemo = ({ quiz, onButtonClick }) => {
+export const ThreeDCardDemo = ({ quiz, teamId }) => {
 
   const { userData } = useContext(AppContext);
+  const [inSameTeam, setInSameTeam] = useState(false);
 
   const navigate = useNavigate();
-  const isTeacherOrCreator = (userData.role === 'teacher' && quiz.creator === userData.username)
-  const buttonText = isTeacherOrCreator ? 'See quiz' : 'Start quiz';
-  const buttonClickPath = isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
+  const isTeacherOrCreator = (userData?.role === 'teacher' && quiz.creator === userData.username)
+  const isTeamMember = inSameTeam && userData?.username !== quiz?.creator;
+  const buttonText = isTeacherOrCreator || isTeamMember ? 'See quiz' : 'Start quiz';
+  const buttonClickPath = isTeacherOrCreator || isTeamMember ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
+
+  areUsersInSameTeam(userData?.username, quiz?.creator, teamId).then(setInSameTeam);
+
+  console.log(inSameTeam)
 
   return (
     <CardContainer className="inter-var w-64 h-64 flex-shrink-0 mr-5">
@@ -36,44 +43,32 @@ export const ThreeDCardDemo = ({ quiz, onButtonClick }) => {
           translateZ="50"
           className="text-xl font-bold text-neutral-600 dark:text-white"
         >
-          {quiz.title}
+          {quiz?.title}
         </CardItem>
         <CardItem
           as="p"
           translateZ="60"
           className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-5 truncate overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs h-20"
         >
-          {quiz.description}
+          {quiz?.description}
         </CardItem>
-
-        <div className="flex justify-between items-center mt-10">
-          {isTeacherOrCreator && <CardItem
-            translateZ={20}
-            as="button"
-            target="__blank"
-            className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
-            onClick={onButtonClick}
-          >
-            Delete quiz
-          </CardItem>}
-          {quiz?.isCompleted ? (<CardItem
+        {quiz?.isCompleted ? (<CardItem
+          translateZ={20}
+          as="button"
+          className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
+          onClick={() => navigate(`/results/${quiz?.id}`)}
+        >
+          See quiz
+        </CardItem>)
+          :
+          (<CardItem
             translateZ={20}
             as="button"
             className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
-            onClick={() => navigate(`/results/${quiz.id}`)}
+            onClick={() => navigate(buttonClickPath)}
           >
-            See quiz
-          </CardItem>)
-            :
-            (<CardItem
-              translateZ={20}
-              as="button"
-              className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
-              onClick={() => navigate(buttonClickPath)}
-            >
-              {buttonText}
-            </CardItem>)}
-        </div>
+            {buttonText}
+          </CardItem>)}
       </CardBody>
     </CardContainer>
   );
@@ -83,5 +78,6 @@ export default ThreeDCardDemo;
 
 ThreeDCardDemo.propTypes = {
   quiz: PropTypes.object,
-  onButtonClick: PropTypes.func
+  teamId: PropTypes.string,
+
 }

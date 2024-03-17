@@ -92,17 +92,7 @@ const MyLibrary = () => {
         setIsDialogOpen(false);
     };
 
-    const deleteQuiz = async (id) => {
-        try {
-            await deleteQuizById(id);
-            navigate('/my-library');
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    console.log(studentQuizzes?.completed)
-
+    
     return (
         <>
             <div className="m-10">
@@ -122,7 +112,7 @@ const MyLibrary = () => {
                                             Hey there, quiz enthusiast!
                                         </h2>
                                         <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300 mb-3">
-                                            It's time to step into the spotlight and showcase your quiz-making skills. Be the pioneer and set the bar high for others to follow!
+                                            {`It's time to step into the spotlight and showcase your quiz-making skills. Be the pioneer and set the bar high for others to follow!`}
                                         </p>
                                         <LabelInputContainer className="mb-3">
                                             <Label htmlFor="title">Quiz title</Label>
@@ -196,7 +186,7 @@ const MyLibrary = () => {
                             </div>
                         </div>
                         <div>
-                            <QuizCardPaginated currentQuiz={teacherQuizzes} quizzesPerPage={quizzesPerPageTeacher} deleteQuiz={() => deleteQuiz(quiz.id)} />
+                            <QuizCardPaginated currentQuiz={teacherQuizzes} quizzesPerPage={quizzesPerPageTeacher} />
                         </div>
                     </>
                 ) : (

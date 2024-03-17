@@ -465,9 +465,8 @@ const CreateQuiz = () => {
                     <div id="questions-score" className="ml-8">
                         <p className="text-xl">Total question points: {totalPoints}</p>
                     </div>
-                    <div className="flex flex-row mt-7">
-                        <div className="flex flex-row items-start justify-start ">
-                            <div id='questions-cards' className="grid grid-cols-3 items-start justify-start w-800px">
+                        <div className="flex flex-row ">
+                            <div id='questions-cards' className="grid grid-cols-3 w-800px mr-5">
                                 {questions ? (
                                     questions.map((question, index) => (
                                         <motion.div
@@ -494,8 +493,9 @@ const CreateQuiz = () => {
                                     <h1>No questions yet</h1>
                                 )}
                             </div>
-                            <div id="create-question-card" className="mr-20">
-                                <div className={`card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl ${createMode ? 'visible' : 'invisible'}`}>
+                            {createMode && (
+                                <div id="create-question-card" className="mr-10">
+                                <div className='card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl'>
                                     <div className="card-body">
                                         <Label htmlFor="question">Question</Label>
                                         <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
@@ -516,9 +516,10 @@ const CreateQuiz = () => {
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <div id="quiz-management" className="flex flex-col mb-5 ml-10">
+                            )}
+                            
+                            <div id="quiz-management" className="flex flex-col mb-5">
                                 <p className="text-xl" >Quiz management:</p>
                                 <div className="mb-10">
                                     <p className="mb-2">Quiz Description</p>
@@ -604,7 +605,7 @@ const CreateQuiz = () => {
                             </div>
                         </div>
 
-                    </div>
+                    
                 </div>
             </div >
         </>
