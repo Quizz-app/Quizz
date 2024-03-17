@@ -12,6 +12,7 @@ import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import RankingTable from "../components/RankingTable";
+import { motion, AnimatePresence } from "framer-motion";
 
 
 const Dashboard = () => {
@@ -134,7 +135,15 @@ const Dashboard = () => {
 
     // console.log(rankedQuizSolvers);
     return (
-        <div className="flex flex-col h-full items-start justify-start p-6">
+
+        <AnimatePresence mode='wait'>
+        <motion.div
+          initial={{ opacity: 0, x: -200 }} // Starts from the left
+          animate={{ opacity: 1, x: 0 }} // Moves to the center
+          exit={{ opacity: 0, x: 200 }} // Exits to the right
+          transition={{ duration: 0.9 }}
+        >
+        <div className="flex flex-col h-full items-start justify-start p-6 mx-20 mt-10">
             <h1>Dashboard</h1>
             {userData && (userData.role === 'teacher' || userData.isAdmin === true) ?
                 (<>
@@ -338,6 +347,9 @@ const Dashboard = () => {
             </div> */}
 
         </div>
+
+        </motion.div>
+        </AnimatePresence>
 
     );
 };

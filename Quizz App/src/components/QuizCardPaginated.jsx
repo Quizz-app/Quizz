@@ -19,9 +19,10 @@ export const QuizCardPaginated = ({ currentQuiz, quizzesPerPage, deleteQuiz }) =
 
     return (
         <>
-            <div className="flex flex-col">
+            <div className="flex flex-col ">
                 <div className="grid grid-cols-5">
                     {currentQuizzes.map((quiz, index) => (
+                 
                         <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={deleteQuiz} />
                     ))}
                 </div>
