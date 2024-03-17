@@ -96,6 +96,7 @@ const CreateClass = () => {
                                                     <th>Name</th>
                                                     <th>Job</th>
                                                     <th>Email</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -128,7 +129,7 @@ const CreateClass = () => {
                                         <th>Username</th>
                                         <th>First and last name</th>
                                         <th>Email</th>
-                                        <th>Remove member</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 {members && userData && currentClass.creator && members.map((member, index) => (

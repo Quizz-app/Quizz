@@ -123,7 +123,7 @@ const CreateTeam = () => {
                                         <th>Username</th>
                                         <th>First and last name</th>
                                         <th>Email</th>
-                                        <th>Remove member</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 {members && userData && team.creator && members.map((member, index) => (
