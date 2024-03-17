@@ -92,6 +92,7 @@ export const removeMemberFromClass = async (classId, student) => {
     const snapShot = await get(classRef);
     const studentsObject = snapShot.val();
     const studentKey = Object.keys(studentsObject).find(key => studentsObject[key].username === student.username);
+    
 
     // Remove the student from the class
     await remove(ref(db, `classes/${classId}/members/${studentKey}`));

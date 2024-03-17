@@ -21,8 +21,8 @@ import { MdCancel, MdDoneAll, MdDownloadDone } from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from 'framer-motion';
-import { CiEdit } from "react-icons/ci";
 import { FaArrowRight } from "react-icons/fa";
+import TableRow from "../components/TableRow";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -123,12 +123,9 @@ const CreateQuiz = () => {
         getUserClasses(userData?.username, setUserClasses);
     }, [userData]);
 
-
-
     const filteredClasses = userClasses.filter(
         (classes) => classes.members[userData?.username]
     );
-
 
     //Filter the user teams to get the teams the user is a member of
     const filteredTeams = userTeams.filter(
@@ -242,7 +239,6 @@ const CreateQuiz = () => {
         }
     };
 
-
     const handleSaveQuiz = async (time, grades, endsOn) => {
 
         if (grades.good !== 0 || grades.bad !== 0) {
@@ -257,9 +253,6 @@ const CreateQuiz = () => {
         }
     };
 
-
-
-    //STATE HANDLERS
     const handleQuestionChange = (e) => {
         setQuestion({ ...question, content: e.target.value });
     };
@@ -349,7 +342,8 @@ const CreateQuiz = () => {
                     </div>
 
                 </div>
-                <div className="border-t-2 border-gray-200 mb-5"></div>
+                {/* THIS IS THE GRAY LINE*/}
+                <div className="border-t-2 border-gray-200 mb-3"></div>
 
                 {/* Here we can see all the teams that the current user is in*/}
                 {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
@@ -370,30 +364,75 @@ const CreateQuiz = () => {
                         {filteredClasses.map((classes) => (
                             <div key={classes.id}>
                                 <p>{classes.name}</p>
-                                <button onClick={() => handleAddQuizToClass(classes.id)}>Add quiz to team</button>
+                                <button onClick={() => handleAddQuizToClass(classes.id)}>Add quiz to class</button>
                             </div>
                         ))}
                     </div>
                 )}
-
                 {/* Here we can see all the students that are in the system*/}
                 {openPanel === 'assignUser' && students.length > 0 && (
-                    <div>
-                        <div className="w-96">
+                    <div className="flex flex-col mb-10">
+                        <div className="w-96 justify">
                             <Input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
                         </div>
-                        {searchTerm.length > 2 &&
-                            filteredStudents.map((student, index) => (
-                                <div key={index}>
-                                    <p>{student.username}</p>
-                                    <button onClick={() => handleAddQuizToStudent(student)}>
-                                        Add quiz to student
-                                    </button>
-                                </div>
-                            ))}
+                        <div className="flex flex-col">
+                            <div className="flex justify-center">
+                                <h1 className="text-xl mb-5 mt-3">Results</h1>
+                            </div>
+                            <div id="student-table">
+                                {searchTerm.length >= 3 &&
+                                    <div className="overflow-x-auto">
+
+                                        {searchTerm.length > 0 && searchTerm ? (
+                                            <table className="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>First name</th>
+                                                        <th>Last name</th>
+                                                        <th>Email</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {filteredStudents.map((student, index) =>
+                                                        <tr key={index}>
+                                                            <td>
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="avatar">
+                                                                        <div className="mask mask-squircle w-12 h-12">
+                                                                            <img src={student?.avatar} />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                {student?.firstName}
+                                                                <br />
+                                                                <span className="badge badge-ghost badge-sm">{student.role}</span>
+                                                            </td>
+                                                            <td>{student?.lastName}</td>
+                                                            <td>{student?.email}</td>
+                                                            <th>
+                                                                <button onClick={() => handleAddQuizToStudent(student)} className="btn btn-xs mb-1">Send quiz</button>
+                                                            </th>
+                                                        </tr>
+                                                    )}
+
+                                                </tbody>
+                                            </table>
+                                        ) : (
+                                            <div className="flex justify-center mt-5 mb-5">
+                                                <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
+                                            </div>
+                                        )}
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
                 )}
-                <div className="flex flex-row items-center justify-between pb-4">
+                <div className="flex flex-row items-center justify-between mb-3">
                     <div className="flex flex-row items-center justify-center">
                         <motion.button
                             onClick={questionCreation}
@@ -412,7 +451,9 @@ const CreateQuiz = () => {
                         </button>
                     </div>
                 </div>
+                {/* THIS IS THE GRAY LINE*/}
                 <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
+                
                 <div className='flex justify-center items-center'>
                     {openPanel === 'assignAssistant' && (
                         <ScrollArea className="flex flex-grow h-[300px] w-[1350px] rounded-xl border p-4 justify-center items-center">
@@ -421,13 +462,11 @@ const CreateQuiz = () => {
                     )}
                 </div>
                 <div className="flex flex-col justify-between">
-                    <div id="questions-score" className="ml-8 flex justify-between">
+                    <div id="questions-score" className="ml-8">
                         <p className="text-xl">Total question points: {totalPoints}</p>
-                        <p className="text-xl" style={{ marginRight: '220px' }}>Quiz management:</p>
                     </div>
-                    <div className="flex flex-row mt-7">
-                        <div className="flex flex-row items-start justify-start ">
-                            <div id='questions-cards' className="grid grid-cols-3 items-start justify-start w-800px">
+                        <div className="flex flex-row ">
+                            <div id='questions-cards' className="grid grid-cols-3 w-800px mr-5">
                                 {questions ? (
                                     questions.map((question, index) => (
                                         <motion.div
@@ -454,8 +493,9 @@ const CreateQuiz = () => {
                                     <h1>No questions yet</h1>
                                 )}
                             </div>
-                            <div id="create-question-card" className="mr-20">
-                                <div className={`card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl ${createMode ? 'visible' : 'invisible'}`}>
+                            {createMode && (
+                                <div id="create-question-card" className="mr-10">
+                                <div className='card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl'>
                                     <div className="card-body">
                                         <Label htmlFor="question">Question</Label>
                                         <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
@@ -476,9 +516,11 @@ const CreateQuiz = () => {
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <div id="quiz-management" className="flex flex-col mb-5 ml-10">
+                            )}
+                            
+                            <div id="quiz-management" className="flex flex-col mb-5">
+                                <p className="text-xl" >Quiz management:</p>
                                 <div className="mb-10">
                                     <p className="mb-2">Quiz Description</p>
                                     <div className="w-96">
@@ -563,7 +605,7 @@ const CreateQuiz = () => {
                             </div>
                         </div>
 
-                    </div>
+                    
                 </div>
             </div >
         </>

@@ -59,6 +59,8 @@ const CreateTeam = () => {
 
     };
 
+    console.log(id)
+
     
     return (
         <>
@@ -107,7 +109,7 @@ const CreateTeam = () => {
                                         </table>
                                     ) : (
                                         <div className="flex justify-center mt-5 mb-5">
-                                            <h2 className=" text-2xl ml-5 mr-5">No results found. Sorry :(</h2>
+                                            <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
                                         </div>
                                     )}
                                 </div>
@@ -123,7 +125,7 @@ const CreateTeam = () => {
                                         <th>Username</th>
                                         <th>First and last name</th>
                                         <th>Email</th>
-                                        <th>Remove member</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 {members && userData && team.creator && members.map((member, index) => (
@@ -139,7 +141,7 @@ const CreateTeam = () => {
                     </div>
                 </div>
                 <div className="">
-                    <QuizCardPaginated currentQuiz={teamQuizzes} quizzesPerPage={quizzesPerPage} deleteQuiz={handleRemoveQuiz} />
+                    <QuizCardPaginated currentQuiz={teamQuizzes} quizzesPerPage={quizzesPerPage} deleteQuiz={handleRemoveQuiz} teamId={id} />
                 </div>
             </div>
         </>
