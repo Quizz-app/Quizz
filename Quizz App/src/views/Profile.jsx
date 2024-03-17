@@ -60,7 +60,6 @@ const Profile = () => {
         avatar,
       }
 
-
       await updateUser(userData?.username, updatedUserData);
       setContext(prevContext => ({
         ...prevContext,
