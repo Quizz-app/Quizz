@@ -342,7 +342,8 @@ const CreateQuiz = () => {
                     </div>
 
                 </div>
-                <div className="border-t-2 border-gray-200 mb-5"></div>
+                {/* THIS IS THE GRAY LINE*/}
+                <div className="border-t-2 border-gray-200 mb-3"></div>
 
                 {/* Here we can see all the teams that the current user is in*/}
                 {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
@@ -368,7 +369,6 @@ const CreateQuiz = () => {
                         ))}
                     </div>
                 )}
-
                 {/* Here we can see all the students that are in the system*/}
                 {openPanel === 'assignUser' && students.length > 0 && (
                     <div className="flex flex-col mb-10">
@@ -432,7 +432,7 @@ const CreateQuiz = () => {
                         </div>
                     </div>
                 )}
-                <div className="flex flex-row items-center justify-between pb-4">
+                <div className="flex flex-row items-center justify-between mb-3">
                     <div className="flex flex-row items-center justify-center">
                         <motion.button
                             onClick={questionCreation}
@@ -451,7 +451,9 @@ const CreateQuiz = () => {
                         </button>
                     </div>
                 </div>
+                {/* THIS IS THE GRAY LINE*/}
                 <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
+                
                 <div className='flex justify-center items-center'>
                     {openPanel === 'assignAssistant' && (
                         <ScrollArea className="flex flex-grow h-[300px] w-[1350px] rounded-xl border p-4 justify-center items-center">
@@ -460,9 +462,8 @@ const CreateQuiz = () => {
                     )}
                 </div>
                 <div className="flex flex-col justify-between">
-                    <div id="questions-score" className="ml-8 flex justify-between">
+                    <div id="questions-score" className="ml-8">
                         <p className="text-xl">Total question points: {totalPoints}</p>
-                        <p className="text-xl" style={{ marginRight: '220px' }}>Quiz management:</p>
                     </div>
                     <div className="flex flex-row mt-7">
                         <div className="flex flex-row items-start justify-start ">
@@ -518,6 +519,7 @@ const CreateQuiz = () => {
 
                             </div>
                             <div id="quiz-management" className="flex flex-col mb-5 ml-10">
+                                <p className="text-xl" >Quiz management:</p>
                                 <div className="mb-10">
                                     <p className="mb-2">Quiz Description</p>
                                     <div className="w-96">
