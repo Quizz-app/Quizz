@@ -21,8 +21,8 @@ import { MdCancel, MdDoneAll, MdDownloadDone } from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from 'framer-motion';
-import { CiEdit } from "react-icons/ci";
 import { FaArrowRight } from "react-icons/fa";
+import TableRow from "../components/TableRow";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -123,12 +123,9 @@ const CreateQuiz = () => {
         getUserClasses(userData?.username, setUserClasses);
     }, [userData]);
 
-
-
     const filteredClasses = userClasses.filter(
         (classes) => classes.members[userData?.username]
     );
-
 
     //Filter the user teams to get the teams the user is a member of
     const filteredTeams = userTeams.filter(
@@ -242,7 +239,6 @@ const CreateQuiz = () => {
         }
     };
 
-
     const handleSaveQuiz = async (time, grades, endsOn) => {
 
         if (grades.good !== 0 || grades.bad !== 0) {
@@ -257,9 +253,6 @@ const CreateQuiz = () => {
         }
     };
 
-
-
-    //STATE HANDLERS
     const handleQuestionChange = (e) => {
         setQuestion({ ...question, content: e.target.value });
     };
@@ -370,7 +363,7 @@ const CreateQuiz = () => {
                         {filteredClasses.map((classes) => (
                             <div key={classes.id}>
                                 <p>{classes.name}</p>
-                                <button onClick={() => handleAddQuizToClass(classes.id)}>Add quiz to team</button>
+                                <button onClick={() => handleAddQuizToClass(classes.id)}>Add quiz to class</button>
                             </div>
                         ))}
                     </div>
@@ -378,19 +371,65 @@ const CreateQuiz = () => {
 
                 {/* Here we can see all the students that are in the system*/}
                 {openPanel === 'assignUser' && students.length > 0 && (
-                    <div>
-                        <div className="w-96">
+                    <div className="flex flex-col mb-10">
+                        <div className="w-96 justify">
                             <Input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
                         </div>
-                        {searchTerm.length > 2 &&
-                            filteredStudents.map((student, index) => (
-                                <div key={index}>
-                                    <p>{student.username}</p>
-                                    <button onClick={() => handleAddQuizToStudent(student)}>
-                                        Add quiz to student
-                                    </button>
-                                </div>
-                            ))}
+                        <div className="flex flex-col">
+                            <div className="flex justify-center">
+                                <h1 className="text-xl mb-5 mt-3">Results</h1>
+                            </div>
+                            <div id="student-table">
+                                {searchTerm.length >= 3 &&
+                                    <div className="overflow-x-auto">
+
+                                        {searchTerm.length > 0 && searchTerm ? (
+                                            <table className="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>First name</th>
+                                                        <th>Last name</th>
+                                                        <th>Email</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {filteredStudents.map((student, index) =>
+                                                        <tr key={index}>
+                                                            <td>
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="avatar">
+                                                                        <div className="mask mask-squircle w-12 h-12">
+                                                                            <img src={student?.avatar} />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                {student?.firstName}
+                                                                <br />
+                                                                <span className="badge badge-ghost badge-sm">{student.role}</span>
+                                                            </td>
+                                                            <td>{student?.lastName}</td>
+                                                            <td>{student?.email}</td>
+                                                            <th>
+                                                                <button onClick={() => handleAddQuizToStudent(student)} className="btn btn-xs mb-1">Send quiz</button>
+                                                            </th>
+                                                        </tr>
+                                                    )}
+
+                                                </tbody>
+                                            </table>
+                                        ) : (
+                                            <div className="flex justify-center mt-5 mb-5">
+                                                <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
+                                            </div>
+                                        )}
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
                 )}
                 <div className="flex flex-row items-center justify-between pb-4">
@@ -552,7 +591,6 @@ const CreateQuiz = () => {
                                         <p>Bad: {grades.bad} and below</p>
                                     </div>
                                 </div>
-
                                 <div className="flex justify-center mt-20">
                                     <motion.button
                                         onClick={() => handleSaveQuiz(timeLimit, grades, date)}

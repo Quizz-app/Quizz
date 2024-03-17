@@ -8,7 +8,7 @@ import { AppContext } from '../context/AppContext';
  */
 const TableRow = ({ member, handleRemoveMember, creator }) => {
     const { avatar, email, firstName, lastName, role, username } = member;
-    //console.log(username)
+    
 
     const { userData } = useContext(AppContext)
 
