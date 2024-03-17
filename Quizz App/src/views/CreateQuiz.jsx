@@ -22,6 +22,7 @@ import { PiStudent } from "react-icons/pi";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from 'framer-motion';
 import { CiEdit } from "react-icons/ci";
+import { FaArrowRight } from "react-icons/fa";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -241,17 +242,21 @@ const CreateQuiz = () => {
         }
     };
 
-    const handleSetGrades = async () => {
+
+    const handleSaveQuiz = async (time, grades, endsOn) => {
+
         if (grades.good !== 0 || grades.bad !== 0) {
-            const updatedQuiz = { ...quiz, grades };
+            const updatedQuiz = { ...quiz, quizTime: Number(time), grades };
             try {
                 await updateQuiz(id, updatedQuiz);
+                await setEndOn(id, endsOn);
                 setQuiz(updatedQuiz);
             } catch (error) {
                 console.error(error);
             }
         }
     };
+
 
 
     //STATE HANDLERS
