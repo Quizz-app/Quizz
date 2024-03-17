@@ -450,11 +450,6 @@ const CreateQuiz = () => {
                             </span>
                         </button>
                     </div>
-                    <div className="ml-10">
-                        <p className="">Quiz management:</p>
-                    </div>
-
-
                 </div>
                 <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
                 <div className='flex justify-center items-center'>
@@ -465,10 +460,11 @@ const CreateQuiz = () => {
                     )}
                 </div>
                 <div className="flex flex-col justify-between">
-                    <div id="questions-score" className="ml-8">
+                    <div id="questions-score" className="ml-8 flex justify-between">
                         <p className="text-xl">Total question points: {totalPoints}</p>
+                        <p className="text-xl" style={{ marginRight: '220px' }}>Quiz management:</p>
                     </div>
-                    <div className="flex flex-row">
+                    <div className="flex flex-row mt-7">
                         <div className="flex flex-row items-start justify-start ">
                             <div id='questions-cards' className="grid grid-cols-3 items-start justify-start w-800px">
                                 {questions ? (
@@ -497,7 +493,7 @@ const CreateQuiz = () => {
                                     <h1>No questions yet</h1>
                                 )}
                             </div>
-                            <div id="create-question-card">
+                            <div id="create-question-card" className="mr-20">
                                 <div className={`card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl ${createMode ? 'visible' : 'invisible'}`}>
                                     <div className="card-body">
                                         <Label htmlFor="question">Question</Label>
@@ -521,9 +517,9 @@ const CreateQuiz = () => {
                                 </div>
 
                             </div>
-                            <div id="quiz-management" className="flex flex-col mt-7 ml-10">
+                            <div id="quiz-management" className="flex flex-col mb-5 ml-10">
                                 <div className="mb-10">
-                                    <p className="">Quiz Description</p>
+                                    <p className="mb-2">Quiz Description</p>
                                     <div className="w-96">
                                         <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
                                     </div>
@@ -559,7 +555,7 @@ const CreateQuiz = () => {
                                             </PopoverContent>
                                         </Popover>
                                     </div>
-                                    <div className="ml-5 mb-10">
+                                    <div className="ml-11 mb-10">
                                         <label className="mb-2">Quiz Deadline</label>
                                         <div className="flex flex-row mt-2 mb-5">
                                             <DatePickerDemo
@@ -579,19 +575,20 @@ const CreateQuiz = () => {
                                 <div className="flex flex-row">
                                     <div >
                                         <div className="flex justify-between">
-                                            <h1 className="mb-4">Grading System </h1>
+                                            <h1 className="mb-2">Grading System </h1>
                                             <FaArrowRight />
                                         </div>
                                         <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
                                         <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
                                     </div>
-                                    <div className="flex flex-col ml-8">
+                                    <div className="flex flex-col ml-16">
                                         <p>Good: {grades.good} and above</p>
                                         <p>Satisfactory: {grades.bad} - {grades.good}</p>
                                         <p>Bad: {grades.bad} and below</p>
                                     </div>
                                 </div>
-                                <div className="flex justify-center mt-20">
+
+                                <div className="flex justify-center mt-16">
                                     <motion.button
                                         onClick={() => handleSaveQuiz(timeLimit, grades, date)}
                                         className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-light transition duration-200 ease-linear "
