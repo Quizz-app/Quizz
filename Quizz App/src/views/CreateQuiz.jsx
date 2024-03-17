@@ -23,6 +23,7 @@ import { MdDoneAll } from "react-icons/md";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from 'framer-motion';
 import { CiEdit } from "react-icons/ci";
+import { FaArrowRight } from "react-icons/fa";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -242,17 +243,21 @@ const CreateQuiz = () => {
         }
     };
 
-    const handleSetGrades = async () => {
+
+    const handleSaveQuiz = async (time, grades, endsOn) => {
+
         if (grades.good !== 0 || grades.bad !== 0) {
-            const updatedQuiz = { ...quiz, grades };
+            const updatedQuiz = { ...quiz, quizTime: Number(time), grades };
             try {
                 await updateQuiz(id, updatedQuiz);
+                await setEndOn(id, endsOn);
                 setQuiz(updatedQuiz);
             } catch (error) {
                 console.error(error);
             }
         }
     };
+
 
 
     //STATE HANDLERS
@@ -538,14 +543,15 @@ const CreateQuiz = () => {
                                             : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
                                     )}
                                 </div>
-
-                                <button className="" onClick={() => setEndOn(id, date)}>Save date</button>
                             </div>
 
                         </div>
                         <div className="flex flex-row">
                             <div>
-                                <h1 className="mb-4">Grading System &rarr;</h1>
+                                <div className="flex justify-between">
+                                    <h1 className="mb-4">Grading System</h1>
+                                    <FaArrowRight />
+                                </div>
                                 <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
                                 <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
                             </div>
@@ -553,9 +559,18 @@ const CreateQuiz = () => {
                                 <p>Good: {grades.good} and above</p>
                                 <p>Satisfactory: {grades.bad} - {grades.good}</p>
                                 <p>Bad: {grades.bad} and below</p>
-
-                                <Button onClick={handleSetGrades}>Set Grades</Button>
                             </div>
+                        </div>
+                        <div className="flex justify-center mt-20">
+                            <motion.button
+                                onClick={() => handleSaveQuiz(timeLimit, grades, date)}
+                                className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-light transition duration-200 ease-linear "
+                                initial={{ scale: 2 }}
+                                animate={{ scale: [1, 1.05, 1] }}
+                                transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                            >
+                                Save Quiz
+                            </motion.button>
                         </div>
                     </div>
                 </div >
