@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { getUserTeams, userLeaveTeam } from "../services/users-service";
 import LabelInputContainer from "../components/ui/LabelInputContainer";
 import { BottomGradient } from "./MyLibrary";
+import { motion, AnimatePresence } from "framer-motion";
 
 
 const MyTeamsView = () => {
@@ -60,6 +61,14 @@ const MyTeamsView = () => {
     };
 
     return (
+<AnimatePresence mode='wait'>
+  <motion.div
+    initial={{ opacity: 0, x: -200 }} // Starts from the left
+    animate={{ opacity: 1, x: 0 }} // Moves to the center
+    exit={{ opacity: 0, x: 200 }} // Exits to the right
+    transition={{ duration: 0.99 }}
+  >
+    
         <div>
             <Dialog onClose={handleCloseDialog}>
                 <DialogTrigger asChild>
@@ -119,6 +128,8 @@ const MyTeamsView = () => {
                 </div>
             )}
         </div>
+        </motion.div>
+    </AnimatePresence>
     );
 };
 

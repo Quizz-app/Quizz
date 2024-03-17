@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ThreeDCardDemo from "./ThreeDCardDemo";
 
 
-export const QuizCardPaginated = ({ currentQuiz, quizzesPerPage, deleteQuiz, teamId }) => {
+export const QuizCardPaginated = ({ currentQuiz, quizzesPerPage, teamId }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -19,10 +19,10 @@ export const QuizCardPaginated = ({ currentQuiz, quizzesPerPage, deleteQuiz, tea
 
     return (
         <>
-            <div className="flex flex-col">
+            <div className="flex flex-col ">
                 <div className="grid grid-cols-5">
                     {currentQuizzes.map((quiz, index) => (
-                        <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={deleteQuiz} teamId={teamId} />
+                        <ThreeDCardDemo key={index} quiz={quiz} teamId={teamId} />
                     ))}
                 </div>
                 {totalPages > 1 && (
@@ -42,7 +42,6 @@ export const QuizCardPaginated = ({ currentQuiz, quizzesPerPage, deleteQuiz, tea
 QuizCardPaginated.propTypes = {
     currentQuiz: PropTypes.array,
     quizzesPerPage: PropTypes.number,
-    deleteQuiz: PropTypes.func,
     teamId: PropTypes.string
 
 }

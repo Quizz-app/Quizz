@@ -245,4 +245,3 @@ function addVariablesForColors({ addBase, theme }) {
   });
 }
 
-
