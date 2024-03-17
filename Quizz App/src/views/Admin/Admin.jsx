@@ -18,13 +18,23 @@ const Admin = () => {
 
 
   useEffect(() => {
-    getAllUsers().then((result) => {
+    const unsubscribeFromUsers = getAllUsers((result) => {
       setUsers(result.filter((user) => !user.isBlocked));
       setBlockedUsers(result.filter((user) => user.isBlocked));
     });
-    getAllQuizzes(setQuizzes);
-  }, [blocked, quizzes]);
-  
+    
+    const unsubscribeFromQuizzes = getAllQuizzes(setQuizzes);
+    
+    return () => {
+      if (typeof unsubscribeFromUsers === 'function') {
+        unsubscribeFromUsers();
+      }
+      if (typeof unsubscribeFromQuizzes === 'function') {
+        unsubscribeFromQuizzes();
+      }
+    };
+  }, []);
+
   const handleBlock = (userHandle) => {
     updateBlockedUser(userHandle).then(() => setBlocked(!blocked));
   };

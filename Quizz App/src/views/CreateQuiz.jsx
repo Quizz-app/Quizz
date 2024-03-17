@@ -73,7 +73,7 @@ const CreateQuiz = () => {
             try {
                 setLoading(true);
                 const fetchedQuiz = await getQuizById(id);
-                
+
                 if (JSON.stringify(fetchedQuiz) !== JSON.stringify(quiz)) {
                     setQuiz(fetchedQuiz);
                     setTimeLimit(fetchedQuiz.quizTime || 0);
@@ -93,7 +93,7 @@ const CreateQuiz = () => {
                 setLoading(true);
                 if (JSON.stringify(fetchedQuestions) !== JSON.stringify(questions)) {
                     setQuestions(fetchedQuestions);
-                    
+
 
                     const newTotalPoints = fetchedQuestions.reduce(
                         (total, question) => total + Number(question.points),
@@ -321,7 +321,7 @@ const CreateQuiz = () => {
     }
         , [id]);
 
-  
+
 
     return (
         <>
@@ -330,36 +330,6 @@ const CreateQuiz = () => {
                     {/* quiz title */}
                     <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
                     <p>Total points: {totalPoints}</p>
-                    <Popover open={open} onOpenChange={setOpen}>
-                        <PopoverTrigger asChild>
-                            <Button variant="outline" role="combobox" className="w-[200px] justify-between">
-                                {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                                {/* <CommandInput placeholder="Search framework..." /> */}
-                                {/* <CommandEmpty>No time limit set</CommandEmpty> */}
-                                <CommandGroup>
-                                    {timeRanges.map((timeRange) => (
-                                        <CommandItem
-                                            key={timeRange.value}
-                                            value={timeRange.value}
-                                            onSelect={async (currentValue) => {
-                                                setTimeLimit(Number(currentValue));
-                                                setOpen(false);
-                                                await handleSetTime(currentValue);
-                                            }}>
-                                            <Check className={cn("mr-2 h-5 w-4", timeLimit === timeRange.value ? "opacity-100" : "opacity-0")} />
-                                            {timeRange.label}
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
-
                     {/* action buttons */}
                     <div className="flex flex-row items-center justify-center">
                         <div className="flex flex-col items-center justify-center">
@@ -424,19 +394,10 @@ const CreateQuiz = () => {
                             ))}
                     </div>
                 )}
-                {/* Here we can see the assistant */}
+
 
                 <div className="flex flex-row items-center justify-between pb-4">
-                    <div>
-                        <p>Description:</p>
-                        <div className="w-96">
-                            <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
-                        </div>
-                    </div>
                     <div className="flex flex-row items-center justify-center">
-                        {/* <button className="btn btn-outline btn-primary " onClick={questionCreation}>Add question +</button> */}
-
-
                         <motion.button
                             onClick={questionCreation}
                             className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-light transition duration-200 ease-linear "
@@ -447,18 +408,15 @@ const CreateQuiz = () => {
                             Add Question +
                         </motion.button>
 
-                        {/* <div className="flex flex-col items-center justify-center">
-                            <Button onClick={() => handleButtonClick('assignAssistant')}>Use Assistant ✨</Button>
-                        </div> */}
-
-
                         <button onClick={() => handleButtonClick('assignAssistant')} className="relative inline-flex h-10 overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 ml-3">
                             <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
                             <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-white px-3 py-1 text-sm font-medium text-slate-950 backdrop-blur-3xl">
                                 Use Assistant ✨
                             </span>
                         </button>
-
+                    </div>
+                    <div>
+                        <p style={{ marginRight: '500px' }}>Quiz management:</p>
                     </div>
                 </div>
                 <div className="border-t-2 border-neon-green mb-5"></div>
@@ -474,9 +432,9 @@ const CreateQuiz = () => {
 
                 <div className="flex flex-row items-start justify-start">
                     <div>
-                        {/* //questions */}
                         <div className="flex flex-row items-start justify-start ">
-                            {/* <div className="flex flex-col items-start justify-start "> */}
+                            <div>
+                            </div>
                             <div className="grid grid-cols-4 gap-1 items-start justify-start w-800px">
                                 {questions ? (
                                     questions.map((question, index) => (
@@ -537,15 +495,71 @@ const CreateQuiz = () => {
                                 </div>
                             )}
 
-                            
+
 
                         </div>
                     </div>
 
 
-                    <div className="flex flex-col items-start justify-center ml-10 mt-10">
+                    <div className="flex flex-col items-start justify-center ml-20 mt-10" style={{ marginLeft: '310px' }} >
                         {/* grading */}
                         <div className="flex flex-col items-start justify-center">
+                            <div className="mb-10">
+                                <p className="">Description:</p>
+                                <div className="w-96">
+                                    <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
+                                </div>
+                            </div>
+                            <div className="flex flex-row justify-between">
+                                <div className="flex flex-col mr-10">
+                                    <label className="mb-2">Time limit:</label>
+                                    <Popover open={open} onOpenChange={setOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" role="combobox" className="w-[200px] justify-between">
+                                                {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
+                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[200px] p-0">
+                                            <Command>
+                                                <CommandGroup>
+                                                    {timeRanges.map((timeRange) => (
+                                                        <CommandItem
+                                                            key={timeRange.value}
+                                                            value={timeRange.value}
+                                                            onSelect={async (currentValue) => {
+                                                                setTimeLimit(Number(currentValue));
+                                                                setOpen(false);
+                                                                await handleSetTime(currentValue);
+                                                            }}>
+                                                            <Check className={cn("mr-2 h-5 w-4", timeLimit === timeRange.value ? "opacity-100" : "opacity-0")} />
+                                                            {timeRange.label}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                                <div className="mb-20">
+                                    <h1 className="font-bold mb-4">Due Date</h1>
+                                    <div className="flex flex-row items-center justify-start">
+                                        <DatePickerDemo
+                                            selected={date}
+                                            onSelect={setDate}
+                                        />
+                                        <div className="ml-10">
+                                            {quiz?.endsOn && (
+                                                remainingTime > 0
+                                                    ? <p>Time left: {msToTime(remainingTime)}</p>
+                                                    : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <button className="" onClick={() => setEndOn(id, date)}>Save date</button>
+                                </div>
+                            </div>
                             <h1 className="text-2xl font-bold mb-4"> Grading</h1>
 
                             <div className="flex space-x-4">
@@ -562,29 +576,6 @@ const CreateQuiz = () => {
                                 </div>
                             </div>
                         </div>
-
-
-
-                        <div className="mt-10">
-                            <h1 className="text-2xl font-bold mb-4">Due Date</h1>
-                            <div className="flex flex-row items-center justify-start">
-                                <DatePickerDemo
-                                    selected={date}
-                                    onSelect={setDate}
-                                />
-                                <div className="ml-10">
-                                    {quiz?.endsOn && (
-                                        remainingTime > 0
-                                            ? <p>Time left: {msToTime(remainingTime)}</p>
-                                            : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
-                                    )}
-                                </div>
-                            </div>
-
-                            <button className="" onClick={() => setEndOn(id, date)}>Save date</button>
-                        </div>
-
-
                     </div>
                 </div>
 
