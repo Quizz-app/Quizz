@@ -16,8 +16,6 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
       ? correctAnswer.map((index) => answers[index])
       : [answers[correctAnswer]]
   );
-  
- 
 
   const handleEdit = () => {
     setEditing(true);
@@ -43,8 +41,6 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
     setEditing(false);
   };
 
-  
-
   return (
     <div className="card w-96 bg-gradient-to-br from-white to-gray-100 shadow-xl p-0 m-0">
       <div className="card-body">
@@ -53,8 +49,6 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
             <Input type="text" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
             {editedAnswers.map((answer, index) => (
               <div className="flex flex-row" key={index}>
-
-
                 <input type="checkbox" defaultChecked className="checkbox checkbox-success" checked={editedCorrectAnswer.includes(editedAnswers[index])}
                   onChange={() => {
                     if (editedCorrectAnswer.includes(editedAnswers[index])) {
@@ -69,12 +63,12 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
                         editedAnswers[index],
                       ]);
                     }
-                  } } />
+                  }} />
 
                 <div className="w-64">
                   <Input type="text" value={editedAnswers[index]} onChange={(e) => {
                     const newAnswers = [...editedAnswers]; newAnswers[index] = e.target.value; setEditedAnswers(newAnswers);
-                  } } />
+                  }} />
                 </div>
 
               </div>
@@ -82,8 +76,6 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
             <Input type="number" value={editedPoints} onChange={(e) => setEditedPoints(Number(e.target.value))} />
             {/* <button className="btn btn-outline btn-info" onClick={handleSave}>Save</button> */}
             <MdDownloadDone onClick={handleSave} />
-
-
           </>
         ) : (
           <>
@@ -96,18 +88,20 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
               ))}
             </ul>
             <p>Points: {points}</p>
-            {/* <button className="btn btn-outline btn-info" onClick={handleEdit}>
-              Edit
-            </button> */}
-
-            <CiEdit onClick={handleEdit} />
-            <RiDeleteBin2Line onClick={() => onDelete(questionId)} />
+            <div className="flex">
+              <div className="mr-5">
+                <CiEdit onClick={handleEdit} />
+              </div>
+              <div>
+                <RiDeleteBin2Line onClick={() => onDelete(questionId)} />
+              </div>
+            </div>
           </>
         )}
       </div>
     </div>
-     
-     
+
+
   );
 };
 

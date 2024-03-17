@@ -5,26 +5,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate, useParams } from "react-router-dom";
-import { addQuestion, deleteQuestion, getQuestionsByQuizId, listenForQuestions, updateQuestion } from "../services/questions-service";
+import { addQuestion, deleteQuestion, listenForQuestions, updateQuestion } from "../services/questions-service";
 import QuestionCard from "./QuestionCard";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Command, CommandEmpty, CommandGroup, CommandItem, } from "@/components/ui/command";
+import { Command, CommandGroup, CommandItem, } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
 import { getAllStudents, getUserClasses, getUserTeams } from "../services/users-service";
-import { Calendar } from "@/components/ui/calendar"
 import { toast } from "react-hot-toast";
 import { formatDate, msToTime, timeRanges } from "../services/time-functions";
 import Assistant from "../components/Assistant";
 import { DatePickerDemo } from "../components/DatePicker";
 import { AiOutlineTeam } from "react-icons/ai";
+import { MdCancel } from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
 import { MdDoneAll } from "react-icons/md";
 import { ScrollArea } from "@/components/ui/scroll-area"
-// import { Separator } from "@/components/ui/separator"
 import { motion } from 'framer-motion';
-import { set } from "lodash";
-
+import { CiEdit } from "react-icons/ci";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -433,9 +431,7 @@ const CreateQuiz = () => {
                 <div className="flex flex-row items-start justify-start">
                     <div>
                         <div className="flex flex-row items-start justify-start ">
-                            <div>
-                            </div>
-                            <div className="grid grid-cols-4 gap-1 items-start justify-start w-800px">
+                            <div className="grid grid-cols-3 items-start justify-start w-800px">
                                 {questions ? (
                                     questions.map((question, index) => (
                                         <motion.div
@@ -462,41 +458,32 @@ const CreateQuiz = () => {
                                     <h1>No questions yet</h1>
                                 )}
                             </div>
-
-                            {createMode && (
-                                <div className=" border rounded-md">
-                                    <div className="p-3">
-                                        <div className="flex flex-col items-start justify-start w-500px ">
-                                            {/* the question */}
+                            <div>
+                                {createMode && (
+                                    <div className="card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl ">
+                                        <div className="card-body">
                                             <Label htmlFor="question">Question</Label>
                                             <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
-                                            {/* answers */}
+                                            <Label htmlFor="question">Add answer:</Label>
                                             {answers.map((answer, index) => (
-                                                <div key={index} className="flex flex-row items-start justify-start w-96 ">
-                                                    <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)}
-                                                    />
-                                                    {/* checkbox for the rigth */}
-                                                    <div className="flex items-center justify-center ml-5">
-                                                        <input type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
-                                                    </div>
-                                                    <button onClick={() => handleRemoveAnswer(index)}>Remove</button>
+                                                <div key={index} className="flex flex-row justify-between">
+                                                    <input className="checkbox checkbox-success mr-2" type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
+                                                    <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)} />
+                                                    <button className="btn btn-xs ml-2" onClick={() => handleRemoveAnswer(index)}>Remove</button>
                                                 </div>
                                             ))}
-                                            {/* points */}
-                                            <Label htmlFor="points">Points</Label>
+                                            <button className="btn btn-xs bg-[#90ee90]" onClick={handleAddAnswer}>Include Answer</button>
+                                            <Label htmlFor="points">Set points:</Label>
                                             <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
-                                            {/* action buttons */}
-                                            <button onClick={handleAddAnswer}>Add Answer</button>
-                                            <button onClick={handleAddQuestion} disabled={loading}>
-                                                Save
-                                            </button>
+                                            <div className="flex mt-3">
+                                                <CiEdit className="mr-5" onClick={handleAddQuestion} />
+                                                <MdCancel onClick={() => setCreateMode(false)} />
+                                            </div>
+
                                         </div>
                                     </div>
-                                </div>
-                            )}
-
-
-
+                                )}
+                            </div>
                         </div>
                     </div>
 
@@ -577,9 +564,9 @@ const CreateQuiz = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
 
-            </div>
+            </div >
         </>
     );
 };
