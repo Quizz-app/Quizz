@@ -75,7 +75,7 @@ const MyLibrary = () => {
         if (!quizTitlePattern.test(quiz.title)) {
             return toast.error('Title must be between 3 and 30 characters');
         }
-        
+
 
         try {
             let category = quiz.category.trim() !== '' ? quiz.category : selectedOption;
@@ -120,14 +120,12 @@ const MyLibrary = () => {
                                 <p className="mx-20">create new ones where you will be sent to the create panel</p>
                                 <div className="flex flex-row h-full items-start justify-between mx-20 mt-10">
                                     <div className="">
-                                        <h2 className="text-4xl font-bold mb-4">My Quizzes</h2>
+                                        <h2 className="text-4xl font-bold mb-4">{userData?.quizzes > 0 ? 'My Quizzes' : "You haven't created any quizzes yet. Start creating your first quiz now!"}</h2>
                                     </div>
-
                                     <div className="">
                                         <Dialog onClose={handleCloseDialog}>
                                             <DialogTrigger asChild>
                                                 <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button>
-
                                             </DialogTrigger>
                                             <DialogContent className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
                                                 <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 ">
@@ -214,7 +212,6 @@ const MyLibrary = () => {
                                     <QuizCardPaginated currentQuiz={teacherQuizzes} quizzesPerPage={quizzesPerPageTeacher} />
                                 </div>
 
-
                             </>
                         ) : (
                             <>
@@ -222,36 +219,38 @@ const MyLibrary = () => {
                                     <p >Here you can see the quizzes you have completed or the ones which</p>
                                     <p >which are assigned to you, you can see the results of your quiz</p>
                                 </div>
+                                <div>
+                                    {userData.quizzes > 0 ? (
+                                        <div className="flex flex-col h-full items-start justify-between mx-20">
+                                            <div className="w-full">
+                                                <h2 className="text-4xl font-bold mb-4 ">Completed</h2>
+                                                <div className="border-t-2 border-neon-green mb-5"></div>
+                                            </div>
+                                            {studentQuizzes?.completed &&
+                                                <QuizCardPaginated currentQuiz={studentQuizzes?.completed} quizzesPerPage={quizzesPerPageStudent} />}
 
+                                            <div className="w-full">
+                                                <h2 className="text-4xl font-bold mb-4">Todo</h2>
+                                                <div className="border-t-2 border-neon-green mb-5"></div>
+                                            </div>
 
-                                <div className="flex flex-col h-full items-start justify-between mx-20">
-
-                                    <div className="w-full">
-                                        <h2 className="text-4xl font-bold mb-4 ">Completed</h2>
-                                        <div className="border-t-2 border-neon-green mb-5"></div>
-                                    </div>
-
-                                    {studentQuizzes?.completed &&
-                                        <QuizCardPaginated currentQuiz={studentQuizzes?.completed} quizzesPerPage={quizzesPerPageStudent} />}
-
-                                    <div className="w-full">
-                                        <h2 className="text-4xl font-bold mb-4">Todo</h2>
-                                        <div className="border-t-2 border-neon-green mb-5"></div>
-                                    </div>
-
-                                    {studentQuizzes?.nonCompleted &&
-                                        <QuizCardPaginated currentQuiz={studentQuizzes?.nonCompleted} quizzesPerPage={quizzesPerPageStudent} />}
+                                            {studentQuizzes?.nonCompleted &&
+                                                <QuizCardPaginated currentQuiz={studentQuizzes?.nonCompleted} quizzesPerPage={quizzesPerPageStudent} />}
+                                        </div>
+                                    ) : (
+                                        <div className="w-full text-center">
+                                            <h2 className="text-4xl font-bold mb-4 mt-60">You haven't taken any quizzes yet. Get started with your first quiz :)</h2>
+                                        </div>
+                                    )}
                                 </div>
                             </>
                         )}
                     </div>
-
                 </motion.div>
             </AnimatePresence>
         </>
     );
 }
-
 export default MyLibrary;
 
 export const BottomGradient = () => {
