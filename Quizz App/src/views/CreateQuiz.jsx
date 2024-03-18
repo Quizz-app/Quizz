@@ -317,13 +317,17 @@ const CreateQuiz = () => {
         navigate("/my-library");
     };
 
+
+
     return (
         <>
 
             <div className="flex flex-row items-center justify-between">
                 {/* quiz title */}
-                <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
-
+                <div className="mb-2">
+                    <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
+                    <h1>Created by: {quiz?.creator}</h1>
+                </div>
                 {/* action buttons */}
                 <div className="flex flex-row items-center justify-center">
                     <div className="flex flex-col items-center justify-center">
@@ -341,9 +345,7 @@ const CreateQuiz = () => {
                     <div className="flex flex-col items-center justify-center">
                         <Button onClick={() => navigate("/my-library")}> <MdDoneAll /> Save Changes</Button>
                     </div>
-                    <div className="flex flex-col items-center justify-center">
-                        <Button onClick={() => handleDeleteQuiz}> <MdDoneAll /> DELETE</Button>
-                    </div>
+
                 </div>
 
             </div>
@@ -353,11 +355,11 @@ const CreateQuiz = () => {
             {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
                 <div>
                     <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
-                            animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
-                            exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
-                            transition={{ duration: 0.5 }} // The duration of the transition
-                        >
+                        initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
+                        animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
+                        exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+                        transition={{ duration: 0.5 }} // The duration of the transition
+                    >
                         <h1 className="text-xl mb-5 mt-3">Teams you participate in</h1>
                         <table className="table mb-10">
                             <thead>
@@ -383,11 +385,11 @@ const CreateQuiz = () => {
             {openPanel === 'assignClass' && filteredClasses.length > 0 && (
                 <div>
                     <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
-                            animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
-                            exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
-                            transition={{ duration: 0.5 }} // The duration of the transition
-                        >
+                        initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
+                        animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
+                        exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+                        transition={{ duration: 0.5 }} // The duration of the transition
+                    >
                         <h1 className="text-xl mb-5 mt-3">Classes you participate in</h1>
                         <table className="table mb-10">
                             <thead>
@@ -414,11 +416,11 @@ const CreateQuiz = () => {
             {/* Here we can see all the students that are in the system*/}
             {openPanel === 'assignUser' && students.length > 0 && (
                 <motion.div
-                initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
-                animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
-                exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
-                transition={{ duration: 0.5 }} // The duration of the transition
-            >
+                    initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
+                    animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
+                    exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+                    transition={{ duration: 0.5 }} // The duration of the transition
+                >
                     <div className="flex flex-col mb-10">
                         <div className="w-96 justify">
                             <Input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
@@ -432,8 +434,8 @@ const CreateQuiz = () => {
                                 {searchTerm.length >= 3 &&
                                     <div className="overflow-x-auto">
 
-                                        {searchTerm.length > 0 && searchTerm ? ( 
-                                            <TableWithPagination array={filteredStudents} pages={5} addMember={handleAddQuizToStudent} buttonText={'Send to student'}/>
+                                        {searchTerm.length > 0 && searchTerm ? (
+                                            <TableWithPagination array={filteredStudents} pages={5} addMember={handleAddQuizToStudent} buttonText={'Send to student'} />
                                         ) : (
                                             <div className="flex justify-center mt-5 mb-5">
                                                 <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
@@ -635,6 +637,7 @@ const CreateQuiz = () => {
                                 Save Changes
                             </motion.button>
                         </div>
+                        <button onClick={handleDeleteQuiz} className="btn"> delete</button>
                     </div>
                 </div>
             </div>
