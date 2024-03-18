@@ -101,6 +101,7 @@ const MyLibrary = () => {
     };
 
 
+
     return (
         <>
 
@@ -215,18 +216,27 @@ const MyLibrary = () => {
                             </div>
                             <div>
                                 <div className="flex flex-col h-full justify-between mx-20">
-                                    <div className="w-full">
-                                        <h2 className="text-4xl font-bold mb-4 ">Completed</h2>
-                                        <div className="border-t-2 border-neon-green mb-5"></div>
+                                    <div>
+                                        <div className="w-full mb-5">
+                                            <h2 className="text-4xl font-bold mb-4 ">Completed</h2>
+                                            <div className="border-t-2 border-neon-green mb-5"></div>
+                                        </div>
+                                        {studentQuizzes?.completed?.length > 0 ? (
+                                            <QuizCardPaginated currentQuiz={studentQuizzes?.completed} quizzesPerPage={quizzesPerPageStudent} />
+                                        ) : (
+                                            <h2 className="text-2xl font-bold">{`You haven't taken any quizzes yet. Get started with your first quiz :)`}</h2>
+                                        )}
                                     </div>
-                                    {studentQuizzes?.completed &&
-                                        <QuizCardPaginated currentQuiz={studentQuizzes?.completed} quizzesPerPage={quizzesPerPageStudent} />}
-                                    <div className="w-full">
-                                        <h2 className="text-4xl font-bold mb-4">Todo</h2>
-                                        <div className="border-t-2 border-neon-green mb-5"></div>
+                                    <div>
+                                        <div className="w-full mb-10">
+                                            <h2 className="text-4xl font-bold mb-4 mt-5">Todo</h2>
+                                            <div className="border-t-2 border-neon-green mb-5"></div>
+                                        </div>
+                                        {studentQuizzes?.nonCompleted?.length > 0 ? (
+                                            <QuizCardPaginated currentQuiz={studentQuizzes?.nonCompleted} quizzesPerPage={quizzesPerPageStudent} />
+                                        ) : (<h2 className="text-2xl mt-5 font-bold">{`Wow, you've completed all your quizzes! Time to take a well-deserved break, don't you think?`}</h2>
+                                        )}
                                     </div>
-                                    {studentQuizzes?.nonCompleted &&
-                                        <QuizCardPaginated currentQuiz={studentQuizzes?.nonCompleted} quizzesPerPage={quizzesPerPageStudent} />}
                                 </div>
                             </div>
                         </>
