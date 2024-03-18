@@ -5,6 +5,7 @@ import { addQuestion } from "../services/questions-service";
 import { Input } from './ui/input';
 import toast from "react-hot-toast";
 import { MultiStepLoader } from './ui/multi-step-loader';
+import { motion } from 'framer-motion';
 
 
 /**
@@ -71,57 +72,67 @@ const Assistant = ({ quiz, questions }) => {
 
   return (
     <>
-      <div className='flex '>
-        <div className='flex justify-center items-center'>
-          <div className='w-96'>
-            <Input value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="Give me a topic" />
-          </div>
-          <div>
-            <button onClick={handleSubmitAssistant} className="relative inline-flex h-10 overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 ml-3">
-              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-white px-3 py-1 text-sm font-medium text-slate-950 backdrop-blur-3xl">
-                Ask ✨
-              </span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-      {isLoading ? (
-        <div className='flex flex-col justify-start items-center min-h-screen'>
-          <MultiStepLoader loading={isLoading} />
-
-        </div>
-      ) : (
-        <div>
-          {assistantResult?.questions && <div className="ml-10 mr-10">
-            <div className="overflow-x-auto">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Answers</th>
-                    <th>Correct answer index</th>
-                    <th>Add question</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {assistantResult?.questions && (assistantResult?.questions.map((question, index) =>
-                    <tr key={index}>
-                      <th>{index + 1}</th>
-                      <td>{question.content}</td>
-                      <td>{question.answers.join(", ")}</td>
-                      <td>{question.correctAnswers}</td>
-                      <td><button className="btn btn-xs"
-                        onClick={() => handleQuestionFromAssistant(question)} >Add question</button></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
+        animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
+        exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+        transition={{ duration: 0.5 }} // The duration of the transition
+      >
+        <div className='flex '>
+          <div className='flex justify-center items-center'>
+            <div className='w-96'>
+              <Input value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="Give me a topic" />
             </div>
-          </div>}
-        </div>)}
+            <div>
+              <button onClick={handleSubmitAssistant} className="relative inline-flex h-10 overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 ml-3">
+                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-white px-3 py-1 text-sm font-medium text-slate-950 backdrop-blur-3xl">
+                  Ask ✨
+                </span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+        {isLoading ? (
+          <div className='flex flex-col justify-start items-center min-h-screen'>
+            <MultiStepLoader loading={isLoading} />
+
+          </div>
+        ) : (
+          <div>
+            {assistantResult?.questions && <div className="ml-10 mr-10">
+              <div className="overflow-x-auto">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Name</th>
+                      <th>Answers</th>
+                      <th>Correct answer</th>
+                      <th>Add question</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {assistantResult?.questions && (assistantResult?.questions.map((question, index) =>
+                      <tr key={index}>
+                        <th>{index + 1}</th>
+                        <td>{question.content}</td>
+                        <td>{question.answers.join(", ")}</td>
+                        <td>{question.correctAnswers.map(index => question.answers[index]).join(", ")}</td>
+                        <td>
+                          <button className="btn btn-xs" onClick={() => handleQuestionFromAssistant(question)}>
+                            Add question
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>}
+          </div>)}
+      </motion.div>
     </>
   );
 };

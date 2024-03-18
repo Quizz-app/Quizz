@@ -91,7 +91,7 @@ const CreateClass = () => {
                                     <h1 className="text-xl mb-5 mt-3">Results</h1>
                                     <div className="divider"></div>
                                     {filteredStudents.length > 0 ? (
-                                        <TableWithPagination array={filteredStudents} pages={itemsPerPage} addMember={handleInviteMember} />
+                                        <TableWithPagination array={filteredStudents} pages={itemsPerPage} addMember={handleInviteMember} buttonText={'Invite student'} />
                                     ) : (
                                         <div className="flex justify-center mt-5 mb-5">
                                             <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>

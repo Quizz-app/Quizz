@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from 'prop-types';
 
-export const TableWithPagination = ({ array, pages, addMember }) => {
+export const TableWithPagination = ({ array, pages, addMember, buttonText }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -20,27 +20,42 @@ export const TableWithPagination = ({ array, pages, addMember }) => {
                 <thead>
                     <tr>
                         <th></th>
-                        <th>Name</th>
-                        <th>Job</th>
+                        <th>Username</th>
+
                         <th>Email</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {currentArray.map((member, index) =>
-                        <tr key={index}>
-                            <th>{index + 1}</th>
-                            <td>{member?.username}</td>
-                            <td>{member?.role}</td>
-                            <td>{member?.email}</td>
-                            <button onClick={() => addMember(member)} className="btn btn-xs">Add to team</button>
-                        </tr>
+                        <>
+                            <tr key={index}>
+                                <td>
+                                    <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            <div className="mask mask-squircle w-12 h-12">
+                                                <img src={member?.avatar} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {member?.username}
+                                    <br />
+                                    <span className="badge badge-ghost badge-sm">{member?.role}</span>
+                                </td>
+                                <td>{member?.email}</td>
+                                <th>
+                                    <button onClick={() => addMember(member)} className="btn btn-xs">{buttonText}</button>
+                                </th>
+                            </tr>
+                        </>
                     )}
                 </tbody>
             </table>
-            <div className="divider"></div>
             {totalPages > 1 && (
                 <div className="justify-center flex mt-5 mb-5">
+                    <div className="divider"></div>
                     {currentPage > 1 && <button className="join-item btn btn-outline mr-2" onClick={() => paginate(currentPage - 1)}>Previous</button>}
                     {pageNumbers.map(number => (
                         <button key={number} className={`join-item btn mr-2 ${number === currentPage ? 'btn bg-gradient-to-r from-cyan-500 to-blue-500' : ''}`} onClick={() => paginate(number)}>{number}</button>
@@ -57,5 +72,7 @@ export default TableWithPagination;
 TableWithPagination.propTypes = {
     array: PropTypes.array,
     pages: PropTypes.number,
-    addMember: PropTypes.func
+    addMember: PropTypes.func,
+    buttonText: PropTypes.string
+
 };

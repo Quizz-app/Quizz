@@ -43,7 +43,7 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
 
   return (
     <div className="card w-96 bg-gradient-to-br from-white to-gray-100 shadow-xl p-0 m-0">
-      <div className="card-body">
+      <div className="card-body text-black">
         {editing ? (
           <>
             <Input type="text" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />

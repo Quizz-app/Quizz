@@ -42,7 +42,7 @@ const LoaderCore = ({
         <div className="flex relative justify-start max-w-xl mx-auto flex-col mt-40">
             {loadingStates.map((loadingState, index) => {
                 const distance = Math.abs(index - value);
-                const opacity = Math.max(1 - distance * 0.2, 0); // Minimum opacity is 0, keep it 0.2 if you're sane.
+                const opacity = Math.max(1 - distance * 0.2, 0);
 
                 return (
                     <motion.div
@@ -56,20 +56,18 @@ const LoaderCore = ({
                             {index > value && (
                                 <CheckIcon className="text-black dark:text-white" />
                             )}
-                            {index <= value && (
-                                <CheckFilled
-                                    className={cn(
-                                        "text-black dark:text-white",
-                                        value === index &&
-                                        "text-black dark:text-lime-500 opacity-100"
-                                    )}
-                                />
+                            {index === value && (
+                                <CheckFilled className="text-black dark:text-black" />
+                            )}
+                            {index < value && (
+                                <CheckFilled className="text-blue-500 dark:text-blue-500" />
                             )}
                         </div>
                         <span
                             className={cn(
                                 "text-black dark:text-white",
-                                value === index && "text-black dark:text-lime-500 opacity-100"
+                                index === value && "text-black dark:text-black",
+                                index < value && "text-blue-500 dark:text-blue-500"
                             )}
                         >
                             {loadingState.text}
@@ -82,30 +80,7 @@ const LoaderCore = ({
 };
 
 export const MultiStepLoader = ({
-    // loadingStates = [{
-    //     text: "Buying a condo",
-    //   },
-    //   {
-    //     text: "Travelling in a flight",
-    //   },
-    //   {
-    //     text: "Meeting Tyler Durden",
-    //   },
-    //   {
-    //     text: "He makes soap",
-    //   },
-    //   {
-    //     text: "We goto a bar",
-    //   },
-    //   {
-    //     text: "Start a fight",
-    //   },
-    //   {
-    //     text: "We like it",
-    //   },
-    //   {
-    //     text: "Welcome to F**** C***",
-    //   },],
+
     loadingStates = [
         {
             "text": "Preparing your quiz questions..."
