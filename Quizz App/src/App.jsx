@@ -23,6 +23,7 @@ import Dashboard from "./views/Dashboard";
 import CreateClass from "./views/CreateClass";
 import MyClassesView from "./views/MyClassesView";
 import { AuthenticationRequired } from "./components/Authentication";
+import Footer from "./components/Footer";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -74,10 +75,11 @@ const App = () => {
             <Route path="/quiz/:id" element={<AuthenticationRequired> <CreateQuiz /> </AuthenticationRequired>} />
             <Route path="/results/:id" element={<AuthenticationRequired> <QuizResults /> </AuthenticationRequired>} />
             <Route path="/profile" element={<AuthenticationRequired> <Profile /> </AuthenticationRequired>} />
-            <Route path="/admin" element={<AuthenticationRequired>context.userData?.isAdmin ? <Admin /> : <Home /></AuthenticationRequired>} />
+            <Route path="/admin" element={<AuthenticationRequired><Admin /></AuthenticationRequired>} />
             <Route path="/dashboard" element={<AuthenticationRequired> <Dashboard /> </AuthenticationRequired>} />
           </Routes>
         </div>
+        <Footer />
       </AppContext.Provider>
     </BrowserRouter>
   );
