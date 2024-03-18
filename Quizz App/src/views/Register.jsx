@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { createUsername } from "../services/users-service";
+import { createUsername, verifyUser } from "../services/users-service";
 import { registerUser } from "../services/auth-service";
 import { useNavigate } from "react-router-dom";
 import { Label } from ".././components/ui/label";
@@ -58,6 +58,7 @@ const Register = () => {
     try {
       const credentials = await registerUser(form.email, form.password);
       await createUsername(form.firstName, form.lastName, form.username, credentials.user.uid, form.email, form.role);
+      await verifyUser(credentials.user);
       toast.success(`Hello ${form.username}, get ready to test your knowledge!`);
       navigate("/");
     } catch (error) {

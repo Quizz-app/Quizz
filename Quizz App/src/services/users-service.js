@@ -4,7 +4,7 @@ import {
 import { db } from "../config/firebase-config.js";
 import { getQuizById } from "./quiz-service.js";
 import { addMemberToTeam } from "./teams-service.js";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { sendEmailVerification } from "firebase/auth";
 import { serverTimestamp } from "firebase/database";
 import { addMemberToClass } from "./class-service.js";
@@ -26,7 +26,7 @@ export const createUsername = (firstName, lastName, username, uid, email, role) 
     teams: {},
     avatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/512px-Windows_10_Default_Profile_Picture.svg.png?20221210150350",
     aboutMe: "",
-    
+
   });
 };
 
@@ -457,14 +457,19 @@ export const getUserClassInvites = (username, callback) => {
   return () => unsubscribe();
 };
 
+
 export const verifyUser = async (user) => {
   try {
-    await sendEmailVerification(user);
-    toast.success("Verification email sent!");
+    setTimeout(async () => {
+      await sendEmailVerification(user);
+      toast.success("Verification email sent!");
+    }, 3000);
+
   } catch (error) {
     toast.error("Something went wrong. Please, try again.");
   }
 };
+
 
 export const updateBlockedUser = (username) => {
   const updateUser = {};
