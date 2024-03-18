@@ -22,6 +22,7 @@ import Admin from "./views/Admin/Admin";
 import Dashboard from "./views/Dashboard";
 import CreateClass from "./views/CreateClass";
 import MyClassesView from "./views/MyClassesView";
+import { AuthenticationRequired } from "./components/Authentication";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -63,18 +64,18 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/my-library" element={<MyLibrary />} />
-            <Route path="/my-teams" element={<MyTeamsView />} />
-            <Route path="/quiz-preview/:id" element={<QuizPreview />} />
-            <Route path="/my-classes" element={<MyClassesView />} />
-            <Route path="/quiz-solve/:id" element={<QuizSolve />} />
-            <Route path="/team/:id" element={<CreateTeam />} />
-            <Route path="/class/:id" element={<CreateClass />} />
-            <Route path="/quiz/:id" element={<CreateQuiz />} />
-            <Route path="/results/:id" element={<QuizResults />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/admin" element={context.userData?.isAdmin ? <Admin /> : <Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/my-library" element={<AuthenticationRequired> <MyLibrary /> </AuthenticationRequired>} />
+            <Route path="/my-teams" element={<AuthenticationRequired> <MyTeamsView /> </AuthenticationRequired>} />
+            <Route path="/quiz-preview/:id" element={<AuthenticationRequired> <QuizPreview /> </AuthenticationRequired>} />
+            <Route path="/my-classes" element={<AuthenticationRequired> <MyClassesView /> </AuthenticationRequired>} />
+            <Route path="/quiz-solve/:id" element={<AuthenticationRequired> <QuizSolve /> </AuthenticationRequired>} />
+            <Route path="/team/:id" element={<AuthenticationRequired> <CreateTeam /> </AuthenticationRequired>} />
+            <Route path="/class/:id" element={<AuthenticationRequired> <CreateClass /> </AuthenticationRequired>} />
+            <Route path="/quiz/:id" element={<AuthenticationRequired> <CreateQuiz /> </AuthenticationRequired>} />
+            <Route path="/results/:id" element={<AuthenticationRequired> <QuizResults /> </AuthenticationRequired>} />
+            <Route path="/profile" element={<AuthenticationRequired> <Profile /> </AuthenticationRequired>} />
+            <Route path="/admin" element={<AuthenticationRequired>context.userData?.isAdmin ? <Admin /> : <Home /></AuthenticationRequired>} />
+            <Route path="/dashboard" element={<AuthenticationRequired> <Dashboard /> </AuthenticationRequired>} />
           </Routes>
         </div>
       </AppContext.Provider>
