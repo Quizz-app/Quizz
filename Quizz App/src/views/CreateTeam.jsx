@@ -6,6 +6,7 @@ import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
 import { Input } from ".././components/ui/input";
 import QuizCardPaginated from "../components/QuizCardPaginated";
+import TableWithPagination from "../components/TableWithPagination";
 
 const CreateTeam = () => {
     const { userData } = useContext(AppContext)
@@ -16,7 +17,7 @@ const CreateTeam = () => {
     const [team, setTeam] = useState([]);
     const [teamQuizzes, setTeamQuizzes] = useState([]);
     const [showResults, setShowResults] = useState(true);
-    const quizzesPerPage = 5;
+    const itemsPerPage = 5;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -59,9 +60,7 @@ const CreateTeam = () => {
 
     };
 
-    console.log(id)
 
-    
     return (
         <>
             <div className="hero min-h-screen flex flex-col bg-base-200 rounded-lg">
@@ -85,28 +84,9 @@ const CreateTeam = () => {
                             {searchTerm.length >= 3 && showResults &&
                                 <div className="overflow-x-auto">
                                     <h1 className="text-xl mb-5 mt-3">Results</h1>
+                                    <div className="divider"></div>
                                     {filteredTeachers.length > 0 ? (
-                                        <table className="table">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>Name</th>
-                                                    <th>Job</th>
-                                                    <th>Email</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {filteredTeachers.map((teacher, index) =>
-                                                    <tr key={index}>
-                                                        <th>{index + 1}</th>
-                                                        <td>{teacher?.username}</td>
-                                                        <td>{teacher?.role}</td>
-                                                        <td>{teacher?.email}</td>
-                                                        <button onClick={() => handleInviteMember(teacher)} className="btn btn-xs">Add to team</button>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
+                                        <TableWithPagination array={filteredTeachers} pages={itemsPerPage} addMember={handleInviteMember} />
                                     ) : (
                                         <div className="flex justify-center mt-5 mb-5">
                                             <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
@@ -116,7 +96,7 @@ const CreateTeam = () => {
                             }
                         </div>
                         <div className="divider"></div>
-                        <h1 className="text-2xl">Team members</h1>
+                        <h1 className="text-2xl">Team members of {team.name}</h1>
                         <div className="divider"></div>
                         <div className="teacher-table">
                             <table className="table">
@@ -139,9 +119,10 @@ const CreateTeam = () => {
                             <button className="btn btn-secondary" onClick={() => handleDeleteTeam()}>Delete team</button>
                         }
                     </div>
-                </div>
-                <div className="">
-                    <QuizCardPaginated currentQuiz={teamQuizzes} quizzesPerPage={quizzesPerPage} deleteQuiz={handleRemoveQuiz} teamId={id} />
+                    <div className="divider"></div>
+                    <div className="">
+                        <QuizCardPaginated currentQuiz={teamQuizzes} quizzesPerPage={itemsPerPage} deleteQuiz={handleRemoveQuiz} teamId={id} />
+                    </div>
                 </div>
             </div>
         </>

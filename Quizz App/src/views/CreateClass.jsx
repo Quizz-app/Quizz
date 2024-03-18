@@ -7,6 +7,7 @@ import { AppContext } from "../context/AppContext";
 import { removeQuizFromTeam } from "../services/teams-service.js";
 import { Input } from ".././components/ui/input";
 import QuizCardPaginated from "../components/QuizCardPaginated.jsx";
+import TableWithPagination from "../components/TableWithPagination.jsx";
 
 const CreateClass = () => {
     const { userData } = useContext(AppContext)
@@ -17,7 +18,7 @@ const CreateClass = () => {
     const [currentClass, setCurrentClass] = useState([]);
     const [classQuizzes, setTeamQuizzes] = useState([]);
     const [showResults, setShowResults] = useState(true);
-    const quizzesPerPage = 5;
+    const itemsPerPage = 5;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -88,29 +89,9 @@ const CreateClass = () => {
                             {searchTerm.length >= 3 && showResults &&
                                 <div className="overflow-x-auto">
                                     <h1 className="text-xl mb-5 mt-3">Results</h1>
+                                    <div className="divider"></div>
                                     {filteredStudents.length > 0 ? (
-                                        <table className="table">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>Name</th>
-                                                    <th>Job</th>
-                                                    <th>Email</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {filteredStudents.map((student, index) =>
-                                                    <tr key={index}>
-                                                        <th>{index + 1}</th>
-                                                        <td>{student.username}</td>
-                                                        <td>{student.role}</td>
-                                                        <td>{student.email}</td>
-                                                        <button onClick={() => handleInviteMember(student)} className="btn btn-xs">Add to team</button>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
+                                        <TableWithPagination array={filteredStudents} pages={itemsPerPage} addMember={handleInviteMember} />
                                     ) : (
                                         <div className="flex justify-center mt-5 mb-5">
                                             <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
@@ -120,7 +101,7 @@ const CreateClass = () => {
                             }
                         </div>
                         <div className="divider"></div>
-                        <h1 className="text-2xl">Team members</h1>
+                        <h1 className="text-2xl">Class members of {currentClass.name}</h1>
                         <div className="divider"></div>
                         <div className="teacher-table">
                             <table className="table">
@@ -143,9 +124,10 @@ const CreateClass = () => {
                             <button className="btn btn-secondary" onClick={() => handleDeleteClass()}>Delete class</button>
                         }
                     </div>
-                </div>
-                <div className="">
-                    <QuizCardPaginated currentQuiz={classQuizzes} quizzesPerPage={quizzesPerPage} deleteQuiz={handleRemoveQuiz} />
+                    <div className="divider"></div>
+                    <div className="">
+                        <QuizCardPaginated currentQuiz={classQuizzes} quizzesPerPage={itemsPerPage} deleteQuiz={handleRemoveQuiz} />
+                    </div>
                 </div>
             </div>
         </>
