@@ -12,6 +12,8 @@ import { cn } from "@/utils/cn";
 import LabelInputContainer from "../components/ui/LabelInputContainer";
 import QuizCardPaginated from "../components/QuizCardPaginated";
 import { AnimatePresence, motion } from "framer-motion";
+import { quizTitlePattern } from "../constants/constants";
+import toast from "react-hot-toast";
 
 
 const MyLibrary = () => {
@@ -69,6 +71,12 @@ const MyLibrary = () => {
     };
 
     const quizCreation = async () => {
+
+        if (!quizTitlePattern.test(quiz.title)) {
+            return toast.error('Title must be between 3 and 30 characters');
+        }
+        
+
         try {
             let category = quiz.category.trim() !== '' ? quiz.category : selectedOption;
 
@@ -126,7 +134,7 @@ const MyLibrary = () => {
                                                     Hey there, quiz enthusiast!
                                                 </h2>
                                                 <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300 mb-3">
-                                                   {` It's time to step into the spotlight and showcase your quiz-making skills. Be the pioneer and set the bar high for others to follow!`}
+                                                    {` It's time to step into the spotlight and showcase your quiz-making skills. Be the pioneer and set the bar high for others to follow!`}
                                                 </p>
                                                 <LabelInputContainer className="mb-3">
                                                     <Label htmlFor="title">Quiz title</Label>
@@ -203,7 +211,7 @@ const MyLibrary = () => {
                                 <div className="border-t-2 border-neon-green mb-5"></div>
 
                                 <div >
-                                    <QuizCardPaginated currentQuiz={teacherQuizzes} quizzesPerPage={quizzesPerPageTeacher}/>
+                                    <QuizCardPaginated currentQuiz={teacherQuizzes} quizzesPerPage={quizzesPerPageTeacher} />
                                 </div>
 
 

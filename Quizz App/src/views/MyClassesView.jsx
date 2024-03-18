@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { createClass, getUserClasses } from "../services/class-service";
 import { AppContext } from "../context/AppContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger, } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -126,5 +126,4 @@ const MyClassesView = () => {
         </AnimatePresence>
     );
 }
-
 export default MyClassesView;

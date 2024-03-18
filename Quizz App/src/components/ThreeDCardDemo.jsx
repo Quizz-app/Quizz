@@ -34,7 +34,6 @@ export const ThreeDCardDemo = ({ quiz, teamId }) => {
 
   areUsersInSameTeam(userData?.username, quiz?.creator, teamId).then(setInSameTeam);
 
-  console.log(inSameTeam)
 
   return (
     <CardContainer className="inter-var w-64 h-64 flex-shrink-0 mr-5">
