@@ -238,19 +238,7 @@ const CreateQuiz = () => {
         }
     };
 
-    const handleSaveQuiz = async (time, grades, endsOn) => {
 
-        if (grades.good !== 0 || grades.bad !== 0) {
-            const updatedQuiz = { ...quiz, quizTime: Number(time), grades };
-            try {
-                await updateQuiz(id, updatedQuiz);
-                await setEndOn(id, endsOn);
-                setQuiz(updatedQuiz);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    };
 
     const handleQuestionChange = (e) => {
         setQuestion({ ...question, content: e.target.value });
@@ -312,12 +300,24 @@ const CreateQuiz = () => {
     }
         , [id]);
 
+
+    const handleSaveQuiz = async (time, grades, endsOn) => {
+        if (grades.good !== 0 || grades.bad !== 0) {
+            const updatedQuiz = { ...quiz, quizTime: Number(time), grades };
+            try {
+                await updateQuiz(id, updatedQuiz);
+                await setEndOn(id, endsOn);
+                setQuiz({ ...updatedQuiz, endsOn });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+
     const handleDeleteQuiz = async () => {
         await deleteQuizById(id);
         navigate("/my-library");
     };
-
-
 
     return (
         <>
@@ -326,7 +326,7 @@ const CreateQuiz = () => {
                 {/* quiz title */}
                 <div className="mb-2">
                     <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
-                    <h1>Created by: {quiz?.creator}</h1>
+                    {userData?.username !== quiz?.creator && <h1>Created by: {quiz?.creator}</h1>}
                 </div>
                 {/* action buttons */}
                 <div className="flex flex-row items-center justify-center">
@@ -343,7 +343,7 @@ const CreateQuiz = () => {
                     </div>
 
                     <div className="flex flex-col items-center justify-center">
-                        <Button onClick={() => navigate("/my-library")}> <MdDoneAll /> Save Changes</Button>
+                        <Button onClick={() => navigate("/my-library")}> <MdDoneAll /> Back to library</Button>
                     </div>
 
                 </div>
@@ -603,7 +603,7 @@ const CreateQuiz = () => {
                                     {quiz?.endsOn && (
                                         remainingTime > 0
                                             ? <p>Time left: {msToTime(remainingTime)}</p>
-                                            : <p>Ended On: {`${formatDate(quiz.endsOn)}`}</p>
+                                            : <p>Ended On: {`${formatDate(quiz?.endsOn)}`}</p>
                                     )}
                                 </div>
                             </div>
