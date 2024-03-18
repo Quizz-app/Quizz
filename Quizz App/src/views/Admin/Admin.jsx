@@ -7,7 +7,7 @@ import {
 } from "../../services/users-service";
 import { deleteQuizById, getAllQuizzes } from "../../services/quiz-service";
 import UserView from "./UserView";
-import { set } from "date-fns";
+import { Input } from "../../components/ui/input";
 
 const Admin = () => {
   const [page, setPage] = useState(1);
@@ -15,16 +15,29 @@ const Admin = () => {
   const [blockedUsers, setBlockedUsers] = useState(null);
   const [quizzes, setQuizzes] = useState(null);
   const [blocked, setBlocked] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
 
   useEffect(() => {
     const unsubscribeFromUsers = getAllUsers((result) => {
-      setUsers(result.filter((user) => !user.isBlocked));
-      setBlockedUsers(result.filter((user) => user.isBlocked));
+      const filteredUsers = result.filter((user) =>
+        !user.isBlocked && user.username.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setUsers(filteredUsers);
+
+      const filteredBlockedUsers = result.filter((user) =>
+        user.isBlocked && user.username.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setBlockedUsers(filteredBlockedUsers);
     });
-    
-    const unsubscribeFromQuizzes = getAllQuizzes(setQuizzes);
-    
+
+    const unsubscribeFromQuizzes = getAllQuizzes((quizzes) => {
+      const filteredQuizzes = quizzes.filter((quiz) =>
+        quiz.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setQuizzes(filteredQuizzes);
+    });
+
     return () => {
       if (typeof unsubscribeFromUsers === 'function') {
         unsubscribeFromUsers();
@@ -33,7 +46,7 @@ const Admin = () => {
         unsubscribeFromQuizzes();
       }
     };
-  }, []);
+  }, [searchTerm]);
 
   const handleBlock = (userHandle) => {
     updateBlockedUser(userHandle).then(() => setBlocked(!blocked));
@@ -55,9 +68,33 @@ const Admin = () => {
     <div className="overflow-x-auto">
       <table className="table">
         <div className="admin-header flex justify-center space-x-4">
-          <button onClick={() => setPage(1)}>Users</button>
-          <button onClick={() => setPage(2)}>Blocked users</button>
-          <button onClick={() => setPage(3)}>Quizzes</button>
+          <button
+            className={`font-bold ${page === 1 ? 'text-blue-500' : ''}`}
+            onClick={() => setPage(1)}
+          >
+            Users
+          </button>
+          <button
+            className={`font-bold ${page === 2 ? 'text-blue-500' : ''}`}
+            onClick={() => setPage(2)}
+          >
+            Blocked users
+          </button>
+          <button
+            className={`font-bold ${page === 3 ? 'text-blue-500' : ''}`}
+            onClick={() => setPage(3)}
+          >
+            Quizzes
+          </button>
+        </div>
+        <div className="flex justify-center mt-10">
+          <Input
+            className="input input-bordered w-80 h-10"
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
         <br />
         <br />
