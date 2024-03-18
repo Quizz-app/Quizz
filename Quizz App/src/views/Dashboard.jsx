@@ -29,7 +29,7 @@ const Dashboard = () => {
     const [clasz, setClas] = useState('');
     const [open, setOpen] = useState(false);
     const [id, setId] = useState('');
-    const [quizId, setQuizId] = useState('');
+    const [quizId, setQuizId] = useState('' );
     const [quizS, setQuiz] = useState('');
     const [rankedQuizSolvers, setRankedQuizSolvers] = useState([]);
 
@@ -264,38 +264,38 @@ const Dashboard = () => {
                                 </table> */}
 
                                 <div className="">
-                                <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl border p-4 justify-center items-center">
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Avatar</th>
-                                                <th>Student</th>
-                                                <th>Full Name</th>
-                                                <th>Class rank</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {rankedMembers.map((student, index) => (
-                                                <tr key={index}>
-                                                    <td>
-                                                        <div className="avatar">
-                                                            <div className="mask mask-squircle w-12 h-12">
-                                                                <img src={student.avatar} />
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>{student.username}</td>
-                                                    <td>{`${student.firstName} ${student.lastName}`}</td>
-                                                    
-                                                    {index === 0 && <th>{index + 1} <span className="text-2xl">👑</span></th>}
-                                                    {index === 1 && <th>{index + 1} <span className="text-2xl">🏆</span></th>}
-                                                    {index === 2 && <th>{index + 1} <span className="text-2xl">🥉</span></th>}
-                                                    
+                                    <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl border p-4 justify-center items-center">
+                                        <table className="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Avatar</th>
+                                                    <th>Student</th>
+                                                    <th>Full Name</th>
+                                                    <th>Class rank</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </ScrollArea>
+                                            </thead>
+                                            <tbody>
+                                                {rankedMembers.map((student, index) => (
+                                                    <tr key={index}>
+                                                        <td>
+                                                            <div className="avatar">
+                                                                <div className="mask mask-squircle w-12 h-12">
+                                                                    <img src={student.avatar} />
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>{student.username}</td>
+                                                        <td>{`${student.firstName} ${student.lastName}`}</td>
+
+                                                        {index === 0 ? <th>{index + 1} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
+                                                        {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
+                                                        {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1}</th>}
+
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </ScrollArea>
                                 </div>
                             </div>
 
@@ -350,14 +350,8 @@ const Dashboard = () => {
                         </Popover>
                         )}
 
-                    <table>
-                        {rankedMembers.length > 0 &&
-                            rankedMembers.map((member, index) => {
-                                return <RankingTable key={index} student={member} index={index + 1} />
-                            })}
-                    </table>
 
-                    <table>
+                    {/* <table>
                         {rankedQuizSolvers.length > 0 &&
                             rankedQuizSolvers.map((member, index) => {
                                 if (member.quizzes[quizId]) {
@@ -366,7 +360,46 @@ const Dashboard = () => {
                                     return null;
                                 }
                             })}
-                    </table>
+                    </table> */}
+
+                    <ScrollArea className="flex flex-grow h-[430px] w-[1500px] rounded-xl border p-4 justify-center items-center">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Avatar</th>
+                                    <th>Student</th>
+                                    <th>Full Name</th>
+                                    <th>Score on quiz</th>
+                                    <th>Grade on quiz</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rankedQuizSolvers.length > 0 && rankedQuizSolvers.map((student, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle w-12 h-12">
+                                                    <img src={student.avatar} />
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        
+                                        <td>{student.username}</td>
+                                        <td>{`${student.firstName} ${student.lastName}`}</td>
+
+                                        
+                                        {(index === 0 && student.quizzes[quizId]) ? <th>{student.quizzes[quizId].score} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
+
+
+                                        {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
+                                        {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1}</th>}
+
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </ScrollArea>
 
 
                     {/* 

@@ -726,7 +726,7 @@ export const getUsersRankedByScoreOnAQuiz = async (quizId) => {
   const usersData = usersSnapshot.val();
   const users = Object.values(usersData);
 
-  const usersWithScore = users.filter(user => user.quizzes && user.quizzes[quizId] && user.quizzes[quizId].score);
+  const usersWithScore = users.filter(user => user.quizzes && user.quizzes[quizId] && user.quizzes[quizId].score && user.quizzes[quizId]);
   usersWithScore.sort((a, b) => b.quizzes[quizId].score - a.quizzes[quizId].score);
 
   return usersWithScore;
