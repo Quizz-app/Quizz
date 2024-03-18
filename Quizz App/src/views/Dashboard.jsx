@@ -1,11 +1,14 @@
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { getUserClasses, getUserCreatedQuizzes, getUserQuizzes, getUsersRankedByScoreOnAQuiz, mostReceivedGradeOnQuizzesByCreator, scheduleUserQuizzesScoreAveragePerWeek, userQuizzesCreated, userQuizzesMostOccurringGrade, userQuizzesSolved } from "../services/users-service";
+import {
+    getUserClasses, getUserCreatedQuizzes,
+    getUsersRankedByScoreOnAQuiz, mostReceivedGradeOnQuizzesByCreator,
+    scheduleUserQuizzesScoreAveragePerWeek, userQuizzesCreated,
+    userQuizzesMostOccurringGrade, userQuizzesSolved
+} from "../services/users-service";
 import { useState } from "react";
 import BarChart from "../components/barChart";
-import { BackgroundGradient } from "../components/ui/background-gradient";
-import { getClassById, getClassMemebersByRanking } from "../services/class-service";
-import { set } from "firebase/database";
+import { getClassMemebersByRanking } from "../services/class-service";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command"
@@ -67,7 +70,7 @@ const Dashboard = () => {
             if (quizId || (quizzes && quizzes[0])) {
                 const users = await getUsersRankedByScoreOnAQuiz(quizId || quizzes[0].id);
                 setRankedQuizSolvers(users);
-                //console.log('iam run');
+               
             }
         })();
     }, [quizId, quizzes]);
@@ -144,8 +147,8 @@ const Dashboard = () => {
                 exit={{ opacity: 0, x: 200 }} // Exits to the right
                 transition={{ duration: 0.9 }}
             >
-                <div className="flex flex-col h-full items-start justify-start p-6 mx-20 mt-10">
-                    <h1>Dashboard</h1>
+                <div className="flex flex-col h-full items-center justify-center mt-10">
+                    <h1 className="mb-10 text-xl">Dashboard</h1>
                     {userData && (userData.role === 'teacher' || userData.isAdmin === true) ?
                         (<>
                             {/* teacher dashboard */}
@@ -264,47 +267,43 @@ const Dashboard = () => {
                                 </table> */}
 
                                 <div className="">
-                                <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl border p-4 justify-center items-center">
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Avatar</th>
-                                                <th>Student</th>
-                                                <th>Full Name</th>
-                                                <th>Class rank</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {rankedMembers.map((student, index) => (
-                                                <tr key={index}>
-                                                    <td>
-                                                        <div className="avatar">
-                                                            <div className="mask mask-squircle w-12 h-12">
-                                                                <img src={student.avatar} />
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>{student.username}</td>
-                                                    <td>{`${student.firstName} ${student.lastName}`}</td>
-                                                    
-                                                    {index === 0 && <th>{index + 1} <span className="text-2xl">👑</span></th>}
-                                                    {index === 1 && <th>{index + 1} <span className="text-2xl">🏆</span></th>}
-                                                    {index === 2 && <th>{index + 1} <span className="text-2xl">🥉</span></th>}
-                                                    
+                                    <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl border p-4 justify-center items-center">
+                                        <table className="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Avatar</th>
+                                                    <th>Student</th>
+                                                    <th>Full Name</th>
+                                                    <th>Class rank</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </ScrollArea>
+                                            </thead>
+                                            <tbody>
+                                                {rankedMembers.map((student, index) => (
+                                                    <tr key={index}>
+                                                        <td>
+                                                            <div className="avatar">
+                                                                <div className="mask mask-squircle w-12 h-12">
+                                                                    <img src={student?.avatar} />
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>{student?.username}</td>
+                                                        <td>{`${student?.firstName} ${student?.lastName}`}</td>
+
+                                                        {index === 0 && <th>{index + 1} <span className="text-2xl">👑</span></th>}
+                                                        {index === 1 && <th>{index + 1} <span className="text-2xl">🏆</span></th>}
+                                                        {index === 2 && <th>{index + 1} <span className="text-2xl">🥉</span></th>}
+
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </ScrollArea>
                                 </div>
                             </div>
-
-
                         </div>
                     )}
-
                     {userData && (userData.role === 'teacher') &&
-
                         (<Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>
                                 <Button
@@ -350,13 +349,7 @@ const Dashboard = () => {
                         </Popover>
                         )}
 
-                    <table>
-                        {rankedMembers.length > 0 &&
-                            rankedMembers.map((member, index) => {
-                                return <RankingTable key={index} student={member} index={index + 1} />
-                            })}
-                    </table>
-
+            
                     <table>
                         {rankedQuizSolvers.length > 0 &&
                             rankedQuizSolvers.map((member, index) => {
@@ -367,7 +360,6 @@ const Dashboard = () => {
                                 }
                             })}
                     </table>
-
 
                     {/* 
             <div>

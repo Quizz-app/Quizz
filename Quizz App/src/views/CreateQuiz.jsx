@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { addQuizToClass, addQuizToTeam, getQuizById, inviteUserToQuiz, observeQuiz, setEndOn, setOnGoing, updateQuiz, } from "../services/quiz-service";
+import { addQuizToClass, addQuizToTeam, deleteQuizById, getQuizById, inviteUserToQuiz, observeQuiz, setEndOn, setOnGoing, updateQuiz, } from "../services/quiz-service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,8 +21,6 @@ import { MdCancel, MdDoneAll, MdDownloadDone } from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from 'framer-motion';
-import { FaArrowRight } from "react-icons/fa";
-import TableRow from "../components/TableRow";
 
 const CreateQuiz = () => {
     const { id } = useParams();
@@ -313,11 +311,14 @@ const CreateQuiz = () => {
     }
         , [id]);
 
-
+    const handleDeleteQuiz = async () => { 
+        await deleteQuizById(id);
+        navigate("/my-library");
+    };
 
     return (
         <>
-            <div className="mx-20 my-10">
+            
                 <div className="flex flex-row items-center justify-between">
                     {/* quiz title */}
                     <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
@@ -339,16 +340,17 @@ const CreateQuiz = () => {
                         <div className="flex flex-col items-center justify-center">
                             <Button onClick={() => navigate("/my-library")}> <MdDoneAll /> Save Changes</Button>
                         </div>
+                        <div className="flex flex-col items-center justify-center">
+                            <Button onClick={() => handleDeleteQuiz}> <MdDoneAll /> DELETE</Button>
+                        </div>
                     </div>
 
                 </div>
                 {/* THIS IS THE GRAY LINE*/}
                 <div className="border-t-2 border-gray-200 mb-3"></div>
-
                 {/* Here we can see all the teams that the current user is in*/}
                 {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
                     <div>
-
                         <motion.div
                             initial={{ opacity: 0, y: -50 }} // Starts from a little above and invisible
                             animate={{ opacity: 1, y: 0 }} // Moves to its original position and becomes visible
@@ -378,7 +380,6 @@ const CreateQuiz = () => {
                         </motion.div>
                     </div>
                 )}
-
                 {openPanel === 'assignClass' && filteredClasses.length > 0 && (
                     <div>
                         <motion.div
@@ -412,17 +413,18 @@ const CreateQuiz = () => {
 
                 {/* Here we can see all the students that are in the system*/}
                 {openPanel === 'assignUser' && students.length > 0 && (
-                    <div className="flex flex-col mb-10">
-                        <div className="w-96 justify">
-                            <Input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
-                        </div>
-                        <div className="flex flex-col">
-                            <motion.div
-                                initial={{ opacity: 0, y: -50 }} // Starts from a little above and invisible
-                                animate={{ opacity: 1, y: 0 }} // Moves to its original position and becomes visible
-                                exit={{ opacity: 0, y: 50 }} // Moves a little down and becomes invisible
-                                transition={{ duration: 0.5 }} // The duration of the transition
-                            >
+                    <motion.div
+                        initial={{ opacity: 0, y: -50 }} // Starts from a little above and invisible
+                        animate={{ opacity: 1, y: 0 }} // Moves to its original position and becomes visible
+                        exit={{ opacity: 0, y: 50 }} // Moves a little down and becomes invisible
+                        transition={{ duration: 0.5 }} // The duration of the transition
+                    >
+                        <div className="flex flex-col mb-10">
+                            <div className="w-96 justify">
+                                <Input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
+                            </div>
+                            <div className="flex flex-col">
+
                                 <div className="flex justify-center">
                                     <h1 className="text-xl mb-5 mt-3">Results</h1>
                                 </div>
@@ -476,14 +478,13 @@ const CreateQuiz = () => {
                                         </div>
                                     }
                                 </div>
-                            </motion.div>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
-
                 <div className="flex flex-row items-center justify-between mb-3">
                     <div id="questions-score">
-                    <h1 className="text-xl mb-2 mt-3">Total question points: {totalPoints}</h1>
+                        <h1 className="text-xl mb-2 mt-3">Total question points: {totalPoints}</h1>
                     </div>
 
                     <div className="flex flex-row items-center justify-center">
@@ -504,7 +505,6 @@ const CreateQuiz = () => {
                         </button>
                     </div>
                 </div>
-
                 {/* THIS IS THE GRAY LINE*/}
                 <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
 
@@ -516,10 +516,8 @@ const CreateQuiz = () => {
                     )}
                 </div>
                 <div className="flex flex-col justify-between">
-
                     <div className="flex flex-row ">
                         <div id='questions-cards' className="grid grid-cols-3 w-800px mr-5">
-
                             {questions ? (
                                 questions.map((question, index) => (
                                     <motion.div
@@ -546,8 +544,6 @@ const CreateQuiz = () => {
                                 <h1>No questions yet</h1>
                             )}
                         </div>
-
-
                         {createMode && (
                             <motion.div
                                 initial={{ opacity: 0, y: -50 }} // Starts from a little above and invisible
@@ -583,16 +579,16 @@ const CreateQuiz = () => {
 
                         <div id="quiz-management" className="flex flex-col mb-5 mt-7 ml-10">
                             <div className="mb-10">
-                            <h1 className="text-xl mb-2 mt-3">Quiz Description</h1>
-                            <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
+                                <h1 className="text-xl mb-2 mt-3">Quiz Description</h1>
+                                <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
                                 <div className="w-96">
                                     <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
                                 </div>
                             </div>
                             <div className="flex flex-row justify-between mb-5">
                                 <div className="flex flex-col">
-                                <h1 className="text-xl mb-2 mt-3">Time Limit</h1>
-                                <div className="border-t-2 border-gray-200  mb-2"></div>
+                                    <h1 className="text-xl mb-2 mt-3">Time Limit</h1>
+                                    <div className="border-t-2 border-gray-200  mb-2"></div>
                                     <Popover open={open} onOpenChange={setOpen}>
                                         <PopoverTrigger asChild>
                                             <Button variant="outline" role="combobox" className="w-[200px] justify-between">
@@ -622,8 +618,8 @@ const CreateQuiz = () => {
                                     </Popover>
                                 </div>
                                 <div className="ml-11 ">
-                                <h1 className="text-xl mb-2 mt-3">Quiz Deadline</h1>
-                                <div className="border-t-2 border-gray-200  mb-2"></div>
+                                    <h1 className="text-xl mb-2 mt-3">Quiz Deadline</h1>
+                                    <div className="border-t-2 border-gray-200  mb-2"></div>
                                     <div className="flex flex-row mt-2 mb-5">
                                         <DatePickerDemo
                                             selected={date}
@@ -642,18 +638,18 @@ const CreateQuiz = () => {
                             <div className="flex flex-row">
                                 <div >
                                     <div className="flex justify-between ">
-                                    <h1 className="text-xl mb-2 mt-3">Grading System </h1>
-                                 
+                                        <h1 className="text-xl mb-2 mt-3">Grading System </h1>
+
                                         {/* <FaArrowRight className="mt-5"/> */}
                                     </div>
-                                       <div className="border-t-2 border-gray-200  mb-2 " ></div>
+                                    <div className="border-t-2 border-gray-200  mb-2 " ></div>
                                     <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
                                     <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
                                 </div>
                                 <div className="flex flex-col ml-16 mt-10">
-                                <h1 className="text-xl mt-3">Good: {grades.good} and above</h1>
-                                <h1 className="text-xl  ">Satisfactory: {grades.bad} - {grades.good}</h1>
-                                <h1 className="text-xl ">Bad: {grades.bad} and below</h1>
+                                    <h1 className="text-xl mt-3">Good: {grades.good} and above</h1>
+                                    <h1 className="text-xl  ">Satisfactory: {grades.bad} - {grades.good}</h1>
+                                    <h1 className="text-xl ">Bad: {grades.bad} and below</h1>
                                 </div>
                             </div>
 
@@ -670,10 +666,8 @@ const CreateQuiz = () => {
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-            </div >
+            
         </>
     );
 };

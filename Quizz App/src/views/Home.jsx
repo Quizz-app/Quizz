@@ -227,8 +227,7 @@ const Home = () => {
         <>
             {userData ?
                 <>
-
-                    <div className="flex flex-col mt-12 mx-10">
+                    <div className="flex flex-col mt-12 ">
                         <div className="flex justify-start w-full mb-5 ml-10">
                             <Input type="text" value={searchTerm} onChange={handleSearchChange}
                                 placeholder="Search content here..."
@@ -259,13 +258,10 @@ const Home = () => {
                         </div>
                         <div className="flex flex-row w-full">
                             <div className=" flex flex-col w-full">
-
                                 <div id="recent" className="flex flex-col">
-                                    <h1 className="text-2xl ml-10 my-10" style={{ margin: "-30px 45px" }}>
+                                    <h1 className=" text-2xl ml-10 my-10" style={{ margin: "0px 45px 30px 45px" }}>
                                         Your Recent Quizzes
                                     </h1>
-
-
                                     <div className="flex flex-row w-full justify-between">
                                         <div id="your-recent" className="ml-10">
                                             {userData.role === 'student' ? (
@@ -289,14 +285,11 @@ const Home = () => {
                                                 </div>
                                             )}
                                         </div>
-
-
                                         <div id="table" className="mr-10">
                                             <h1 className="text-2xl">
                                                 Our Top 5 Quizcrafters
                                             </h1>
                                             <div className="border-t-2 border-gray mb-5"></div>
-
                                             <div className="overflow-x-auto">
                                                 <table className="table">
                                                     <thead>
