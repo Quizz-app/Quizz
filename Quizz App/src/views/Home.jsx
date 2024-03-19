@@ -151,34 +151,42 @@ const Home = () => {
     const testimonials = [
         {
             quote:
-                "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.",
-            name: "Charles Dickens",
-            title: "A Tale of Two Cities",
+                "As an instructor, I find BrainBurst to be a valuable resource for assessing student understanding and tracking progress. The customizable features make it easy to tailor quizzes to specific topics and learning objectives.",
+            name: "Dr. Johnson",
+            title: "Mathematics Professor",
         },
         {
             quote:
-                "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer The slings and arrows of outrageous fortune, Or to take Arms against a Sea of troubles, And by opposing end them: to die, to sleep.",
-            name: "William Shakespeare",
-            title: "Hamlet",
-        },
-        {
-            quote: "All that we see or seem is but a dream within a dream.",
-            name: "Edgar Allan Poe",
-            title: "A Dream Within a Dream",
+                "BrainBurst is a lifesaver for busy students like me! With its user-friendly interface and extensive question bank, I can quickly review course material anytime, anywhere.",
+            name: "Alex",
+            title: "Engineering Student",
         },
         {
             quote:
-                "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
-            name: "Jane Austen",
-            title: "Pride and Prejudice",
+                "I've integrated BrainBurst into my classroom routine, and the results have been remarkable! Students are more engaged, and their retention of information has significantly improved.",
+            name: "Ms. Rodriguez",
+            title: "High School Teacher",
         },
         {
             quote:
-                "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world.",
-            name: "Herman Melville",
-            title: "Moby-Dick",
+                "I've tried numerous study aids, but none have been as effective as BrainBurst. It's like having a personal tutor guiding me through complex topics and helping me master challenging concepts.",
+            name: "David",
+            title: "Physics Student",
+        },
+        {
+            quote:
+                "As a teacher, I appreciate how BrainBurst promotes active learning and critical thinking skills. It's a powerful tool for fostering a deeper understanding of course material and encouraging student participation.",
+            name: "Mrs. Ivanova",
+            title: "Biology Teacher",
+        },
+        {
+            quote:
+                "I love it! It's so easy to use and it's really fun. I've been using it for a while now and I've already improved my grades :)",
+            name: "Mrs. Williams",
+            title: "Geography Teacher",
         },
     ];
+
 
     const content = [
         {
@@ -489,34 +497,6 @@ const Home = () => {
                                         </Accordion>
                                     </div>
                                 </div>
-
-                                {/* //footer */}
-                                <footer className="footer p-10 bg-base-200 text-base-content">
-                                    <aside>
-                                        <svg width="50" height="50" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" clipRule="evenodd" className="fill-current"><path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path></svg>
-                                        <p>ACME Industries Ltd.<br />Providing reliable tech since 1992</p>
-                                    </aside>
-                                    <nav>
-                                        <h6 className="footer-title">Services</h6>
-                                        <a className="link link-hover">Branding</a>
-                                        <a className="link link-hover">Design</a>
-                                        <a className="link link-hover">Marketing</a>
-                                        <a className="link link-hover">Advertisement</a>
-                                    </nav>
-                                    <nav>
-                                        <h6 className="footer-title">Company</h6>
-                                        <a className="link link-hover">About us</a>
-                                        <a className="link link-hover">Contact</a>
-                                        <a className="link link-hover">Jobs</a>
-                                        <a className="link link-hover">Press kit</a>
-                                    </nav>
-                                    <nav>
-                                        <h6 className="footer-title">Legal</h6>
-                                        <a className="link link-hover">Terms of use</a>
-                                        <a className="link link-hover">Privacy policy</a>
-                                        <a className="link link-hover">Cookie policy</a>
-                                    </nav>
-                                </footer>
 
                             </div>
                         </motion.div>

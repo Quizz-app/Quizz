@@ -1,5 +1,3 @@
-
-
 const QuestionPreviewCard = ({ time, points}) => {
 
     return (

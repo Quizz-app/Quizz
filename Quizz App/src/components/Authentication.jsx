@@ -8,9 +8,8 @@ export const AuthenticationRequired = ({ children }) => {
     const location = useLocation();
 
     if (!user) {
-        return <Navigate replace to="/login" state={{ from: location.pathname }} />
+        return <Navigate replace to="/login" state={{ from: location }} />
     }
-
     return (
         <>
             {children}

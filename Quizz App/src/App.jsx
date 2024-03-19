@@ -23,6 +23,8 @@ import Dashboard from "./views/Dashboard";
 import CreateClass from "./views/CreateClass";
 import MyClassesView from "./views/MyClassesView";
 import { AuthenticationRequired } from "./components/Authentication";
+import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -50,34 +52,41 @@ const App = () => {
   const handleThemeChange = (event) => {
     setTheme(event.target.checked ? "synthwave" : "1");
   };
-
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
-        <Header theme={theme} onThemeChange={handleThemeChange} />
         <div className='min-h-screen min-w-screen flex flex-col ml-10 mr-10'>
-          <Routes>
-            <Route index element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route index element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/my-library" element={<AuthenticationRequired> <MyLibrary /> </AuthenticationRequired>} />
-            <Route path="/my-teams" element={<AuthenticationRequired> <MyTeamsView /> </AuthenticationRequired>} />
-            <Route path="/quiz-preview/:id" element={<AuthenticationRequired> <QuizPreview /> </AuthenticationRequired>} />
-            <Route path="/my-classes" element={<AuthenticationRequired> <MyClassesView /> </AuthenticationRequired>} />
-            <Route path="/quiz-solve/:id" element={<AuthenticationRequired> <QuizSolve /> </AuthenticationRequired>} />
-            <Route path="/team/:id" element={<AuthenticationRequired> <CreateTeam /> </AuthenticationRequired>} />
-            <Route path="/class/:id" element={<AuthenticationRequired> <CreateClass /> </AuthenticationRequired>} />
-            <Route path="/quiz/:id" element={<AuthenticationRequired> <CreateQuiz /> </AuthenticationRequired>} />
-            <Route path="/results/:id" element={<AuthenticationRequired> <QuizResults /> </AuthenticationRequired>} />
-            <Route path="/profile" element={<AuthenticationRequired> <Profile /> </AuthenticationRequired>} />
-            <Route path="/admin" element={<AuthenticationRequired>context.userData?.isAdmin ? <Admin /> : <Home /></AuthenticationRequired>} />
-            <Route path="/dashboard" element={<AuthenticationRequired> <Dashboard /> </AuthenticationRequired>} />
-          </Routes>
+          {context?.userData?.isBlocked ? (
+            <h1>You are blocked!</h1>
+          ) : (
+            <>
+              <Header theme={theme} onThemeChange={handleThemeChange} />
+              <Routes>
+                <Route index element={<Home />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route index element={<Home />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/my-library" element={<AuthenticationRequired> <MyLibrary /> </AuthenticationRequired>} />
+                <Route path="/my-teams" element={<AuthenticationRequired> <MyTeamsView /> </AuthenticationRequired>} />
+                <Route path="/quiz-preview/:id" element={<AuthenticationRequired> <QuizPreview /> </AuthenticationRequired>} />
+                <Route path="/my-classes" element={<AuthenticationRequired> <MyClassesView /> </AuthenticationRequired>} />
+                <Route path="/quiz-solve/:id" element={<AuthenticationRequired> <QuizSolve /> </AuthenticationRequired>} />
+                <Route path="/team/:id" element={<AuthenticationRequired> <CreateTeam /> </AuthenticationRequired>} />
+                <Route path="/class/:id" element={<AuthenticationRequired> <CreateClass /> </AuthenticationRequired>} />
+                <Route path="/quiz/:id" element={<AuthenticationRequired> <CreateQuiz /> </AuthenticationRequired>} />
+                <Route path="/results/:id" element={<AuthenticationRequired> <QuizResults /> </AuthenticationRequired>} />
+                <Route path="/profile" element={<AuthenticationRequired> <Profile /> </AuthenticationRequired>} />
+                <Route path="/admin" element={<AuthenticationRequired><Admin /></AuthenticationRequired>} />
+                <Route path="/dashboard" element={<AuthenticationRequired> <Dashboard /> </AuthenticationRequired>} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </>
+          )}
         </div>
+        <Footer />
       </AppContext.Provider>
     </BrowserRouter>
   );

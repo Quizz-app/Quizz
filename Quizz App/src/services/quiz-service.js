@@ -1,7 +1,7 @@
 import { db } from "../config/firebase-config";
 import { get, set, ref, query, equalTo, orderByChild, update, push, onValue } from "firebase/database";
 import { removeQuizFromAllTeams } from "./teams-service";
-import { removeMemberFromClass } from "./class-service";
+import { removeMemberFromClass, removeQuizFromAllClasses } from "./class-service";
 import { removeQuizFromAllUsers } from "./users-service";
 
 export const createQuiz = async (creator, title, category, isPublic, questionTypes,) => {
@@ -89,13 +89,16 @@ export const incrementFinishedCount = async (id) => {
   await update(quizRef, updatedQuiz);
 };
 
+import { remove } from "firebase/database";
+
 export const deleteQuizById = async (id) => {
   const quizRef = ref(db, `quizzes/${id}`);
-  await set(quizRef, null);
 
+  console.log(id)
   removeQuizFromAllTeams(id);
-  removeMemberFromClass(id);
+  removeQuizFromAllClasses(id);
   removeQuizFromAllUsers(id);
+  await remove(quizRef);
 
   return true;
 };
@@ -260,21 +263,21 @@ export const getAllQuizzes = async (callback) => {
 
 
 export const getTopCategories = (quizzes) => {
-        
+
   const categoryCounts = quizzes.reduce((counts, quiz) => {
-      const category = quiz.category;
-      if (!counts[category]) {
-          counts[category] = 0;
-      }
-      counts[category]++;
-      return counts;
+    const category = quiz.category;
+    if (!counts[category]) {
+      counts[category] = 0;
+    }
+    counts[category]++;
+    return counts;
   }, {});
 
-  
+
   const topCategories = Object.entries(categoryCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(pair => pair[0]); 
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(pair => pair[0]);
 
   return topCategories;
 }
