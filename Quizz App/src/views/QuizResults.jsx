@@ -47,6 +47,7 @@ const QuizResults = () => {
                 const userAnswersArray = questionsArray.map((question, index) => userAnswersObject[Object.keys(quiz.questions)[index]]);
                 setUserAnswers(userAnswersArray);
                 setUserQuestions(userAnswersArray.length);
+               
                 setTotalPoints(questionsArray.reduce((total, question) => total + Number(question.points), 0));
                 setPoints(questionsArray.map(question => question.points));
                 setGrades(grades);
@@ -165,7 +166,7 @@ const QuizResults = () => {
 
                         <div className="flex flex-col items-center justify-center mb-7">
                             <h2 className="text-2xl font-bold ">Total questions: {totalQuestions}</h2>
-                            <h2 className="text-2xl font-bold mr-5 ">Answered: {userQuestions}</h2>
+                            <h2 className="text-2xl font-bold mr-5 ">Answered: {userAnswers.filter(answer => answer !== 'null').length}</h2>
                         </div>
                     </div>
 

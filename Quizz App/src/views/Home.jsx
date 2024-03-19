@@ -16,9 +16,6 @@ import QuizCardPaginated from "../components/QuizCardPaginated";
 import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { StickyScroll } from "../components/ui/sticky-scroll-reveal";
 import { TextGenerateEffect } from "../components/ui/text generate/text-generate-effect";
-
-
-
 import { words, testimonials, content } from "../services/words.jsx";
 
 const Home = () => {
@@ -312,7 +309,7 @@ const Home = () => {
 
                                 {/* //accordion - q&a */}
                                 <div>
-                                    <div className="flex flex-col items-center justify-center w-600px mb-5 mt-10">
+                                    <div className="flex flex-col items-center justify-center w-600px mb-5 mt-10 ml-20">
                                         <h1 className="text-4xl text-start font-bold">Q&A</h1>
                                     </div>
                                     <div className="flex items-start justify-center max-w-full pb-20">

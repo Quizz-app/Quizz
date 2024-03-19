@@ -19,7 +19,7 @@ export const words = [
     },
     {
         text: "BrainBurst.",
-        className: "text-blue-500 dark:text-lime-500",
+        className: "text-[#00ff8c86] ",
     },
 ];
 

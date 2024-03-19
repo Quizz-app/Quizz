@@ -290,9 +290,9 @@ const Dashboard = () => {
                                                         <td>{student?.username}</td>
                                                         <td>{`${student?.firstName} ${student?.lastName}`}</td>
 
-                                                        {index === 0 && <th>{index + 1} <span className="text-2xl">👑</span></th>}
-                                                        {index === 1 && <th>{index + 1} <span className="text-2xl">🏆</span></th>}
-                                                        {index === 2 && <th>{index + 1} <span className="text-2xl">🥉</span></th>}
+                                                        {index === 0 ? <th>{index + 1} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
+                                                        {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
+                                                        {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1} </th>}
 
                                                     </tr>
                                                 ))}
@@ -382,18 +382,15 @@ const Dashboard = () => {
                                                 </div>
                                             </div>
                                         </td>
-
-                                        
                                         <td>{student.username}</td>
                                         <td>{`${student.firstName} ${student.lastName}`}</td>
-
-                                        
-                                        {(index === 0 && student.quizzes[quizId]) ? <th>{student.quizzes[quizId].score} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
-
-
-                                        {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
-                                        {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1}</th>}
-
+                                        <td>
+                                            {student.quizzes[quizId]?.score}
+                                            {index === 0 && <span className="text-2xl">👑</span>}
+                                            {index === 1 && <span className="text-2xl">🏆</span>}
+                                            {index === 2 && <span className="text-2xl">🥉</span>}
+                                        </td>
+                                        <td>{student.quizzes[quizId]?.grade}</td>
                                     </tr>
                                 ))}
                             </tbody>
