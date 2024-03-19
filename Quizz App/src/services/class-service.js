@@ -1,6 +1,7 @@
 import { db } from "../config/firebase-config";
 import { get, remove, set, ref, query, equalTo, orderByChild, update, push, onValue, off, serverTimestamp } from "firebase/database";
 import { userQuizzesScoreAverage } from "./users-service";
+import { toast } from "react-hot-toast";
 
 
 export const createClass = async (name, description, creatorUsername) => {
@@ -131,6 +132,11 @@ export const inviteUserToClass = async (classId, user, inviter) => {
     if (!userData.invitesForClass) {
         userData.invitesForClass = {};
     }
+
+    if (userData.invitesForClass[classId]) {
+        toast.error("An invite for this class has already been sent.");
+        return;
+      }
 
     userData.invitesForClass[classId] = {
         classId,

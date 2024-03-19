@@ -447,6 +447,8 @@ export const getUserQuizInvites = (username, callback) => {
 };
 
 
+
+
 export const getUserClassInvites = (username, callback) => {
   const userInviteRef = ref(db, `users/${username}/invitesForClass`);
 
@@ -731,3 +733,5 @@ export const getUsersRankedByScoreOnAQuiz = async (quizId) => {
 
   return usersWithScore;
 };
+
+

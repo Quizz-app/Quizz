@@ -150,8 +150,8 @@ const CreateQuiz = () => {
         addQuizToClass(classId, id);
     }
 
-    const handleAddQuizToStudent = async (studentId) => {
-        inviteUserToQuiz(id, studentId, userData.username);
+    const handleAddQuizToStudent = async (student) => {
+        inviteUserToQuiz(id, student, userData.username);
     };
 
     // Checking for empty answers in a question

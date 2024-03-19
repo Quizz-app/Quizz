@@ -1,5 +1,6 @@
 import { db } from "../config/firebase-config";
 import { get, remove, set, ref, push, onValue } from "firebase/database";
+import { toast } from "react-hot-toast";
 
 
 /**
@@ -204,6 +205,11 @@ export const inviteUserToTeam = async (teamId, user, inviter) => {
     if (!userData.invitesForTeam) {
         userData.invitesForTeam = {};
     }
+
+    if (userData.invitesForTeam[teamId]) {
+        toast.error("An invite for this team has already been sent.");
+        return;
+      }
 
     userData.invitesForTeam[teamId] = {
         teamId,
