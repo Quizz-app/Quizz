@@ -32,7 +32,7 @@ const Dashboard = () => {
     const [clasz, setClas] = useState('');
     const [open, setOpen] = useState(false);
     const [id, setId] = useState('');
-    const [quizId, setQuizId] = useState('' );
+    const [quizId, setQuizId] = useState('');
     const [quizS, setQuiz] = useState('');
     const [rankedQuizSolvers, setRankedQuizSolvers] = useState([]);
 
@@ -70,7 +70,7 @@ const Dashboard = () => {
             if (quizId || (quizzes && quizzes[0])) {
                 const users = await getUsersRankedByScoreOnAQuiz(quizId || quizzes[0].id);
                 setRankedQuizSolvers(users);
-               
+
             }
         })();
     }, [quizId, quizzes]);
@@ -268,36 +268,44 @@ const Dashboard = () => {
 
                                 <div className="">
                                     <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl border p-4 justify-center items-center">
-                                        <table className="table bg-white">
-                                            <thead>
-                                                <tr>
-                                                    <th>Avatar</th>
-                                                    <th>Student</th>
-                                                    <th>Full Name</th>
-                                                    <th>Class rank</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {rankedMembers.map((student, index) => (
-                                                    <tr key={index}>
-                                                        <td>
-                                                            <div className="avatar">
-                                                                <div className="mask mask-squircle w-12 h-12">
-                                                                    <img src={student?.avatar} />
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>{student?.username}</td>
-                                                        <td>{`${student?.firstName} ${student?.lastName}`}</td>
-
-                                                        {index === 0 ? <th>{index + 1} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
-                                                        {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
-                                                        {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1} </th>}
-
+                                        <motion.table
+                                            className="table bg-white"
+                                            initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above its final position
+                                            animate={{ opacity: 1, y: 0 }} // Moves to its final position and becomes visible
+                                            exit={{ opacity: 0, y: -50 }} // Moves up and becomes invisible
+                                            transition={{ duration: 0.5 }} // The duration of the transition
+                                        >
+                                            <table className="table bg-white">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avatar</th>
+                                                        <th>Student</th>
+                                                        <th>Full Name</th>
+                                                        <th>Class rank</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {rankedMembers.map((student, index) => (
+                                                        <tr key={index}>
+                                                            <td>
+                                                                <div className="avatar">
+                                                                    <div className="mask mask-squircle w-12 h-12">
+                                                                        <img src={student?.avatar} />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{student?.username}</td>
+                                                            <td>{`${student?.firstName} ${student?.lastName}`}</td>
+
+                                                            {index === 0 ? <th>{index + 1} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
+                                                            {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
+                                                            {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1} </th>}
+
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </motion.table>
                                     </ScrollArea>
                                 </div>
                             </div>
@@ -349,7 +357,7 @@ const Dashboard = () => {
                         </Popover>
                         )}
 
-{/*             
+                    {/*             
                     <table>
                         {rankedQuizSolvers.length > 0 &&
                             rankedQuizSolvers.map((member, index) => {
@@ -359,10 +367,18 @@ const Dashboard = () => {
                                     return null;
                                 }
                             })}
-                    </table> */} 
+                    </table> */}
 
                     <ScrollArea className="flex flex-grow h-[430px] w-[1500px] rounded-xl border-[#00014f60] p-4 justify-center items-center">
+                    <motion.table
+                                            className="table bg-white"
+                                            initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above its final position
+                                            animate={{ opacity: 1, y: 0 }} // Moves to its final position and becomes visible
+                                            exit={{ opacity: 0, y: -50 }} // Moves up and becomes invisible
+                                            transition={{ duration: 0.5 }} // The duration of the transition
+                                        >
                         <table className="table bg-white">
+                            
                             <thead>
                                 <tr>
                                     <th>Avatar</th>
@@ -395,6 +411,7 @@ const Dashboard = () => {
                                 ))}
                             </tbody>
                         </table>
+                    </motion.table>
                     </ScrollArea>
 
                     {/* 
