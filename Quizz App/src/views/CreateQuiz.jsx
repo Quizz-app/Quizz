@@ -331,7 +331,8 @@ const CreateQuiz = () => {
                     transition={{ duration: 0.9 }}
                 >
 
-                    <div className="flex flex-row items-center justify-between">
+                    <div className="mx-20">
+                    <div className="flex flex-row items-center justify-between mt-10">
                         {/* quiz title */}
                         <div className="mb-2">
                             <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
@@ -650,6 +651,7 @@ const CreateQuiz = () => {
                             </div>
                         </div>
                     </div>
+                </div>
 
                 </motion.div>
             </AnimatePresence>
