@@ -19,8 +19,8 @@ export const QuizCardPaginated = ({ currentQuiz, quizzesPerPage, teamId }) => {
 
     return (
         <>
-            <div className="flex flex-col ">
-                <div className="grid grid-cols-5">
+            <div className="flex flex-col">
+                <div className="grid grid-cols-4">
                     {currentQuizzes.map((quiz, index) => (
                         <ThreeDCardDemo key={index} quiz={quiz} teamId={teamId} />
                     ))}

@@ -126,7 +126,7 @@ const CreateClass = () => {
                     </div>
                     <div className="divider"></div>
                     <div className="">
-                        <QuizCardPaginated currentQuiz={classQuizzes} quizzesPerPage={itemsPerPage} deleteQuiz={handleRemoveQuiz} />
+                        <QuizCardPaginated currentQuiz={classQuizzes} quizzesPerPage={itemsPerPage}/>
                     </div>
                 </div>
             </div>

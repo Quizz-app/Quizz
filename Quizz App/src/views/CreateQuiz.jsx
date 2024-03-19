@@ -171,6 +171,10 @@ const CreateQuiz = () => {
             return toast.error("Your question is too long!");
         }
 
+        if (question.points < 1) {
+            return toast.error("Points cannot be less or equal to 0.");
+        }
+
         try {
             await addQuestion(
                 quiz.id,
@@ -303,7 +307,7 @@ const CreateQuiz = () => {
 
 
     const handleSaveQuiz = async (time, grades, endsOn) => {
-        
+
         if (grades.good !== 0 || grades.bad !== 0) {
 
             const endsOnTime = new Date(endsOn).getTime();
@@ -331,342 +335,351 @@ const CreateQuiz = () => {
         }
     };
 
-return (
+    return (
 
-    <div className="m-10">
-        <AnimatePresence mode='wait'>
-            <motion.div
-                initial={{ opacity: 0, x: -200 }} // Starts from the left
-                animate={{ opacity: 1, x: 0 }} // Moves to the center
-                exit={{ opacity: 0, x: 200 }} // Exits to the right
-                transition={{ duration: 0.9 }}
-            >
+        <div className="m-10">
+            <AnimatePresence mode='wait'>
+                <motion.div
+                    initial={{ opacity: 0, x: -200 }} // Starts from the left
+                    animate={{ opacity: 1, x: 0 }} // Moves to the center
+                    exit={{ opacity: 0, x: 200 }} // Exits to the right
+                    transition={{ duration: 0.9 }}
+                >
 
-                <div className="flex flex-row items-center justify-between">
-                    {/* quiz title */}
-                    <div className="mb-2">
-                        <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
-                        {userData?.username !== quiz?.creator && <h1>Created by: {quiz?.creator}</h1>}
-                    </div>
-                    {/* action buttons */}
-                    <div className="flex flex-row items-center justify-center">
-                        <div className="flex flex-col items-center justify-center">
-
-                            <Button onClick={() => handleButtonClick('assignTeam')}> <AiOutlineTeam />   Assign to group</Button>
+                    <div className="flex flex-row items-center justify-between">
+                        {/* quiz title */}
+                        <div className="mb-2">
+                            <h1 className="text-4xl font-bold mb-4">{quiz?.title}</h1>
+                            {userData?.username !== quiz?.creator && <h1>Created by: {quiz?.creator}</h1>}
                         </div>
-                        <div className="flex flex-col items-center justify-center">
+                        {/* action buttons */}
+                        <div className="flex flex-row items-center justify-center">
+                            <div className="flex flex-col items-center justify-center">
 
-                            <Button onClick={() => handleButtonClick('assignClass')}> <AiOutlineTeam />   Assign to class</Button>
-                        </div>
-                        <div className="flex flex-col items-center justify-center">
-                            <Button onClick={() => handleButtonClick('assignUser')}> <PiStudent /> Assign to student</Button>
-                        </div>
-
-                        <div className="flex flex-col items-center justify-center">
-                            <Button onClick={() => navigate("/my-library")}> <MdDoneAll /> Back to library</Button>
-                        </div>
-
-                    </div>
-
-                </div>
-                {/* THIS IS THE GRAY LINE*/}
-                <div className="border-t-2 border-gray-200 mb-3"></div>
-                {/* Here we can see all the teams that the current user is in*/}
-                {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
-                    <div>
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
-                            animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
-                            exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
-                            transition={{ duration: 0.5 }} // The duration of the transition
-                        >
-                            <h1 className="text-xl mb-5 mt-3">Teams you participate in</h1>
-                            <table className="table mb-10">
-                                <thead>
-                                    <tr>
-                                        <th>Team Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredTeams.map((team) =>
-                                        <tr key={team.id}>
-                                            <td>{team.name}</td>
-                                            <td>
-                                                <button onClick={() => handleAddQuizToTeam(team.id)} className="btn btn-xs mb-1">Add quiz to team</button>
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </motion.div>
-                    </div>
-                )}
-                {openPanel === 'assignClass' && filteredClasses.length > 0 && (
-                    <div>
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
-                            animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
-                            exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
-                            transition={{ duration: 0.5 }} // The duration of the transition
-                        >
-                            <h1 className="text-xl mb-5 mt-3">Classes you participate in</h1>
-                            <table className="table mb-10">
-                                <thead>
-                                    <tr>
-                                        <th>Class Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredClasses.map((classes) =>
-                                        <tr key={classes.id}>
-                                            <td>{classes.name}</td>
-                                            <td>
-                                                <button onClick={() => handleAddQuizToClass(classes.id)} className="btn btn-xs mb-1">Add quiz to class</button>
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </motion.div>
-                    </div>
-                )}
-
-                {/* Here we can see all the students that are in the system*/}
-                {openPanel === 'assignUser' && students.length > 0 && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
-                        animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
-                        exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
-                        transition={{ duration: 0.5 }} // The duration of the transition
-                    >
-                        <div className="flex flex-col mb-10">
-                            <div className="w-96 justify">
-                                <Input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
+                                <Button onClick={() => handleButtonClick('assignTeam')}> <AiOutlineTeam />   Assign to group</Button>
                             </div>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col items-center justify-center">
 
-                                <div className="flex justify-center">
-                                    <h1 className="text-xl mb-5 mt-3">Results</h1>
-                                </div>
-                                <div id="student-table">
-                                    {searchTerm.length >= 3 &&
-                                        <div className="overflow-x-auto">
-
-                                            {searchTerm.length > 0 && searchTerm ? (
-                                                <TableWithPagination array={filteredStudents} pages={5} addMember={handleAddQuizToStudent} buttonText={'Send to student'} />
-                                            ) : (
-                                                <div className="flex justify-center mt-5 mb-5">
-                                                    <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
-                                                </div>
-                                            )}
-                                        </div>
-                                    }
-                                </div>
+                                <Button onClick={() => handleButtonClick('assignClass')}> <AiOutlineTeam />   Assign to class</Button>
                             </div>
-                        </div>
-                    </motion.div>
-                )}
-                <div className="flex flex-row items-center justify-between mb-3">
-                    <div id="questions-score">
-                        <h1 className="text-xl mb-2 mt-3">Total question points: {totalPoints}</h1>
-                    </div>
+                            <div className="flex flex-col items-center justify-center">
+                                <Button onClick={() => handleButtonClick('assignUser')}> <PiStudent /> Assign to student</Button>
+                            </div>
 
-                    <div className="flex flex-row items-center justify-center">
-                        <motion.button
-                            onClick={questionCreation}
-                            className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-light transition duration-200 ease-linear "
-                            initial={{ scale: 2 }}
-                            animate={{ scale: [1, 1.05, 1] }}
-                            transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
-                        >
-                            Add Question +
-                        </motion.button>
-                        <button onClick={() => handleButtonClick('assignAssistant')} className="relative inline-flex h-10 overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 ml-3">
-                            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-                            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-white px-3 py-1 text-sm font-medium text-slate-950 backdrop-blur-3xl">
-                                Use Assistant ✨
-                            </span>
-                        </button>
-                    </div>
-                </div>
-                {/* THIS IS THE GRAY LINE*/}
-                <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
+                            <div className="flex flex-col items-center justify-center">
+                                <Button onClick={() => navigate("/my-library")}> <MdDoneAll /> Back to library</Button>
+                            </div>
 
-                <div className='flex justify-center items-center'>
-                    {openPanel === 'assignAssistant' && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
-                            animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
-                            exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
-                            transition={{ duration: 0.5 }} // The duration of the transition
-                        >
-                            <ScrollArea className="flex flex-grow h-[300px] w-[1350px] rounded-xl border p-4 justify-center items-center">
-                                <Assistant quiz={quiz} questions={questions} />
-                            </ScrollArea>
-                        </motion.div>
-                    )}
-                </div>
-                <div className="flex flex-col justify-between">
-                    <div className="flex flex-row ">
-                        <div id='questions-cards' className="grid grid-cols-3 w-800px mr-5">
-                            {questions ? (
-                                questions.map((question, index) => (
-                                    <motion.div
-                                        key={index}
-                                        className="p-0 m-0 w-24 h-32" // adjust the size of the grid items
-                                        initial={{ scale: 0.3, zIndex: 0 }} // card is initially smaller and has a z-index of 0
-                                        whileHover={{ scale: 1.1, zIndex: 1 }} // card scales up and has a z-index of 1 when hovered over
-                                        transition={{ duration: 0.5 }}
-                                    >
-                                        <QuestionCard
-                                            className="p-0 m-0"
-                                            content={question.content}
-                                            quizId={id}
-                                            questionId={question.id}
-                                            answers={question.answers}
-                                            correctAnswer={question.correctAnswer}
-                                            points={Number(question.points)}
-                                            handleUpdateQuestion={handleUpdateQuestion}
-                                            onDelete={handleDeleteQuestion}
-                                        />
-                                    </motion.div>
-                                ))
-                            ) : (
-                                <h1>No questions yet</h1>
-                            )}
                         </div>
-                        {createMode && (
+
+                    </div>
+                    {/* THIS IS THE GRAY LINE*/}
+                    <div className="border-t-2 border-gray-400 mb-3"></div>
+                    {/* Here we can see all the teams that the current user is in*/}
+                    {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
+                        <div>
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
                                 animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
                                 exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
                                 transition={{ duration: 0.5 }} // The duration of the transition
                             >
-                                <div id="create-question-card" className="mr-10 mt-10 ">
-                                    <div className='card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl'>
-                                        <div className="card-body">
-                                            <Label htmlFor="question">Question</Label>
-                                            <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
-                                            <Label htmlFor="question">Add answer:</Label>
-                                            {answers.map((answer, index) => (
-                                                <div key={index} className="flex flex-row justify-between">
-                                                    <input className="checkbox checkbox-success mr-2" type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
-                                                    <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)} />
-                                                    <button className="btn btn-xs ml-2" onClick={() => handleRemoveAnswer(index)}>Remove</button>
+                                <h1 className="text-xl mb-5 mt-3">Teams you participate in</h1>
+                                <table className="table mb-10">
+                                    <thead>
+                                        <tr>
+                                            <th>Team Name</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredTeams.map((team) =>
+                                            <tr key={team.id}>
+                                                <td>{team.name}</td>
+                                                <td>
+                                                    <button onClick={() => handleAddQuizToTeam(team.id)} className="btn btn-xs mb-1">Add quiz to team</button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </motion.div>
+                        </div>
+                    )}
+                    {openPanel === 'assignClass' && filteredClasses.length > 0 && (
+                        <div>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
+                                animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
+                                exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+                                transition={{ duration: 0.5 }} // The duration of the transition
+                            >
+                                <h1 className="text-xl mb-5 mt-3">Classes you participate in</h1>
+                                <table className="table mb-10">
+                                    <thead>
+                                        <tr>
+                                            <th>Class Name</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredClasses.map((classes) =>
+                                            <tr key={classes.id}>
+                                                <td>{classes.name}</td>
+                                                <td>
+                                                    <button onClick={() => handleAddQuizToClass(classes.id)} className="btn btn-xs mb-1">Add quiz to class</button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </motion.div>
+                        </div>
+                    )}
+
+                    {/* Here we can see all the students that are in the system*/}
+                    {openPanel === 'assignUser' && students.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
+                            animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
+                            exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+                            transition={{ duration: 0.5 }} // The duration of the transition
+                        >
+                            <div className="flex flex-col mb-10">
+                                <div className="w-96 justify">
+                                    <Input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for student" />
+                                </div>
+                                <div className="flex flex-col">
+
+                                    <div className="flex justify-center">
+                                        <h1 className="text-xl mb-5 mt-3">Results</h1>
+                                    </div>
+                                    <div id="student-table">
+                                        {searchTerm.length >= 3 &&
+                                            <div className="overflow-x-auto">
+
+                                                {searchTerm.length > 0 && searchTerm ? (
+                                                    <TableWithPagination array={filteredStudents} pages={5} addMember={handleAddQuizToStudent} buttonText={'Send to student'} />
+                                                ) : (
+                                                    <div className="flex justify-center mt-5 mb-5">
+                                                        <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                    <div className="flex flex-row items-center justify-between mb-3">
+                        <div id="questions-score">
+                            <h1 className="text-xl mb-2 mt-3">Total question points: {totalPoints}</h1>
+                        </div>
+
+                        <div className="flex flex-row items-center justify-center">
+                            <motion.button
+                                onClick={questionCreation}
+                                className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
+                                initial={{ scale: 2 }}
+                                animate={{ scale: [1, 1.05, 1] }}
+                                transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                            >
+                                Add Question +
+                            </motion.button>
+                            <button onClick={() => handleButtonClick('assignAssistant')} className="relative inline-flex h-10 overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 ml-3">
+                                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-white px-3 py-1 text-sm font-medium text-slate-950 backdrop-blur-3xl">
+                                    Use Assistant ✨
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    {/* THIS IS THE GRAY LINE*/}
+                    <div className="border-t-2 border-gray-400 mt-2 mb-2"></div>
+
+                    <div className='flex justify-center items-center'>
+                        {openPanel === 'assignAssistant' && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
+                                animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
+                                exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+                                transition={{ duration: 0.5 }} // The duration of the transition
+                            >
+                                <ScrollArea className="flex flex-grow h-[300px] w-[1350px] rounded-xl border p-4 justify-center items-center">
+                                    <Assistant quiz={quiz} questions={questions} />
+                                </ScrollArea>
+                            </motion.div>
+                        )}
+                    </div>
+                    <div className="flex flex-col justify-between">
+                        <div className="flex flex-row ">
+                            <div id='questions-cards' className="grid grid-cols-3 w-800px mr-5">
+                                {questions ? (
+                                    questions.map((question, index) => (
+                                        <motion.div
+                                            key={index}
+                                            className="p-0 m-0 w-24 h-32" // adjust the size of the grid items
+                                            initial={{ scale: 0.3, zIndex: 0 }} // card is initially smaller and has a z-index of 0
+                                            whileHover={{ scale: 1.1, zIndex: 1 }} // card scales up and has a z-index of 1 when hovered over
+                                            transition={{ duration: 0.5 }}
+                                        >
+                                            <QuestionCard
+                                                className="p-0 m-0"
+                                                content={question.content}
+                                                quizId={id}
+                                                questionId={question.id}
+                                                answers={question.answers}
+                                                correctAnswer={question.correctAnswer}
+                                                points={Number(question.points)}
+                                                handleUpdateQuestion={handleUpdateQuestion}
+                                                onDelete={handleDeleteQuestion}
+                                            />
+                                        </motion.div>
+                                    ))
+                                ) : (
+                                    <h1>No questions yet</h1>
+                                )}
+                            </div>
+                            {createMode && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
+                                    animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
+                                    exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+                                    transition={{ duration: 0.5 }} // The duration of the transition
+                                >
+                                    <div id="create-question-card" className="mr-10 mt-10 ">
+                                        <div className='card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl'>
+                                            <div className="card-body">
+                                                <Label htmlFor="question">Question</Label>
+                                                <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
+                                                <Label htmlFor="question">Add answer:</Label>
+                                                {answers.map((answer, index) => (
+                                                    <div key={index} className="flex flex-row justify-between">
+                                                        <input className="checkbox checkbox-success mr-2" type="checkbox" checked={correctAnswerIndices.includes(index)} onChange={() => handleCheckboxChange(index)} />
+                                                        <Input type="text" placeholder={`Enter answer ${index + 1}`} value={quiz?.answers} onChange={handleAnswerChange(index)} />
+                                                        <button className="btn btn-xs ml-2" onClick={() => handleRemoveAnswer(index)}>Remove</button>
+                                                    </div>
+                                                ))}
+                                                <button className="btn btn-xs bg-[#90ee90]" onClick={handleAddAnswer}>Include Answer</button>
+                                                <Label htmlFor="points">Set points:</Label>
+                                                <Input id="points" type="number" value={question.points} onChange={handlePointsChange} />
+                                                <div className="flex mt-3">
+                                                    <MdDownloadDone className="mr-5" onClick={handleAddQuestion} />
+                                                    <MdCancel onClick={() => setCreateMode(false)} />
                                                 </div>
-                                            ))}
-                                            <button className="btn btn-xs bg-[#90ee90]" onClick={handleAddAnswer}>Include Answer</button>
-                                            <Label htmlFor="points">Set points:</Label>
-                                            <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
-                                            <div className="flex mt-3">
-                                                <MdDownloadDone className="mr-5" onClick={handleAddQuestion} />
-                                                <MdCancel onClick={() => setCreateMode(false)} />
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </motion.div>
-                        )}
+                                </motion.div>
+                            )}
 
-                        <div id="quiz-management" className="flex flex-col mb-5 mt-7 ml-10">
-                            <div className="mb-10">
-                                <h1 className="text-xl mb-2 mt-3">Quiz Description</h1>
-                                <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
-                                <div className="w-96">
-                                    <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
-                                </div>
-                            </div>
-                            <div className="flex flex-row justify-between mb-5">
-                                <div className="flex flex-col">
-                                    <h1 className="text-xl mb-2 mt-3">Time Limit</h1>
-                                    <div className="border-t-2 border-gray-200  mb-2"></div>
-                                    <Popover open={open} onOpenChange={setOpen}>
-                                        <PopoverTrigger asChild>
-                                            <Button variant="outline" role="combobox" className="w-[200px] justify-between">
-                                                {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
-                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-[200px] p-0">
-                                            <Command>
-                                                <CommandGroup>
-                                                    {timeRanges.map((timeRange) => (
-                                                        <CommandItem
-                                                            key={timeRange.value}
-                                                            value={timeRange.value}
-                                                            onSelect={async (currentValue) => {
-                                                                setTimeLimit(Number(currentValue));
-                                                                setOpen(false);
-                                                                await handleSetTime(currentValue);
-                                                            }}>
-                                                            <Check className={cn("mr-2 h-5 w-4", timeLimit === timeRange.value ? "opacity-100" : "opacity-0")} />
-                                                            {timeRange.label}
-                                                        </CommandItem>
-                                                    ))}
-                                                </CommandGroup>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
-                                <div className="ml-11 ">
-                                    <h1 className="text-xl mb-2 mt-3">Quiz Deadline</h1>
-                                    <div className="border-t-2 border-gray-200  mb-2"></div>
-                                    <div className="flex flex-row mt-2 mb-5">
-                                        <DatePickerDemo
-                                            selected={date}
-                                            onSelect={setDate}
-                                        />
-                                    </div>
-                                    <div className="">
-                                        {quiz?.endsOn && (
-                                            remainingTime > 0
-                                                ? <p>Time left: {msToTime(remainingTime)}</p>
-                                                : <p>Ended On: {`${formatDate(quiz?.endsOn)}`}</p>
-                                        )}
+                            <div id="quiz-management" className="flex flex-col mb-5 mt-7 ml-10">
+                                <div className="mb-10">
+                                    <h1 className="text-xl mb-2 mt-3">Quiz Description</h1>
+                                    <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
+                                    <div className="w-96">
+                                        <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
                                     </div>
                                 </div>
-                            </div>
-                            <div className="flex flex-row">
-                                <div >
-                                    <div className="flex justify-between ">
-                                        <h1 className="text-xl mb-2 mt-3">Grading System </h1>
-
-                                        {/* <FaArrowRight className="mt-5"/> */}
+                                <div className="flex flex-row justify-between mb-5">
+                                    <div className="flex flex-col">
+                                        <h1 className="text-xl mb-2 mt-3">Time Limit</h1>
+                                        <div className="border-t-2 border-gray-200  mb-2"></div>
+                                        <Popover open={open} onOpenChange={setOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button variant="outline" role="combobox" className="w-[200px] justify-between">
+                                                    {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-[200px] p-0">
+                                                <Command>
+                                                    <CommandGroup>
+                                                        {timeRanges.map((timeRange) => (
+                                                            <CommandItem
+                                                                key={timeRange.value}
+                                                                value={timeRange.value}
+                                                                onSelect={async (currentValue) => {
+                                                                    setTimeLimit(Number(currentValue));
+                                                                    setOpen(false);
+                                                                    await handleSetTime(currentValue);
+                                                                }}>
+                                                                <Check className={cn("mr-2 h-5 w-4", timeLimit === timeRange.value ? "opacity-100" : "opacity-0")} />
+                                                                {timeRange.label}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
-                                    <div className="border-t-2 border-gray-200  mb-2 " ></div>
-                                    <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
-                                    <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
+                                    <div className="ml-11 ">
+                                        <h1 className="text-xl mb-2 mt-3">Quiz Deadline</h1>
+                                        <div className="border-t-2 border-gray-200  mb-2"></div>
+                                        <div className="flex flex-row mt-2 mb-5">
+                                            <DatePickerDemo
+                                                selected={date}
+                                                onSelect={setDate}
+                                            />
+                                        </div>
+                                        <div className="">
+                                            {quiz?.endsOn && (
+                                                remainingTime > 0
+                                                    ? <p>Time left: {msToTime(remainingTime)}</p>
+                                                    : <p>Ended On: {`${formatDate(quiz?.endsOn)}`}</p>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex flex-col ml-16 mt-10">
-                                    <h1 className="text-xl mt-3">Good: {grades.good} and above</h1>
-                                    <h1 className="text-xl  ">Satisfactory: {grades.bad} - {grades.good}</h1>
-                                    <h1 className="text-xl ">Bad: {grades.bad} and below</h1>
-                                </div>
-                            </div>
+                                <div className="flex flex-row">
+                                    <div >
+                                        <div className="flex justify-between ">
+                                            <h1 className="text-xl mb-2 mt-3">Grading System </h1>
 
-                            <div className="flex justify-center mt-16">
-                                <motion.button
-                                    onClick={() => handleSaveQuiz(timeLimit, grades, date)}
-                                    className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-light transition duration-200 ease-linear "
-                                    initial={{ scale: 2 }}
-                                    animate={{ scale: [1, 1.05, 1] }}
-                                    transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
-                                >
-                                    Save Changes
-                                </motion.button>
+                                            {/* <FaArrowRight className="mt-5"/> */}
+                                        </div>
+                                        <div className="border-t-2 border-gray-200  mb-2 " ></div>
+                                        <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
+                                        <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
+                                    </div>
+                                    <div className="flex flex-col ml-16 mt-10">
+                                        <h1 className="text-xl mt-3">Good: {grades.good} and above</h1>
+                                        <h1 className="text-xl  ">Satisfactory: {grades.bad} - {grades.good}</h1>
+                                        <h1 className="text-xl ">Bad: {grades.bad} and below</h1>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-around mt-16 mr-10">
+                                    <motion.button
+                                        onClick={() => handleSaveQuiz(timeLimit, grades, date)}
+                                        className="mr-10 shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
+                                        initial={{ scale: 2 }}
+                                        animate={{ scale: [1, 1.05, 1] }}
+                                        transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                    >
+                                        Save Changes
+                                    </motion.button>
+                                    <motion.button
+                                        onClick={handleDeleteQuiz}
+                                        className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-red-600 px-8 py-2 bg-red-500 rounded-md text-black font-bold transition duration-200 ease-linear "
+                                        initial={{ scale: 2 }}
+                                        animate={{ scale: [1, 1.05, 1] }}
+                                        transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                    >
+                                        Delete quiz
+                                    </motion.button>
+                                </div>
+                              
                             </div>
-                            <button onClick={handleDeleteQuiz} className="btn"> Delete quiz</button>
                         </div>
                     </div>
-                </div>
 
-            </motion.div>
-        </AnimatePresence>
+                </motion.div>
+            </AnimatePresence>
 
-    </div>
-);
+        </div>
+    );
 };
 
 export default CreateQuiz;
