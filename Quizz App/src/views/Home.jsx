@@ -161,7 +161,7 @@ const Home = () => {
                         <div className="flex flex-row ">
                             <div className=" flex flex-col ">
                                 <div id="recent" className="flex flex-col">
-                                    <h1 className=" text-2xl ml-10 " >
+                                    <h1 className="text-2xl ml-10 font-bold text-[#00014f60]" >
                                         Your Recent Quizzes
                                     </h1>
                                     <div className="flex flex-row ">
@@ -191,7 +191,7 @@ const Home = () => {
                                     </div>
                                 </div>
                                 <div id="popular" className="flex flex-col ml-10">
-                                    <div className="flex mt-15" style={{ margin: '-30px 10px' }}>
+                                    <div className="flex mt-15 font-bold text-[#00014f60]" style={{ margin: '-30px 10px' }}>
                                         <h1 className="text-2xl">
                                             Popular
                                         </h1>
@@ -204,7 +204,7 @@ const Home = () => {
                         </div>
                         <div>
                             <div>
-                                <h2 className="text-center text-3xl mr-5 mb-10">Trending Categories</h2>
+                                <h2 className="text-center text-3xl mr-5 mb-10 font-bold text-[#00014f60]">Trending Categories</h2>
                                 {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
                                     <div key={index}>
                                         <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
