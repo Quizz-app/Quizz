@@ -116,110 +116,110 @@ const Home = () => {
         <>
             {userData ?
                 <>
-                <div className=" w-full">
-                    <div className=" mx-20 ">
-                    <div className="flex flex-col mt-12 ">
+                    <div className=" w-full">
+                        <div className=" mx-20 ">
+                            <div className="flex flex-col mt-12 ">
 
-                        <div className="ml-10">
-                        <div className="flex justify-between w-full ">
-                       
-                            <TextGenerateEffect words={welcoming} />
-                          
-                            <Input 
-                                type="text" 
-                                value={searchTerm} 
-                                onChange={handleSearchChange}
-                                placeholder="Search content here..."
-                                className="text-start w-96 shadow-custom-light dark:shadow-custom-dark" 
-                            />
-                        </div>
-                        </div>
+                                <div className="ml-10">
+                                    <div className="flex justify-between w-full ">
 
-                        <div className="flex justify-center mb-10">
-                            {searchTerm.length > 2 &&
-                                <div className="flex flex-col bg-base border rounded-2xl mb-5">
-                                    <div className="flex flex-row justify-center">
-                                        <h1 className="mt-5 text-2xl ml-5 mr-5">
-                                            Search results
-                                        </h1>
+                                        <TextGenerateEffect words={welcoming} />
+
+                                        <Input
+                                            type="text"
+                                            value={searchTerm}
+                                            onChange={handleSearchChange}
+                                            placeholder="Search content here..."
+                                            className="text-start w-96 shadow-custom-light dark:shadow-custom-dark"
+                                        />
                                     </div>
-                                    <div className="flex flex-row ml-5">
-                                        {searchTerm.length > 2 &&
-                                            searchQuizzes
-                                                .filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
-                                                .map((quiz, index) => (
-                                                    <ThreeDCardDemo key={index} quiz={quiz} />
-                                                ))}
-                                    </div>
-                                    {searchQuizzes.filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 &&
-                                        <div className="flex justify-center mt-5 mb-5">
-                                            <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
-                                        </div>
-                                    }
-                                </div>}
-                        </div>
-                        <div className="flex flex-row ">
-                            <div className=" flex flex-col ">
-                                <div id="recent" className="flex flex-col">
-                                    <h1 className="text-2xl ml-10 font-bold text-[#00014f60]" >
-                                        Your Recent Quizzes
-                                    </h1>
-                                    <div className="flex flex-row ">
-                                        <div id="your-recent" className="ml-10 mr-10">
-                                            {userData.role === 'student' ? (
-                                                <div id="student" className="flex flex-row ">
-                                                    {studentQuizzes && studentQuizzes.length > 0 ? (
-                                                        studentQuizzes.map((quiz, index) => (
-                                                            <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
-                                                        ))
-                                                    ) :
-                                                        (
-                                                            <div className="flex flex-row justify-center">
-                                                                <p className="text-2xl">No Quiz Contributions Yet</p>
-                                                            </div>
-                                                        )}
+                                </div>
+
+                                <div className="flex justify-center mb-10">
+                                    {searchTerm.length > 2 &&
+                                        <div className="flex flex-col bg-base border rounded-2xl mb-5">
+                                            <div className="flex flex-row justify-center">
+                                                <h1 className="mt-5 text-2xl ml-5 mr-5">
+                                                    Search results
+                                                </h1>
+                                            </div>
+                                            <div className="flex flex-row ml-5">
+                                                {searchTerm.length > 2 &&
+                                                    searchQuizzes
+                                                        .filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                                                        .map((quiz, index) => (
+                                                            <ThreeDCardDemo key={index} quiz={quiz} />
+                                                        ))}
+                                            </div>
+                                            {searchQuizzes.filter(quiz => quiz.title.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 &&
+                                                <div className="flex justify-center mt-5 mb-5">
+                                                    <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>
                                                 </div>
-                                            ) : (
-                                                <div id='teacher' className="flex flex-row w-3/4">
-                                                    {teacherQuizzes.map((quiz, index) => (
+                                            }
+                                        </div>}
+                                </div>
+                                <div className="flex flex-row ">
+                                    <div className=" flex flex-col ">
+                                        <div id="recent" className="flex flex-col">
+                                            <h1 className="text-2xl ml-10 font-bold" >
+                                                Your Recent Quizzes
+                                            </h1>
+                                            <div className="flex flex-row ">
+                                                <div id="your-recent" className="ml-10 mr-10">
+                                                    {userData.role === 'student' ? (
+                                                        <div id="student" className="flex flex-row ">
+                                                            {studentQuizzes && studentQuizzes.length > 0 ? (
+                                                                studentQuizzes.map((quiz, index) => (
+                                                                    <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
+                                                                ))
+                                                            ) :
+                                                                (
+                                                                    <div className="flex flex-row justify-center">
+                                                                        <p className="text-2xl">No Quiz Contributions Yet</p>
+                                                                    </div>
+                                                                )}
+                                                        </div>
+                                                    ) : (
+                                                        <div id='teacher' className="flex flex-row w-3/4">
+                                                            {teacherQuizzes.map((quiz, index) => (
+                                                                <ThreeDCardDemo key={index} quiz={quiz} />
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div id="popular" className="flex flex-col ml-10">
+                                            <div className="flex mt-15 font-bold" style={{ margin: '-30px 10px' }}>
+                                                <h1 className="text-2xl">
+                                                    Popular
+                                                </h1>
+                                            </div>
+                                            <div className="flex flex-row">
+                                                <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={5} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>
+                                        <h2 className="text-center text-3xl mr-5 mb-10 font-bold">Trending Categories</h2>
+                                        {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
+                                            <div key={index}>
+                                                <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
+                                                <div className="flex flex-row w-full ml-10" style={{ margin: '-30px 30px' }}>
+                                                    {categoryWithQuizzes.quizzes.map((quiz, index) => (
                                                         <ThreeDCardDemo key={index} quiz={quiz} />
                                                     ))}
                                                 </div>
-                                            )}
-                                        </div>
-
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                                <div id="popular" className="flex flex-col ml-10">
-                                    <div className="flex mt-15 font-bold text-[#00014f60]" style={{ margin: '-30px 10px' }}>
-                                        <h1 className="text-2xl">
-                                            Popular
-                                        </h1>
-                                    </div>
-                                    <div className="flex flex-row">
-                                        <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={5} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div>
-                                <h2 className="text-center text-3xl mr-5 mb-10 font-bold text-[#00014f60] ">Trending Categories</h2>
-                                {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
-                                    <div key={index}>
-                                        <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
-                                        <div className="flex flex-row w-full ml-10" style={{ margin: '-30px 30px' }}>
-                                            {categoryWithQuizzes.quizzes.map((quiz, index) => (
-                                                <ThreeDCardDemo key={index} quiz={quiz} />
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
                             </div>
                         </div>
                     </div>
-                </div>
-                </div>
                 </>
                 :
                 <>
@@ -233,7 +233,7 @@ const Home = () => {
                         >
 
                             <div>
-                                
+
                                 <div className="flex flex-col items-center justify-center mt-40  ">
                                     <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base  ">
                                         The road to quality education stats here
