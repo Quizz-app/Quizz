@@ -13,7 +13,7 @@ const Header = ({ theme, onThemeChange }) => {
   const [quizInvites, setQuizInvites] = useState([]);
   const [classInvites, setClassInvites] = useState([]);
   const navigate = useNavigate();
-  const isChecked = theme === "synthwave";
+  const isChecked = theme === "aqua";
   const [userAvatar, setUserAvatar] = useState(userData?.avatar);
 
 
@@ -83,11 +83,11 @@ const Header = ({ theme, onThemeChange }) => {
             <Link to="/my-library" className="font-semibold mb-4 mr-8"> Library </Link>
             {userData.role === 'teacher' ? (
               <>
-                <Link to="/my-teams" className="font-semibold mb-4 mr-8">Teams</Link>
-                <Link to="/my-classes" className="font-semibold mb-4 mr-8">Classes</Link>
+                <Link to="/my-teams" className="font-bold  mr-8">Teams</Link>
+                <Link to="/my-classes" className="font-bold  mr-8">Classes</Link>
               </>
             ) : (
-              <Link to="/my-classes" className="font-semibold mb-4 mr-15">Classes</Link>
+              <Link to="/my-classes" className="font-bold mr-15">Classes</Link>
             )}
           </div>
         </div>

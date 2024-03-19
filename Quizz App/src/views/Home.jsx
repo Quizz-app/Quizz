@@ -16,9 +16,6 @@ import QuizCardPaginated from "../components/QuizCardPaginated";
 import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { StickyScroll } from "../components/ui/sticky-scroll-reveal";
 import { TextGenerateEffect } from "../components/ui/text generate/text-generate-effect";
-
-
-
 import { words, testimonials, content } from "../services/words.jsx";
 
 const Home = () => {
@@ -164,7 +161,7 @@ const Home = () => {
                         <div className="flex flex-row ">
                             <div className=" flex flex-col ">
                                 <div id="recent" className="flex flex-col">
-                                    <h1 className=" text-2xl ml-10 " >
+                                    <h1 className="text-2xl ml-10 font-bold text-[#00014f60]" >
                                         Your Recent Quizzes
                                     </h1>
                                     <div className="flex flex-row ">
@@ -194,7 +191,7 @@ const Home = () => {
                                     </div>
                                 </div>
                                 <div id="popular" className="flex flex-col ml-10">
-                                    <div className="flex mt-15" style={{ margin: '-30px 10px' }}>
+                                    <div className="flex mt-15 font-bold text-[#00014f60]" style={{ margin: '-30px 10px' }}>
                                         <h1 className="text-2xl">
                                             Popular
                                         </h1>
@@ -207,7 +204,7 @@ const Home = () => {
                         </div>
                         <div>
                             <div>
-                                <h2 className="text-center text-3xl mr-5 mb-10">Trending Categories</h2>
+                                <h2 className="text-center text-3xl mr-5 mb-10 font-bold text-[#00014f60]">Trending Categories</h2>
                                 {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
                                     <div key={index}>
                                         <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
@@ -236,12 +233,13 @@ const Home = () => {
                         >
 
                             <div>
-                                <div className="flex flex-col items-center justify-center mt-20 ">
+                                
+                                <div className="flex flex-col items-center justify-center mt-40  ">
                                     <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base  ">
                                         The road to quality education stats here
                                     </p>
                                     <TypewriterEffectSmooth words={words} />
-                                    <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
+                                    <div className="flex flex-col justify-center md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
                                         <motion.button
                                             onClick={() => navigate("/register")}
                                             className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(0,118,255,0.9)] px-8 py-2 bg-[#0070f3] rounded-md text-white font-light transition duration-200 ease-linear"
@@ -251,7 +249,6 @@ const Home = () => {
                                         >
                                             Join Now
                                         </motion.button>
-
                                     </div>
                                 </div>
                                 {/* //hero */}
@@ -287,12 +284,12 @@ const Home = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-40 ">
+                                <div className="mt-40">
                                     <div className="flex flex-col items-start justify-center ml-40">
                                         <h1 className="text-3xl text-start font-bold ">Evolution of the way we teach and learn</h1>
 
                                     </div>
-                                    <div className="border-t-2 border-neon-green mb-5 w-2/4"></div>
+                                    <div className="w-2/4 h-1 bg-gradient-to-r from-[#00ff8c] via-[#00ff8c] to-transparent"></div>
 
                                     <div className="p-10">
                                         <StickyScroll content={content} />
@@ -312,7 +309,7 @@ const Home = () => {
 
                                 {/* //accordion - q&a */}
                                 <div>
-                                    <div className="flex flex-col items-center justify-center w-600px mb-5 mt-10">
+                                    <div className="flex flex-col items-center justify-center w-600px mb-5 mt-10 ml-20">
                                         <h1 className="text-4xl text-start font-bold">Q&A</h1>
                                     </div>
                                     <div className="flex items-start justify-center max-w-full pb-20">

@@ -32,7 +32,7 @@ const Dashboard = () => {
     const [clasz, setClas] = useState('');
     const [open, setOpen] = useState(false);
     const [id, setId] = useState('');
-    const [quizId, setQuizId] = useState('' );
+    const [quizId, setQuizId] = useState('');
     const [quizS, setQuiz] = useState('');
     const [rankedQuizSolvers, setRankedQuizSolvers] = useState([]);
 
@@ -70,7 +70,7 @@ const Dashboard = () => {
             if (quizId || (quizzes && quizzes[0])) {
                 const users = await getUsersRankedByScoreOnAQuiz(quizId || quizzes[0].id);
                 setRankedQuizSolvers(users);
-               
+
             }
         })();
     }, [quizId, quizzes]);
@@ -147,13 +147,13 @@ const Dashboard = () => {
                 exit={{ opacity: 0, x: 200 }} // Exits to the right
                 transition={{ duration: 0.9 }}
             >
-                <div className="flex flex-col h-full items-center justify-center mt-10">
-                    <h1 className="mb-10 text-xl">Dashboard</h1>
+                <div className="flex flex-col h-full items-start justify-center mt-10 ml-20 pl-5">
+                    <h1 className="mb-5 text-3xl font-bold ">Dashboard</h1>
                     {userData && (userData.role === 'teacher' || userData.isAdmin === true) ?
                         (<>
                             {/* teacher dashboard */}
                             <div className="flex flex-row h-full items-center justify-between ">
-                                <div className="stats shadow border round-md">
+                                <div className="stats shadow-lg bg-white round-md">
                                     <div className="stat">
                                         <div className="stat-title">Quizzes created:</div>
                                         <div className="stat-value">{quizzesCreated}</div>
@@ -163,7 +163,7 @@ const Dashboard = () => {
 
 
                                 {/* last 20 solvings only for now */}
-                                <div className="stats shadow border round-md">
+                                <div className="stats shadow-lg bg-white  round-md">
                                     <div className="stat">
                                         <div className="stat-title">Average grade</div>
                                         <div className="stat-value">{mostOccuringGrad}</div>
@@ -176,8 +176,8 @@ const Dashboard = () => {
                         :
                         (<>
                             {/* student dashboard */}
-                            <div className="flex flex-row h-full items-center justify-between mb-10">
-                                <div className="stats shadow border-4 round-md w-96 h-40">
+                            <div className="flex flex-row h-full items-center  justify-between mb-10">
+                                <div className="stats shadow border-4 bg-white round-md w-96 h-40">
                                     <div className="stat">
                                         <div className="stat-title">Quizzes solved:</div>
                                         <div className="stat-value">{quizzesSolved}</div>
@@ -185,7 +185,7 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                <div className="stats shadow border-4 round-md ml-20 w-96 h-40">
+                                <div className="stats shadow border-4 bg-white round-md ml-20 w-96 h-40">
                                     <div className="stat">
                                         <div className="stat-title">Average grade</div>
                                         <div className="stat-value">{quizzesGrades}</div>
@@ -193,7 +193,7 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                <div className="stats shadow border-4 round-md ml-20 w-96 h-40">
+                                <div className="stats shadow border-4 bg-white round-md ml-20 w-96 h-40">
                                     <div className="stat">
                                         <div className="stat-title">Place</div>
                                         <div className="stat-value">{currentUserPosition ? `${currentUserPosition}th` : 'Not ranked'}</div>
@@ -268,36 +268,44 @@ const Dashboard = () => {
 
                                 <div className="">
                                     <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl border p-4 justify-center items-center">
-                                        <table className="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Avatar</th>
-                                                    <th>Student</th>
-                                                    <th>Full Name</th>
-                                                    <th>Class rank</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {rankedMembers.map((student, index) => (
-                                                    <tr key={index}>
-                                                        <td>
-                                                            <div className="avatar">
-                                                                <div className="mask mask-squircle w-12 h-12">
-                                                                    <img src={student?.avatar} />
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>{student?.username}</td>
-                                                        <td>{`${student?.firstName} ${student?.lastName}`}</td>
-
-                                                        {index === 0 && <th>{index + 1} <span className="text-2xl">👑</span></th>}
-                                                        {index === 1 && <th>{index + 1} <span className="text-2xl">🏆</span></th>}
-                                                        {index === 2 && <th>{index + 1} <span className="text-2xl">🥉</span></th>}
-
+                                        <motion.table
+                                            className="table bg-white"
+                                            initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above its final position
+                                            animate={{ opacity: 1, y: 0 }} // Moves to its final position and becomes visible
+                                            exit={{ opacity: 0, y: -50 }} // Moves up and becomes invisible
+                                            transition={{ duration: 0.5 }} // The duration of the transition
+                                        >
+                                            <table className="table bg-white">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avatar</th>
+                                                        <th>Student</th>
+                                                        <th>Full Name</th>
+                                                        <th>Class rank</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {rankedMembers.map((student, index) => (
+                                                        <tr key={index}>
+                                                            <td>
+                                                                <div className="avatar">
+                                                                    <div className="mask mask-squircle w-12 h-12">
+                                                                        <img src={student?.avatar} />
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{student?.username}</td>
+                                                            <td>{`${student?.firstName} ${student?.lastName}`}</td>
+
+                                                            {index === 0 ? <th>{index + 1} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
+                                                            {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
+                                                            {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1} </th>}
+
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </motion.table>
                                     </ScrollArea>
                                 </div>
                             </div>
@@ -349,7 +357,7 @@ const Dashboard = () => {
                         </Popover>
                         )}
 
-{/*             
+                    {/*             
                     <table>
                         {rankedQuizSolvers.length > 0 &&
                             rankedQuizSolvers.map((member, index) => {
@@ -359,10 +367,18 @@ const Dashboard = () => {
                                     return null;
                                 }
                             })}
-                    </table> */} 
+                    </table> */}
 
-                    <ScrollArea className="flex flex-grow h-[430px] w-[1500px] rounded-xl border p-4 justify-center items-center">
-                        <table className="table">
+                    <ScrollArea className="flex flex-grow h-[430px] w-[1500px] rounded-xl border-[#00014f60] p-4 justify-center items-center">
+                    <motion.table
+                                            className="table bg-white"
+                                            initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above its final position
+                                            animate={{ opacity: 1, y: 0 }} // Moves to its final position and becomes visible
+                                            exit={{ opacity: 0, y: -50 }} // Moves up and becomes invisible
+                                            transition={{ duration: 0.5 }} // The duration of the transition
+                                        >
+                        <table className="table bg-white">
+                            
                             <thead>
                                 <tr>
                                     <th>Avatar</th>
@@ -382,22 +398,20 @@ const Dashboard = () => {
                                                 </div>
                                             </div>
                                         </td>
-
-                                        
                                         <td>{student.username}</td>
                                         <td>{`${student.firstName} ${student.lastName}`}</td>
-
-                                        
-                                        {(index === 0 && student.quizzes[quizId]) ? <th>{student.quizzes[quizId].score} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
-
-
-                                        {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
-                                        {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1}</th>}
-
+                                        <td>
+                                            {student.quizzes[quizId]?.score}
+                                            {index === 0 && <span className="text-2xl">👑</span>}
+                                            {index === 1 && <span className="text-2xl">🏆</span>}
+                                            {index === 2 && <span className="text-2xl">🥉</span>}
+                                        </td>
+                                        <td>{student.quizzes[quizId]?.grade}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+                    </motion.table>
                     </ScrollArea>
 
                     {/* 

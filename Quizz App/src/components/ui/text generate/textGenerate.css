@@ -5,7 +5,8 @@
     color: transparent;
     position: relative;
     overflow: hidden;
-
+    
+   
   }
   
   .noise-text::after {

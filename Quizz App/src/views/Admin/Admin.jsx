@@ -16,6 +16,10 @@ const Admin = () => {
   const [quizzes, setQuizzes] = useState(null);
   const [blocked, setBlocked] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [usersCurrentPage, setUsersCurrentPage] = useState(1);
+  const [blockedUsersCurrentPage, setBlockedUsersCurrentPage] = useState(1);
+  const [quizzesCurrentPage, setQuizzesCurrentPage] = useState(1);
+  const itemsPerPage = 7;
 
 
   useEffect(() => {
@@ -64,8 +68,21 @@ const Admin = () => {
     updateAdminStatus(userHandle).then(() => setBlocked(!blocked));
   };
 
+
+  const usersTotalPages = Math.ceil(users?.length / itemsPerPage);
+  const blockedUsersTotalPages = Math.ceil(blockedUsers?.length / itemsPerPage);
+  const quizzesTotalPages = Math.ceil(quizzes?.length / itemsPerPage);
+
+  const currentUsers = users?.slice((usersCurrentPage - 1) * itemsPerPage, usersCurrentPage * itemsPerPage);
+  const currentBlockedUsers = blockedUsers?.slice((blockedUsersCurrentPage - 1) * itemsPerPage, blockedUsersCurrentPage * itemsPerPage);
+  const currentQuizzes = quizzes?.slice((quizzesCurrentPage - 1) * itemsPerPage, quizzesCurrentPage * itemsPerPage);
+
+  const paginateUsers = pageNumber => setUsersCurrentPage(pageNumber);
+  const paginateBlockedUsers = pageNumber => setBlockedUsersCurrentPage(pageNumber);
+  const paginateQuizzes = pageNumber => setQuizzesCurrentPage(pageNumber);
+
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto mt-10 mb-5">
       <table className="table">
         <div className="admin-header flex justify-center space-x-4">
           <button
@@ -113,7 +130,7 @@ const Admin = () => {
                 </thead>
                 <tbody className="mb-2 pr-24 text-center">
 
-                  {users?.map((user, index) => (
+                  {currentUsers?.map((user, index) => (
                     <UserView
                       key={user.id}
                       text={"Block"}
@@ -123,8 +140,29 @@ const Admin = () => {
                       lineNumber={index + 1}
                     />
                   ))}
+
                 </tbody>
               </table>
+              {usersTotalPages > 1 && (
+                <div className="justify-center flex mt-5 mb-5">
+                  <div className="divider"></div>
+                  {usersCurrentPage > 1 &&
+                    <button className="join-item btn btn-outline mr-2" onClick={() => paginateUsers(usersCurrentPage - 1)}>Previous</button>
+                  }
+                  {Array.from({ length: usersTotalPages }, (_, i) => i + 1).map(number => (
+                    <button
+                      key={number}
+                      className={`join-item btn mr-2 ${number === usersCurrentPage ? 'btn bg-gradient-to-r from-cyan-500 to-blue-500' : ''}`}
+                      onClick={() => paginateUsers(number)}
+                    >
+                      {number}
+                    </button>
+                  ))}
+                  {usersCurrentPage < usersTotalPages &&
+                    <button className="join-item btn " onClick={() => paginateUsers(usersCurrentPage + 1)}>Next</button>
+                  }
+                </div>
+              )}
             </div>
           )}
           {page === 2 && (
@@ -140,7 +178,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody className="mb-2 pr-24 text-center">
-                  {blockedUsers?.map((user, index) => (
+                  {currentBlockedUsers?.map((user, index) => (
                     <UserView
                       key={user.id}
                       text={"Unblock"}
@@ -151,6 +189,26 @@ const Admin = () => {
                   ))}
                 </tbody>
               </table>
+              {blockedUsersTotalPages > 1 && (
+                <div className="justify-center flex mt-5 mb-5">
+                  <div className="divider"></div>
+                  {blockedUsersCurrentPage > 1 &&
+                    <button className="join-item btn btn-outline mr-2" onClick={() => paginateBlockedUsers(blockedUsersCurrentPage - 1)}>Previous</button>
+                  }
+                  {Array.from({ length: blockedUsersTotalPages }, (_, i) => i + 1).map(number => (
+                    <button
+                      key={number}
+                      className={`join-item btn mr-2 ${number === blockedUsersCurrentPage ? 'btn bg-gradient-to-r from-cyan-500 to-blue-500' : ''}`}
+                      onClick={() => paginateBlockedUsers(number)}
+                    >
+                      {number}
+                    </button>
+                  ))}
+                  {blockedUsersCurrentPage < blockedUsersTotalPages &&
+                    <button className="join-item btn " onClick={() => paginateBlockedUsers(blockedUsersCurrentPage + 1)}>Next</button>
+                  }
+                </div>
+              )}
             </div>
           )}
           {page === 3 && (
@@ -167,7 +225,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody className="mb-2 pr-24 text-center">
-                  {quizzes?.map((quiz, index) => (
+                  {currentQuizzes?.map((quiz, index) => (
                     <tr key={quiz.id} className="">
                       <td>{index + 1}</td>
                       <td>{quiz.title}</td>
@@ -182,6 +240,26 @@ const Admin = () => {
                   ))}
                 </tbody>
               </table>
+              {quizzesTotalPages > 1 && (
+                <div className="justify-center flex mt-5 mb-5">
+                  <div className="divider"></div>
+                  {quizzesCurrentPage > 1 &&
+                    <button className="join-item btn btn-outline mr-2" onClick={() => paginateQuizzes(quizzesCurrentPage - 1)}>Previous</button>
+                  }
+                  {Array.from({ length: quizzesTotalPages }, (_, i) => i + 1).map(number => (
+                    <button
+                      key={number}
+                      className={`join-item btn mr-2 ${number === quizzesCurrentPage ? 'btn bg-gradient-to-r from-cyan-500 to-blue-500' : ''}`}
+                      onClick={() => paginateQuizzes(number)}
+                    >
+                      {number}
+                    </button>
+                  ))}
+                  {quizzesCurrentPage < quizzesTotalPages &&
+                    <button className="join-item btn " onClick={() => paginateQuizzes(quizzesCurrentPage + 1)}>Next</button>
+                  }
+                </div>
+              )}
             </div>
           )}
         </div>
