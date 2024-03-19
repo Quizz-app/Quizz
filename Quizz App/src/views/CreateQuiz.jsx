@@ -303,7 +303,16 @@ const CreateQuiz = () => {
 
 
     const handleSaveQuiz = async (time, grades, endsOn) => {
+        
         if (grades.good !== 0 || grades.bad !== 0) {
+
+            const endsOnTime = new Date(endsOn).getTime();
+            const currentTime = new Date().getTime();
+
+            if (endsOnTime < currentTime) {
+                return toast.error('End time cannot be in the past.');
+            }
+
             const updatedQuiz = { ...quiz, quizTime: Number(time), grades };
             try {
                 await updateQuiz(id, updatedQuiz);

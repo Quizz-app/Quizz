@@ -187,7 +187,6 @@ const Home = () => {
                                                         </div>
                                                     )}
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div id="popular" className="flex flex-col ml-10">
