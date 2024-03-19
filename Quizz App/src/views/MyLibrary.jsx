@@ -210,7 +210,7 @@ const MyLibrary = () => {
                         </>
                     ) : (
                         <>
-                            <div className="flex flex-col h-full  justify-between mx-20 mb-10">
+                            <div className="flex flex-col h-full  justify-between mx-20 mb-10 mt-10">
                                 <p >Here you can see the quizzes you have completed or the ones which</p>
                                 <p >which are assigned to you, you can see the results of your quiz</p>
                             </div>

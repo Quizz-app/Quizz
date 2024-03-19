@@ -52,6 +52,8 @@ const App = () => {
   const handleThemeChange = (event) => {
     setTheme(event.target.checked ? "synthwave" : "1");
   };
+
+  console.log(context);
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
@@ -71,9 +73,9 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/my-library" element={<AuthenticationRequired> <MyLibrary /> </AuthenticationRequired>} />
                 <Route path="/my-teams" element={<AuthenticationRequired> <MyTeamsView /> </AuthenticationRequired>} />
-                <Route path="/quiz-preview/:id" element={<AuthenticationRequired> <QuizPreview /> </AuthenticationRequired>} />
+                <Route path="/quiz-preview/:id" element={<QuizPreview />} />
                 <Route path="/my-classes" element={<AuthenticationRequired> <MyClassesView /> </AuthenticationRequired>} />
-                <Route path="/quiz-solve/:id" element={<AuthenticationRequired> <QuizSolve /> </AuthenticationRequired>} />
+                <Route path="/quiz-solve/:id" element={<QuizSolve />} />
                 <Route path="/team/:id" element={<AuthenticationRequired> <CreateTeam /> </AuthenticationRequired>} />
                 <Route path="/class/:id" element={<AuthenticationRequired> <CreateClass /> </AuthenticationRequired>} />
                 <Route path="/quiz/:id" element={<AuthenticationRequired> <CreateQuiz /> </AuthenticationRequired>} />

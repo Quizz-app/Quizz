@@ -108,13 +108,13 @@ const QuestionCard = ({ quizId, questionId, content, answers, points, correctAns
 export default QuestionCard;
 
 QuestionCard.propTypes = {
-  content: PropTypes.string.isRequired,
-  answers: PropTypes.array.isRequired,
-  points: PropTypes.number.isRequired,
-  handleUpdateQuestion: PropTypes.func.isRequired,
-  quizId: PropTypes.string.isRequired,
-  questionId: PropTypes.string.isRequired,
+  content: PropTypes.string,
+  answers: PropTypes.array,
+  points: PropTypes.number,
+  handleUpdateQuestion: PropTypes.func,
+  quizId: PropTypes.string,
+  questionId: PropTypes.string,
   correctAnswer: PropTypes.array,
-  onDelete: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
 };
 
