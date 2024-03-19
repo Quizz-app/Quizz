@@ -233,12 +233,13 @@ const Home = () => {
                         >
 
                             <div>
-                                <div className="flex flex-col items-center justify-center mt-20 ">
+                                
+                                <div className="flex flex-col items-center justify-center mt-40  ">
                                     <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base  ">
                                         The road to quality education stats here
                                     </p>
                                     <TypewriterEffectSmooth words={words} />
-                                    <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
+                                    <div className="flex flex-col justify-center md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
                                         <motion.button
                                             onClick={() => navigate("/register")}
                                             className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(0,118,255,0.9)] px-8 py-2 bg-[#0070f3] rounded-md text-white font-light transition duration-200 ease-linear"
@@ -248,7 +249,6 @@ const Home = () => {
                                         >
                                             Join Now
                                         </motion.button>
-
                                     </div>
                                 </div>
                                 {/* //hero */}
@@ -284,12 +284,12 @@ const Home = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-40 ">
+                                <div className="mt-40">
                                     <div className="flex flex-col items-start justify-center ml-40">
                                         <h1 className="text-3xl text-start font-bold ">Evolution of the way we teach and learn</h1>
 
                                     </div>
-                                    <div className="border-t-2 border-neon-green mb-5 w-2/4"></div>
+                                    <div className="w-2/4 h-1 bg-gradient-to-r from-[#00ff8c] via-[#00ff8c] to-transparent"></div>
 
                                     <div className="p-10">
                                         <StickyScroll content={content} />
