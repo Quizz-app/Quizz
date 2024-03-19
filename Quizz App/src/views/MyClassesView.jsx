@@ -69,7 +69,7 @@ const MyClassesView = () => {
                 exit={{ opacity: 0, x: 200 }} // Exits to the right
                 transition={{ duration: 0.9 }}
             >
-                <div className="m-10">
+                <div className="m-10 mx-20">
                     <div className="flex flex-row h-full items-start justify-between ml-5">
                         <div className="">
                             <h2 className="text-4xl font-bold mb-4">My Classes</h2>

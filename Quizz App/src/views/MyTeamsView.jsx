@@ -63,9 +63,14 @@ const MyTeamsView = () => {
 
     return (
         <AnimatePresence mode='wait'>
-            <motion.div initial={{ opacity: 0, x: -200 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 200 }}>
-                <div className="m-10">
-                    <div className="flex flex-row h-full items-start justify-between ml-5">
+                <motion.div
+                    initial={{ opacity: 0, x: -200 }} // Starts from the left
+                    animate={{ opacity: 1, x: 0 }} // Moves to the center
+                    exit={{ opacity: 0, x: 200 }} // Exits to the right
+                    transition={{ duration: 0.9 }}
+                >
+                <div className="m-10 mx-20">
+                    <div className="flex flex-row h-full items-start justify-between ">
                         <div className="">
                             <h2 className="text-4xl font-bold mb-4">My Teams</h2>
                         </div>

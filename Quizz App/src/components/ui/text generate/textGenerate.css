@@ -1,11 +1,12 @@
 .noise-text {
-    background: linear-gradient(45deg, #00ff8c, #3300ff88);
+  background: #000000;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
     position: relative;
     overflow: hidden;
-
+    
+   
   }
   
   .noise-text::after {

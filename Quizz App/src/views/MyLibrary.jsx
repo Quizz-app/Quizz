@@ -114,7 +114,8 @@ const MyLibrary = () => {
                 >
                     {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
                         <>
-                            <div className="flex flex-row h-full  justify-between mt-10">
+                        <div className="mx-20">
+                            <div className="flex flex-row h-full  justify-between mt-10 ">
                                 <div className="ml-3">
                                     <p >Here you can see your created quizzes and manage them, delete them,</p>
                                     <p >create new ones where you will be sent to the create panel</p>
@@ -202,10 +203,11 @@ const MyLibrary = () => {
                                     </Dialog>
                                 </div>
                             </div>
-                            <div className="border-t-2 border-neon-green mt-5 mb-5"></div>
+                            <div className="border-t-2 border-black-700 mt-5 mb-5"></div>
                             <div>
                                 <QuizCardPaginated currentQuiz={teacherQuizzes} quizzesPerPage={quizzesPerPageTeacher} />
                             </div>
+                        </div>
 
                         </>
                     ) : (

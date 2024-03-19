@@ -1,25 +1,22 @@
 import PropTypes from 'prop-types';
 
 const QuestionResultsCard = ({ question, answers, userAnswers = [], correctAnswers, points }) => {
-    const totalPoints = correctAnswers.reduce((total, _, index) => {
+
+    console.log(userAnswers);
+    console.log(correctAnswers);
+    console.log(points);
+    const totalPoints = correctAnswers.reduce((total, correctAnswer, index) => {
         if (userAnswers[0] === 'null') {
-            return total - total;
+            return 0;
         }
-
         if (correctAnswers.length === 1) {
-            // If an answer was selected, subtract points for incorrect answers
-            if (userAnswers.length === 1 && userAnswers !== correctAnswers) {
-                return total - total;
+            if (userAnswers[0] !== correctAnswer) {
+                return 0;
             }
-            if (userAnswers.length > 1 && !userAnswers.includes(index)) {
-                return total - total;
-            }
+        } else if (!userAnswers.includes(correctAnswer)) {
+            return total - Math.floor(points / answers.length);
         }
-
-        else {
-            return total - (userAnswers.includes(index) ? 0 : Math.floor(points / answers.length));
-        }
-
+        return total;
     }, points);
 
 
