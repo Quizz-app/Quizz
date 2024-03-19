@@ -78,9 +78,9 @@ const Header = ({ theme, onThemeChange }) => {
       {userData && (
         <div>
           <div className="flex items-center justify-center ">
-            <Link to="/home" className="font-semibold mb-4 mr-8">  Home </Link>
-            <Link to="/dashboard" className="font-semibold mb-4 mr-8">  Dashboard </Link>
-            <Link to="/my-library" className="font-semibold mb-4 mr-8"> Library </Link>
+            <Link to="/home" className="font-bold  mr-8">  Home </Link>
+            <Link to="/dashboard" className="font-bold  mr-8">  Dashboard </Link>
+            <Link to="/my-library" className="font-bold  mr-8"> Library </Link>
             {userData.role === 'teacher' ? (
               <>
                 <Link to="/my-teams" className="font-bold  mr-8">Teams</Link>
