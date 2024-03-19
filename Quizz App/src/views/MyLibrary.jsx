@@ -202,7 +202,7 @@ const MyLibrary = () => {
                                     </Dialog>
                                 </div>
                             </div>
-                            <div className="border-t-2 border-neon-green mt-5 mb-5"></div>
+                            <div className="border-t-2 border-black-700 mt-5 mb-5"></div>
                             <div>
                                 <QuizCardPaginated currentQuiz={teacherQuizzes} quizzesPerPage={quizzesPerPageTeacher} />
                             </div>

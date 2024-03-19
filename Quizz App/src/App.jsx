@@ -50,7 +50,7 @@ const App = () => {
   }, [user, loading, error]);
 
   const handleThemeChange = (event) => {
-    setTheme(event.target.checked ? "synthwave" : "1");
+    setTheme(event.target.checked ? "aqua" : "1");
   };
 
   console.log(context);
