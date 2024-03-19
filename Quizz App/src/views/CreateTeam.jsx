@@ -86,7 +86,7 @@ const CreateTeam = () => {
                                     <h1 className="text-xl mb-5 mt-3">Results</h1>
                                     <div className="divider"></div>
                                     {filteredTeachers.length > 0 ? (
-                                        <TableWithPagination array={filteredTeachers} pages={itemsPerPage} addMember={handleInviteMember} />
+                                        <TableWithPagination array={filteredTeachers} pages={itemsPerPage} addMember={handleInviteMember} buttonText={'Invite teacher'} />
                                     ) : (
                                         <div className="flex justify-center mt-5 mb-5">
                                             <h2 className=" text-2xl ml-5 mr-5">{`No results found. Sorry :(`}</h2>

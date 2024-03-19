@@ -3,6 +3,7 @@ import { get, set, ref, query, equalTo, orderByChild, update, push, onValue } fr
 import { removeQuizFromAllTeams } from "./teams-service";
 import { removeMemberFromClass, removeQuizFromAllClasses } from "./class-service";
 import { removeQuizFromAllUsers } from "./users-service";
+import { toast } from "react-hot-toast";
 
 export const createQuiz = async (creator, title, category, isPublic, questionTypes,) => {
 
@@ -167,6 +168,11 @@ export const inviteUserToQuiz = async (quizId, user, inviter) => {
 
   if (!userData.invitesForQuiz) {
     userData.invitesForQuiz = {};
+  }
+
+  if (userData.invitesForQuiz[quizId]) {
+    toast.error("An invite for this quiz has already been sent.");
+    return;
   }
 
   userData.invitesForQuiz[quizId] = {

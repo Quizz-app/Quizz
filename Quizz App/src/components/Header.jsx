@@ -27,7 +27,7 @@ const Header = ({ theme, onThemeChange }) => {
 
   useEffect(() => {
     if (userData && userData.username) {
-      getUserQuizInvites(userData.username, (invites) => {
+      getUserQuizInvites(userData?.username, (invites) => {
         setQuizInvites(Object.values(invites));
       });
     }

@@ -22,8 +22,8 @@ const QuestionResultsCard = ({ question, answers, userAnswers = [], correctAnswe
 
     return (
         <>
-            <div className='card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl'>
-                <div className="card-body text-black">
+            <div className='card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl flex flex-col'>
+                <div className="card-body text-black flex-grow">
                     <h2 className="card-title">{question}</h2>
                     <ul>
                         {answers.map((answer, index) => (
@@ -31,8 +31,8 @@ const QuestionResultsCard = ({ question, answers, userAnswers = [], correctAnswe
                                 key={index}
                                 className={`p-2 rounded-md mb-1 
                             ${correctAnswers.includes(index) ?
-                                        "bg-green-500 text-white" :
-                                        (userAnswers.includes(index) ? "bg-error text-white" : "bg-gray-200")} 
+                                    "bg-green-500 text-white" :
+                                    (userAnswers.includes(index) ? "bg-error text-white" : "bg-gray-200")} 
 
                             ${userAnswers.includes(index) ? "border-2 border-custom-blue" : ""}`}
                             >
@@ -40,10 +40,12 @@ const QuestionResultsCard = ({ question, answers, userAnswers = [], correctAnswe
                             </li>
                         ))}
                     </ul>
-                    <p className="mt-4">Correct answer: {answers.map((answer, index) => (
+                </div>
+                <div className="p-5">
+                    <p>Correct answer: {answers.map((answer, index) => (
                         correctAnswers.includes(index) ? answer : null
                     )).filter(Boolean).join(', ')} </p>
-                    <p>Points: {totalPoints} out of {points}</p>
+                    <p className='font-bold'> Points: {totalPoints} out of {points}</p>
                 </div>
             </div>
         </>

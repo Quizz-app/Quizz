@@ -150,18 +150,15 @@ const CreateQuiz = () => {
         addQuizToClass(classId, id);
     }
 
-    const handleAddQuizToStudent = async (studentId) => {
-        inviteUserToQuiz(id, studentId, userData.username);
+    const handleAddQuizToStudent = async (student) => {
+        inviteUserToQuiz(id, student, userData.username);
     };
 
     // Checking for empty answers in a question
-    const emptyAnswer = answers.some((answer) => answer === "");
+    const emptyAnswer = answers.some((answer) => answer === "" || answer.length > 100);
 
     //ASYNCHRONOUS FUNCTIONS DO NOT TOUCH AT ANY COST
     const handleAddQuestion = async () => {
-        if (emptyAnswer) {
-            return toast.error("Please provide an answer.");
-        }
 
         if (!question.content) {
             return toast.error("Please enter a question.");
@@ -169,11 +166,18 @@ const CreateQuiz = () => {
 
         if (question.content.length > 100) {
             return toast.error("Your question is too long!")
+        }
 
+        if (emptyAnswer) {
+            return toast.error("Please provide an answer.");
         }
 
         if (correctAnswerIndices.length === 0) {
-            return toast.error('Please select at least one checkbox.');
+            return toast.error('Please select at least one correct answer.');
+        }
+
+        if (question.points < 1) {
+            return toast.error("Points cannot be less or equal to 0.");
         }
 
         try {
@@ -335,7 +339,6 @@ const CreateQuiz = () => {
         }
     };
 
-    console.log(correctAnswerIndices);
     return (
 
         <div className="m-10">
@@ -375,7 +378,7 @@ const CreateQuiz = () => {
 
                     </div>
                     {/* THIS IS THE GRAY LINE*/}
-                    <div className="border-t-2 border-gray-200 mb-3"></div>
+                    <div className="border-t-2 border-gray-400 mb-3"></div>
                     {/* Here we can see all the teams that the current user is in*/}
                     {openPanel === 'assignTeam' && filteredTeams.length > 0 && (
                         <div>
@@ -481,7 +484,7 @@ const CreateQuiz = () => {
                         <div className="flex flex-row items-center justify-center">
                             <motion.button
                                 onClick={questionCreation}
-                                className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-light transition duration-200 ease-linear "
+                                className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
                                 initial={{ scale: 2 }}
                                 animate={{ scale: [1, 1.05, 1] }}
                                 transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
@@ -497,7 +500,7 @@ const CreateQuiz = () => {
                         </div>
                     </div>
                     {/* THIS IS THE GRAY LINE*/}
-                    <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
+                    <div className="border-t-2 border-gray-400 mt-2 mb-2"></div>
 
                     <div className='flex justify-center items-center'>
                         {openPanel === 'assignAssistant' && (
@@ -564,7 +567,7 @@ const CreateQuiz = () => {
                                                 ))}
                                                 <button className="btn btn-xs bg-[#90ee90]" onClick={handleAddAnswer}>Include Answer</button>
                                                 <Label htmlFor="points">Set points:</Label>
-                                                <Input id="points" type="number" value={question.points} placeholder="Enter points" onChange={handlePointsChange} />
+                                                <Input id="points" type="number" value={question.points} onChange={handlePointsChange} />
                                                 <div className="flex mt-3">
                                                     <MdDownloadDone className="mr-5" onClick={handleAddQuestion} />
                                                     <MdCancel onClick={() => setCreateMode(false)} />
@@ -651,18 +654,27 @@ const CreateQuiz = () => {
                                     </div>
                                 </div>
 
-                                <div className="flex justify-center mt-16">
+                                <div className="flex justify-around mt-16 mr-10">
                                     <motion.button
                                         onClick={() => handleSaveQuiz(timeLimit, grades, date)}
-                                        className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-light transition duration-200 ease-linear "
+                                        className="mr-10 shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
                                         initial={{ scale: 2 }}
                                         animate={{ scale: [1, 1.05, 1] }}
                                         transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
                                     >
                                         Save Changes
                                     </motion.button>
+                                    <motion.button
+                                        onClick={handleDeleteQuiz}
+                                        className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-red-600 px-8 py-2 bg-red-500 rounded-md text-black font-bold transition duration-200 ease-linear "
+                                        initial={{ scale: 2 }}
+                                        animate={{ scale: [1, 1.05, 1] }}
+                                        transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                    >
+                                        Delete quiz
+                                    </motion.button>
                                 </div>
-                                <button onClick={handleDeleteQuiz} className="btn"> Delete quiz</button>
+
                             </div>
                         </div>
                     </div>
