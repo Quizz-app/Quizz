@@ -6,6 +6,8 @@ import { getUserQuizById, setGradeToUser, setScoreToUser } from "../services/use
 import QuestionResultsCard from "./QuestionResultsCard";
 import { useNavigate } from "react-router-dom";
 import { addFeedback } from "../services/quiz-service";
+import { MdDownloadDone } from "react-icons/md";
+import { AnimatePresence, motion } from "framer-motion";
 
 
 const QuizResults = () => {
@@ -47,7 +49,7 @@ const QuizResults = () => {
                 const userAnswersArray = questionsArray.map((question, index) => userAnswersObject[Object.keys(quiz.questions)[index]]);
                 setUserAnswers(userAnswersArray);
                 setUserQuestions(userAnswersArray.length);
-               
+
                 setTotalPoints(questionsArray.reduce((total, question) => total + Number(question.points), 0));
                 setPoints(questionsArray.map(question => question.points));
                 setGrades(grades);
@@ -151,60 +153,83 @@ const QuizResults = () => {
 
         <>
             {quiz && (
-                <div className="flex flex-col mx-20 mt-10">
-                    {/* overview  */}
-                    <div className="flex flex-col" >
-                        <div>
-                            <h1 className="text-4xl font-bold mb-4">Your performance overview</h1>
-                            <h2 className="text-2xl font-bold mb-4">{quiz.title}</h2>
+
+                <AnimatePresence mode='wait'>
+                    <motion.div
+                        initial={{ opacity: 0, x: -200 }} // Starts from the left
+                        animate={{ opacity: 1, x: 0 }} // Moves to the center
+                        exit={{ opacity: 0, x: 200 }} // Exits to the right
+                        transition={{ duration: 0.9 }}
+                    >
+                        <div className="flex flex-col mx-20 mt-10">
+                            {/* overview  */}
+                            <div className="flex flex-col " >
+                                <div className="flex flex-row justify-between mb-5">
+                                    <h1 className="text-4xl font-bold mb-4 text-[#0073ffa4]">Your performance overview</h1>
+                                    <h2 className="text-2xl font-bold text-[#0073ffa4] mt-2">Quiz: {quiz.title}</h2>
+                                    <div>
+                                        <button className="btn btn-primary" onClick={() => navigate('/my-library')}>Finish</button>
+                                    </div>
+
+                                </div>
+
+
+                                <div className="flex flex-row items-start justify-between mb-10">
+                                    <div className="flex flex-col items-start justify-start">
+                                        <h2 className="text-2xl  mb-4 ">{userData.role === 'teacher' || userData.isAdmin === 'true' ? `{} score:` : `Your score:`} {score} </h2>
+                                        <h2 className="text-2xl  mb-4 ">Total score: {totalPoints}</h2>
+                                    </div>
+
+                                    <div className="flex flex-col items-start justify-center mb-7 ">
+                                        <h2 className="text-2xl  mb-4 ">Total questions: {totalQuestions}</h2>
+                                        <h2 className="text-2xl  mr-5 ">Answered: {userAnswers.filter(answer => answer !== 'null').length}</h2>
+                                    </div>
+
+                                    <div className="flex items-start justify-start  ">
+                                        <h2 className="text-2xl  mb-4">Overall grade:
+                                            <div className="ml-5">
+                                                {quiz &&
+                                                    score >= Number(grades.good) ? <div className="badge badge-primary bg-green-500 badge-outline">Good</div> :
+                                                    (score > Number(grades.bad) && score < Number(grades.good)) ? <div className="badge badge-primary bg-yellow-500 badge-outline">Satisfactory</div> :
+                                                        (score <= Number(grades.bad)) ? <div className="badge badge-error badge-outline bg-red-500 py-3 px-6">Poor</div> : ''
+                                                }
+                                            </div>
+                                        </h2>
+                                    </div>
+
+                                    <div id="feedback" className="flex ">
+                                        <textarea
+                                            placeholder="Feedback"
+                                            className="textarea textarea-bordered textarea-md w-full max-w-xs"
+                                            value={feedback}
+                                            onChange={e => setFeedback(e.target.value)}
+                                        />
+                                        {/* <button className="btn btn-primary" onClick={handleFeedback}>Save</button> */}
+                                        <MdDownloadDone className="mr-5 ml-3" onClick={handleFeedback} size="2em" />
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            {/* grades */}
+
+                            {/* Feedback */}
+
+
+                            {/* answers */}
+                            <div className="flex flex-row">
+                                <div className="grid grid-cols-5 gap-4">
+                                    {quests}
+                                </div>
+                            </div>
+
+
                         </div>
-
-                        <div className="flex flex-row items-center justify-between">
-                            <h2 className="text-2xl font-bold mb-4 ">{userData.role === 'teacher' || userData.isAdmin === 'true' ? `{} score:` : `Your score:`} {score}</h2>
-                            <h2 className="text-2xl font-bold mb-4">Total score: {totalPoints}</h2>
-                        </div>
-
-                        <div className="flex flex-col items-center justify-center mb-7">
-                            <h2 className="text-2xl font-bold ">Total questions: {totalQuestions}</h2>
-                            <h2 className="text-2xl font-bold mr-5 ">Answered: {userAnswers.filter(answer => answer !== 'null').length}</h2>
-                        </div>
-                    </div>
-
-                    {/* answers */}
-                    <div className="flex flex-row">
-                        <div className="grid grid-cols-5 gap-4">
-                            {quests}
-                        </div>
-                    </div>
-
-                    {/* grades */}
-                    <div className="flex items-center justify-center mt-10">
-                        <h2 className="text-2xl font-bold mb-4">Overall grade:
-                            {quiz &&
-                                score >= Number(grades.good) ? "Good" :
-                                (score > Number(grades.bad) && score < Number(grades.good)) ? "Satisfactory" :
-                                    (score <= Number(grades.bad)) ? "Bad" : ''
-                            }
-                        </h2>
-                    </div>
-
-                    {/* Feedback */}
-                    <div>
-                        <button className="btn btn-primary" onClick={() => navigate('/my-library')}>Finish</button>
-                    </div>
-                    <div id="feedback" className="flex">
-                        <textarea
-                            placeholder="Feedback"
-                            className="textarea textarea-bordered textarea-md w-full max-w-xs"
-                            value={feedback}
-                            onChange={e => setFeedback(e.target.value)}
-                        />
-                        <button className="btn btn-primary" onClick={handleFeedback}>Save</button>
-                    </div>
-                </div>
+                    </motion.div>
+                </AnimatePresence>
             )}
-        </>
-    );
+                    </>
+                    );
 };
 
-export default QuizResults;
+                    export default QuizResults;
