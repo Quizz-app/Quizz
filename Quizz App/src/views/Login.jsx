@@ -10,6 +10,7 @@ import { Input } from ".././components/ui/input";
 import LabelInputContainer from "../components/ui/LabelInputContainer";
 import { Label } from "@radix-ui/react-label";
 import { BottomGradient } from "./Register";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Login = () => {
   const { user, userData, setContext } = useContext(AppContext);
@@ -65,41 +66,53 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
-      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 mb-5">
-        Welcome to BrainBurst
-      </h2>
-      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300 mb-5">
-        Unlock your potential with each quiz. Start your adventure in learning now!
-      </p>
-      <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-      </div>
-      <LabelInputContainer className="mb-4">
-        <Label htmlFor="email">Email address</Label>
-        <Input id="email" placeholder="your-email-here@bb.com" type="email" value={form.email} onChange={updateForm("email")} />
-      </LabelInputContainer>
-      <LabelInputContainer className="mb-4">
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" placeholder="••••••••" type="password" value={form.password} onChange={updateForm("password")} />
-        <label className="label">
-          <a href="#" className="label-text-alt link link-hover" onClick={forgotPassword}>Forgot password?</a>
-        </label>
 
-      </LabelInputContainer>
-      <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4 justify-center items-center">
-      </div>
-
-      <button
-        className=" mt-5 bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-        type="submit"
-        onClick={login}
+    <AnimatePresence mode='wait'>
+      <motion.div
+        initial={{ opacity: 0, x: -200 }} // Starts from the left
+        animate={{ opacity: 1, x: 0 }} // Moves to the center
+        exit={{ opacity: 0, x: 200 }} // Exits to the right
+        transition={{ duration: 0.9 }}
       >
-        Login &rarr;
-        <BottomGradient />
-      </button>
-      <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
 
-    </div>
+        <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+          <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 mb-5">
+            Welcome to BrainBurst
+          </h2>
+          <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300 mb-5">
+            Unlock your potential with each quiz. Start your adventure in learning now!
+          </p>
+          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+          </div>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="email">Email address</Label>
+            <Input id="email" placeholder="your-email-here@bb.com" type="email" value={form.email} onChange={updateForm("email")} />
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" placeholder="••••••••" type="password" value={form.password} onChange={updateForm("password")} />
+            <label className="label">
+              <a href="#" className="label-text-alt link link-hover" onClick={forgotPassword}>Forgot password?</a>
+            </label>
+
+          </LabelInputContainer>
+          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4 justify-center items-center">
+          </div>
+
+          <button
+            className=" mt-5 bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            type="submit"
+            onClick={login}
+          >
+            Login &rarr;
+            <BottomGradient />
+          </button>
+          <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+
+        </div>
+
+      </motion.div>
+    </AnimatePresence>
 
   );
 };

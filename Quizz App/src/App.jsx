@@ -50,14 +50,14 @@ const App = () => {
   }, [user, loading, error]);
 
   const handleThemeChange = (event) => {
-    setTheme(event.target.checked ? "synthwave" : "1");
+    setTheme(event.target.checked ? "dim" : "1");
   };
 
   console.log(context);
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
-        <div className='min-h-screen min-w-screen flex flex-col ml-10 mr-10'>
+        <div className='min-h-screen min-w-screen flex flex-col bg-base-200 w-full'>
           {context?.userData?.isBlocked ? (
             <h1>You are blocked!</h1>
           ) : (
