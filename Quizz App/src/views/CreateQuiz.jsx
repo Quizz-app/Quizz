@@ -155,20 +155,25 @@ const CreateQuiz = () => {
     };
 
     // Checking for empty answers in a question
-    const emptyAnswer = answers.some((answer) => answer === "");
+    const emptyAnswer = answers.some((answer) => answer === "" || answer.length > 100);
 
     //ASYNCHRONOUS FUNCTIONS DO NOT TOUCH AT ANY COST
     const handleAddQuestion = async () => {
-        if (emptyAnswer) {
-            return toast.error("Please provide an answer.");
-        }
 
         if (!question.content) {
             return toast.error("Please enter a question.");
         }
 
         if (question.content.length > 100) {
-            return toast.error("Your question is too long!");
+            return toast.error("Your question is too long!")
+        }
+
+        if (emptyAnswer) {
+            return toast.error("Please provide an answer.");
+        }
+
+        if (correctAnswerIndices.length === 0) {
+            return toast.error('Please select at least one correct answer.');
         }
 
         if (question.points < 1) {
@@ -193,7 +198,6 @@ const CreateQuiz = () => {
 
     const handleUpdateQuestion = async (updatedQuestion) => {
         try {
-            console.log(updatedQuestion);
             await updateQuestion(
                 quiz.id,
                 updatedQuestion.id,
@@ -670,7 +674,7 @@ const CreateQuiz = () => {
                                         Delete quiz
                                     </motion.button>
                                 </div>
-                              
+
                             </div>
                         </div>
                     </div>
