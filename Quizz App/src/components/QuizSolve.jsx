@@ -84,10 +84,10 @@ const QuizSolve = () => {
 
     return (
         <>
-            <div>
+            <div className="flex justify-center">
                 {!isCountdownFinished ? (
                     questions[currentQuestionIndex] && (
-                        <>
+                        <div className="mt-10">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={currentQuestionIndex}
@@ -99,32 +99,57 @@ const QuizSolve = () => {
                                     <QuizSolveCard question={questions[currentQuestionIndex]} quizId={id} />
                                 </motion.div>
                             </AnimatePresence>
-                            <Countdown date={endTime} onComplete={handleCountdownEnd} onTick={({ total }) =>
-                                localStorage.setItem(`endTime-${id}`, (Date.now() + total).toString())} />
 
-                            {currentQuestionIndex < questions.length - 1 ? (
-                                <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}>Next</button>
-                            ) : (
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button variant="outline">Finish</Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent className="sm:max-w-[425px] bg-white dark:bg-neutral text-black dark:text-white">
-                                        <AlertDialogHeader >
-                                            <AlertDialogTitle>You will finish answering to quiz ${quiz.content} </AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This action cannot be undone. It will save your answers and you will be redirected to the results page.
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={handleCountdownEnd}>Finish</AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            )}
-                            <button className="btn btn-primary" onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex > 0 ? prevIndex - 1 : 0)}>Previous</button>
-                        </>
+
+                            <div className="flex justify-between mt-10">
+                                <motion.button
+                                    onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex > 0 ? prevIndex - 1 : 0)}
+                                    className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
+                                    initial={{ scale: 2 }}
+                                    animate={{ scale: [1, 1.05, 1] }}
+                                    transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                >
+                                    Previous
+                                </motion.button>
+                                <div className="text-2xl flex">
+                                    <p className="mr-2">Time left:</p>
+                                    <Countdown date={endTime} onComplete={handleCountdownEnd} onTick={({ total }) =>
+                                        localStorage.setItem(`endTime-${id}`, (Date.now() + total).toString())} />
+                                </div>
+                                {currentQuestionIndex < questions.length - 1 ? (
+
+                                    <motion.button
+                                        onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex + 1)}
+                                        className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
+                                        initial={{ scale: 2 }}
+                                        animate={{ scale: [1, 1.05, 1] }}
+                                        transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                    >
+                                        Next
+                                    </motion.button>
+                                ) : (
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <button onClick={() => navigate("/login")} className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                                                Finish
+                                            </button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent className="sm:max-w-[425px] bg-white dark:bg-neutral text-black dark:text-white">
+                                            <AlertDialogHeader >
+                                                <AlertDialogTitle>You will finish answering to quiz ${quiz.content} </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be undone. It will save your answers and you will be redirected to the results page.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={handleCountdownEnd}>Finish</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                )}
+                            </div>
+                        </div>
                     )
                 ) : (
                     <div className="flex flex-col items-center justify-center min-h-screen">
