@@ -526,7 +526,7 @@ const CreateQuiz = () => {
                         >
                             <div id="create-question-card" className="mr-10 mt-10 ">
                                 <div className='card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl'>
-                                    <div className="card-body">
+                                    <div className="card-body text-black">
                                         <Label htmlFor="question">Question</Label>
                                         <Input id="question" type="text" placeholder="Enter the question" onChange={handleQuestionChange} />
                                         <Label htmlFor="question">Add answer:</Label>
