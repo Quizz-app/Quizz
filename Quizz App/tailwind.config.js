@@ -198,6 +198,8 @@ module.exports = {
       "synthwave",
       "dim",
       "sunset",
+      'aqua',
+      'retro',
     ],
   },
 
