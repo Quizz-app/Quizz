@@ -1,5 +1,5 @@
 .noise-text {
-  background: #000000;
+  background: linear-gradient(45deg, #0073ffa4, #0099ff48);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;

@@ -133,7 +133,7 @@ const QuizResults = () => {
         const questionPoints = points[index];
 
         return (
-            <div key={index} className="flex flex-row flex-wrap">
+            <div key={index} className="flex flex-row-4 flex-wrap">
                 {correctAnswer && quiz && (
                     <QuestionResultsCard question={question} answers={answer}
                         userAnswers={userAnswer} correctAnswers={correctAnswer}
@@ -151,7 +151,7 @@ const QuizResults = () => {
 
         <>
             {quiz && (
-                <div className="flex flex-col">
+                <div className="flex flex-col mx-20 mt-10">
                     {/* overview  */}
                     <div className="flex flex-col" >
                         <div>

@@ -148,7 +148,7 @@ const Dashboard = () => {
                 transition={{ duration: 0.9 }}
             >
                 <div className="flex flex-col h-full items-start justify-center mt-10 ml-20 pl-5 ">
-                    <h1 className="mb-5 text-3xl font-bold ml-20 text-black  dark:text-neutral">Dashboard</h1>
+                    <h1 className="mb-5 text-3xl font-bold text-black  dark:text-neutral">Dashboard</h1>
                     {userData && (userData.role === 'teacher' || userData.isAdmin === true) ?
                         (<>
                             {/* teacher dashboard */}
@@ -177,7 +177,7 @@ const Dashboard = () => {
                         (<>
                             {/* student dashboard */}
                             <div className="flex flex-row h-full items-center  justify-between mb-10">
-                                <div className="stats shadow border-4 bg-white round-md w-96 h-40">
+                                <div className="stats shadow-lg bg-white round-md w-96 h-40">
                                     <div className="stat">
                                         <div className="stat-title">Quizzes solved:</div>
                                         <div className="stat-value">{quizzesSolved}</div>
@@ -185,7 +185,7 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                <div className="stats shadow border-4 bg-white round-md ml-20 w-96 h-40">
+                                <div className="stats shadow-lg bg-white round-md ml-20 w-96 h-40">
                                     <div className="stat">
                                         <div className="stat-title">Average grade</div>
                                         <div className="stat-value">{quizzesGrades}</div>
@@ -193,7 +193,7 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                <div className="stats shadow border-4 bg-white round-md ml-20 w-96 h-40">
+                                <div className="stats shadow-lg bg-white round-md ml-20 w-96 h-40">
                                     <div className="stat">
                                         <div className="stat-title">Place</div>
                                         <div className="stat-value">{currentUserPosition ? `${currentUserPosition}th` : 'Not ranked'}</div>
@@ -267,7 +267,7 @@ const Dashboard = () => {
                                 </table> */}
 
                                 <div className="">
-                                    <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl border p-4 justify-center items-center">
+                                    <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl  p-4 justify-center items-center">
                                         <motion.table
                                             className="table bg-white"
                                             initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above its final position
@@ -296,11 +296,12 @@ const Dashboard = () => {
                                                             </td>
                                                             <td>{student?.username}</td>
                                                             <td>{`${student?.firstName} ${student?.lastName}`}</td>
-
-                                                            {index === 0 ? <th>{index + 1} <span className="text-2xl">👑</span></th> : <th>{index + 1}</th>}
-                                                            {index === 1 ? <th>{index + 1} <span className="text-2xl">🏆</span></th> : <th>{index + 1}</th>}
-                                                            {index === 2 ? <th>{index + 1} <span className="text-2xl">🥉</span></th> : <th>{index + 1} </th>}
-
+                                                            <th>
+                                                                {index + 1} 
+                                                                {index === 0 && <span className="text-2xl">👑</span>}
+                                                                {index === 1 && <span className="text-2xl">🏆</span>}
+                                                                {index === 2 && <span className="text-2xl">🥉</span>}
+                                                            </th>
                                                         </tr>
                                                     ))}
                                                 </tbody>
