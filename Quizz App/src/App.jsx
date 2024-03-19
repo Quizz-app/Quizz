@@ -57,7 +57,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
-        <div className='min-h-screen min-w-screen flex flex-col bg-base-200 w-full'>
+        <div className='min-h-screen flex flex-col bg-base-200'>
           {context?.userData?.isBlocked ? (
             <h1>You are blocked!</h1>
           ) : (

@@ -1,5 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { getAllUsers } from "../services/users-service";
 import { useContext, useEffect, useState } from "react";
@@ -13,13 +11,10 @@ import { getUserQuizzes } from "../services/users-service";
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { AnimatePresence } from "framer-motion";
-
-
-import { get } from "firebase/database";
 import QuizCardPaginated from "../components/QuizCardPaginated";
 import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { StickyScroll } from "../components/ui/sticky-scroll-reveal";
-import DummyQuizzes from "../components/DummyQuizzes";
+import { words, testimonials, content } from "../services/words.jsx";
 
 const Home = () => {
     const { userData } = useContext(AppContext);
@@ -69,36 +64,9 @@ const Home = () => {
 
 
     const categoriesWithQuizzes = topCategories.map((category) => {
-        const categoryQuizzes = quizzes.filter(quiz => quiz.category === category);
+        const categoryQuizzes = quizzes.filter(quiz => quiz.category === category).slice(0, 5);
         return { category, quizzes: categoryQuizzes };
     });
-
-
-
-    const words = [
-        {
-            text: "Explore",
-        },
-        {
-            text: "the",
-        },
-        {
-            text: "depths",
-        },
-        {
-            text: "of your",
-        },
-        {
-            text: "mind",
-        },
-        {
-            text: "with",
-        },
-        {
-            text: "BrainBurst.",
-            className: "text-blue-500 dark:text-lime-500",
-        },
-    ];
 
 
     useEffect(() => {
@@ -109,7 +77,7 @@ const Home = () => {
                 quizCount: teacher.createdQuizzes ? Object.values(teacher.createdQuizzes).length : 0
             };
         });
-        const sorted = teachersQuizes.sort((a, b) => b.quizCount - a.quizCount).slice(0, 5);
+        const sorted = teachersQuizes.sort((a, b) => b.quizCount - a.quizCount).slice(0, 4);
         setSortedTeachersQuizzes(sorted);
     }, [users]);
 
@@ -138,106 +106,15 @@ const Home = () => {
         };
     }, [userData]);
 
-    const deleteQuiz = async (id) => {
-        try {
-            await deleteQuiz(id);
-            navigate('/my-library');
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     const popularQuizzes = quizzes.sort((a, b) => b.finishedCount - a.finishedCount).slice(0, 5);
-
-    const testimonials = [
-        {
-            quote:
-                "As an instructor, I find BrainBurst to be a valuable resource for assessing student understanding and tracking progress. The customizable features make it easy to tailor quizzes to specific topics and learning objectives.",
-            name: "Dr. Johnson",
-            title: "Mathematics Professor",
-        },
-        {
-            quote:
-                "BrainBurst is a lifesaver for busy students like me! With its user-friendly interface and extensive question bank, I can quickly review course material anytime, anywhere.",
-            name: "Alex",
-            title: "Engineering Student",
-        },
-        {
-            quote:
-                "I've integrated BrainBurst into my classroom routine, and the results have been remarkable! Students are more engaged, and their retention of information has significantly improved.",
-            name: "Ms. Rodriguez",
-            title: "High School Teacher",
-        },
-        {
-            quote:
-                "I've tried numerous study aids, but none have been as effective as BrainBurst. It's like having a personal tutor guiding me through complex topics and helping me master challenging concepts.",
-            name: "David",
-            title: "Physics Student",
-        },
-        {
-            quote:
-                "As a teacher, I appreciate how BrainBurst promotes active learning and critical thinking skills. It's a powerful tool for fostering a deeper understanding of course material and encouraging student participation.",
-            name: "Mrs. Ivanova",
-            title: "Biology Teacher",
-        },
-        {
-            quote:
-                "I love it! It's so easy to use and it's really fun. I've been using it for a while now and I've already improved my grades :)",
-            name: "Mrs. Williams",
-            title: "Geography Teacher",
-        },
-    ];
-
-
-    const content = [
-        {
-            title: "Collaborative Editing",
-            description:
-                "Work together in real time with your team, clients, and stakeholders. Collaborate on documents, share ideas, and make decisions quickly. With our platform, you can streamline your workflow and increase productivity.",
-            content: (
-                <DummyQuizzes />
-            ),
-        },
-        {
-            title: "Real time changes",
-            description:
-                "See changes as they happen. With our platform, you can track every modification in real time. No more confusion about the latest version of your project. Say goodbye to the chaos of version control and embrace the simplicity of real-time updates.",
-            content: (
-                <div className="h-full w-full  flex items-center justify-center text-white">
-
-                </div>
-            ),
-        },
-        {
-            title: "Version control",
-            description:
-                "Experience real-time updates and never stress about version control again. Our platform ensures that you're always working on the most recent version of your project, eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
-            content: (
-                <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--orange-500),var(--yellow-500))] flex items-center justify-center text-white">
-                    Version control
-                </div>
-            ),
-        },
-        {
-            title: "Running out of content",
-            description:
-                "Experience real-time updates and never stress about version control again. Our platform ensures that you're always working on the most recent version of your project, eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
-            content: (
-                <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] flex items-center justify-center text-white">
-                    Running out of content
-                </div>
-            ),
-        },
-    ];
 
     return (
         <>
             {userData ?
                 <>
-                <div className="bg-base-200 w-full">
-                    <div className=" mx-20 ">
+
                     <div className="flex flex-col mt-12 ">
-                        <div className="flex justify-start w-full mb-5 ml-10">
+                        <div className="flex justify-start  mb-5 ml-10">
                             <Input type="text" value={searchTerm} onChange={handleSearchChange}
                                 placeholder="Search content here..."
                                 className="text-start w-96" />
@@ -265,16 +142,16 @@ const Home = () => {
                                     }
                                 </div>}
                         </div>
-                        <div className="flex flex-row w-full">
-                            <div className=" flex flex-col w-full">
+                        <div className="flex flex-row ">
+                            <div className=" flex flex-col ">
                                 <div id="recent" className="flex flex-col">
                                     <h1 className=" text-2xl ml-10 my-10" style={{ margin: "0px 45px 30px 45px" }}>
                                         Your Recent Quizzes
                                     </h1>
-                                    <div className="flex flex-row w-full justify-between">
-                                        <div id="your-recent" className="ml-10">
+                                    <div className="flex flex-row ">
+                                        <div id="your-recent" className="ml-10 mr-10">
                                             {userData.role === 'student' ? (
-                                                <div id="student" className="flex flex-row overflow-auto">
+                                                <div id="student" className="flex flex-row ">
                                                     {studentQuizzes && studentQuizzes.length > 0 ? (
                                                         studentQuizzes.map((quiz, index) => (
                                                             <ThreeDCardDemo key={index} quiz={quiz} isCompleted={true} />
@@ -287,50 +164,24 @@ const Home = () => {
                                                         )}
                                                 </div>
                                             ) : (
-                                                <div id='teacher' className="flex flex-row overflow-auto">
+                                                <div id='teacher' className="flex flex-row w-3/4">
                                                     {teacherQuizzes.map((quiz, index) => (
-                                                        <ThreeDCardDemo key={index} quiz={quiz} onButtonClick={() => deleteQuiz(quiz.id)} />
+                                                        <ThreeDCardDemo key={index} quiz={quiz} />
                                                     ))}
                                                 </div>
                                             )}
                                         </div>
-                                        <div id="table" className="mr-10">
-                                            <h1 className="text-2xl">
-                                                Our Top 5 Quizcrafters
-                                            </h1>
-                                            <div className="border-t-2 border-gray mb-5"></div>
-                                            <div className="overflow-x-auto">
-                                                <table className="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>Teacher</th>
-                                                            <th>Created Quizzes</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {sortedTeachersQuizzes.map((teacher, index) => (
-                                                            <tr key={index}>
-                                                                <th>{index + 1}</th>
-                                                                <td>{teacher.name}</td>
-                                                                <td>{teacher.quizCount}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
-
-                                <div id="popular" className="flex flex-col  justify-start w-full ml-10">
+                                <div id="popular" className="flex flex-col ml-10">
                                     <div className="flex mt-15" style={{ margin: '-30px 10px' }}>
                                         <h1 className="text-2xl">
                                             Popular
                                         </h1>
                                     </div>
                                     <div className="flex flex-row">
-                                        <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={5} deleteQuiz={deleteQuiz} />
+                                        <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={5} />
                                     </div>
                                 </div>
                             </div>
@@ -341,7 +192,7 @@ const Home = () => {
                                 {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
                                     <div key={index}>
                                         <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
-                                        <div className="flex flex-row justify-start w-full ml-10" style={{ margin: '-30px 30px' }}>
+                                        <div className="flex flex-row w-full ml-10" style={{ margin: '-30px 30px' }}>
                                             {categoryWithQuizzes.quizzes.map((quiz, index) => (
                                                 <ThreeDCardDemo key={index} quiz={quiz} />
                                             ))}
@@ -351,8 +202,6 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                    </div>
-                </div>
                 </>
                 :
                 <>
@@ -417,37 +266,6 @@ const Home = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {/* cateogirs */}
-                                {/* <div>
-                            <div className="flex flex-col items-center justify-center mt-20 ">
-                                <h1 className="text-4xl text-center font-bold">Top Categories:</h1>
-                            </div>
-                            <div className="flex items-center justify-center p-10">
-                                <Carousel
-                                    opts={{
-                                        align: "start",
-                                    }}
-                                    className="w-3/4"
-                                >
-                                    <CarouselContent>
-                                        {Array.from({ length: 5 }).map((_, index) => (
-                                            <CarouselItem key={index} className="md:basis-1/3 lg:basis-1/3 h-80 ">
-                                                <div className="h-full ">
-                                                    <Card className=" w-80">
-                                                        <CardContent className="flex aspect-square items-center justify-center w-full h-full">
-                                                            <span className="text-3xl font-semibold">{index + 1}</span>
-                                                        </CardContent>
-                                                    </Card>
-                                                </div>
-                                            </CarouselItem>
-                                        ))}
-                                    </CarouselContent>
-                                    <CarouselPrevious />
-                                    <CarouselNext />
-                                </Carousel>
-                            </div>
-                        </div> */}
-
                                 <div className="mt-40 ">
                                     <div className="flex flex-col items-start justify-center ml-40">
                                         <h1 className="text-3xl text-start font-bold ">Evolution of the way we teach and learn</h1>
