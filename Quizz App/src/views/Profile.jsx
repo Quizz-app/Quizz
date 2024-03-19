@@ -105,7 +105,7 @@ const Profile = () => {
   };
   return (
     <>
-      <div className="hero min-h-screen bg-base-200 flex flex-col items-center justify-center mx-auto">
+      <div className="hero min-h-screen flex flex-col items-center justify-center mx-auto">
         <div className="profile-details  ml-0" style={{ marginLeft: '-600px' }}>
           <div className="flex flex-col">
             <h2 className="text-2xl font-bold mb-2 text-left justify-items-start">Profile details</h2>

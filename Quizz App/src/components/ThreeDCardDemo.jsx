@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { areUsersInSameTeam } from "../services/teams-service";
 
+
 /**
  * QuizCard component displays a card with quiz details.
  * @component
