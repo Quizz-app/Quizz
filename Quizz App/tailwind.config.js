@@ -175,58 +175,23 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          
-          
-            "primary": "#a3e635",
-                     
-            "secondary": "#4f46e5",
-                     
-            "accent": "#a3e635",
-                     
-            "neutral": "#ffedd5",
-                     
-            "base-100": "#f3f4f6",
-                     
-            "info": "#4f46e5",
-                     
-            "success": "#bef264",
-                     
-            "warning": "#fde68a",
-                     
+            "primary": "#a3e635", 
+            "secondary": "#4f46e5", 
+            "accent": "#a3e635",  
+            "neutral": "#ffedd5",     
+            "base-100": "#e0e7ff",     
+            "info": "#4f46e5",     
+            "success": "#bef264",     
+            "warning": "#fde68a",     
             "error": "#fca5a5",
         },
       },
       "light",
       "dark",
-      "cupcake",
-      "bumblebee",
-      "emerald",
-      "corporate",
-      "synthwave",
-      "retro",
-      "cyberpunk",
-      "valentine",
-      "halloween",
-      "garden",
-      "forest",
-      "aqua",
-      "lofi",
-      "pastel",
-      "fantasy",
-      "wireframe",
-      "black",
-      "luxury",
       "dracula",
-      "cmyk",
-      "autumn",
-      "business",
-      "acid",
-      "lemonade",
       "night",
-      "coffee",
-      "winter",
+      "synthwave",
       "dim",
-      "nord",
       "sunset",
     ],
   },

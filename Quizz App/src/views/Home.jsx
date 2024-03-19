@@ -235,6 +235,8 @@ const Home = () => {
         <>
             {userData ?
                 <>
+                <div className="bg-base-200 w-full">
+                    <div className=" mx-20 ">
                     <div className="flex flex-col mt-12 ">
                         <div className="flex justify-start w-full mb-5 ml-10">
                             <Input type="text" value={searchTerm} onChange={handleSearchChange}
@@ -243,7 +245,7 @@ const Home = () => {
                         </div>
                         <div className="flex justify-center mb-10">
                             {searchTerm.length > 2 &&
-                                <div className="flex flex-col bg-base-200 border rounded-2xl mb-5">
+                                <div className="flex flex-col bg-base border rounded-2xl mb-5">
                                     <div className="flex flex-row justify-center">
                                         <h1 className="mt-5 text-2xl ml-5 mr-5">
                                             Search results
@@ -350,6 +352,8 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
+                    </div>
+                </div>
                 </>
                 :
                 <>
