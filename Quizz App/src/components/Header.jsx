@@ -67,13 +67,12 @@ const Header = ({ theme, onThemeChange }) => {
   }
 
 
-  //console.log(quizInvites)
+
   return (
     <div className="navbar bg-base-100 flex justify-between">
       <div className="flex-2">
-        <h1 className="text-2xl text-center font-bold ml-5" onClick={() => navigate("/")}>Brain</h1>
-        <h1 className="text-2xl text-center font-bold text-blue-500" onClick={() => navigate("/")}>Burst .</h1>
-
+        <h1 className="text-2xl text-center font-bold ml-5 cursor-pointer" onClick={() => navigate("/")}>Brain</h1>
+        <h1 className="text-2xl text-center font-bold text-blue-500 cursor-pointer" onClick={() => navigate("/")}>Burst .</h1>
       </div>
       {userData && (
         <div>

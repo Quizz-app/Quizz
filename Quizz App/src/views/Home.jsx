@@ -19,6 +19,7 @@ import { get } from "firebase/database";
 import QuizCardPaginated from "../components/QuizCardPaginated";
 import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { StickyScroll } from "../components/ui/sticky-scroll-reveal";
+import DummyQuizzes from "../components/DummyQuizzes";
 
 const Home = () => {
     const { userData } = useContext(AppContext);
@@ -194,9 +195,7 @@ const Home = () => {
             description:
                 "Work together in real time with your team, clients, and stakeholders. Collaborate on documents, share ideas, and make decisions quickly. With our platform, you can streamline your workflow and increase productivity.",
             content: (
-                <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] flex items-center justify-center text-white">
-                    Collaborative Editing
-                </div>
+                <DummyQuizzes />
             ),
         },
         {
