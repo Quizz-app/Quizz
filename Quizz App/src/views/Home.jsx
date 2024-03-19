@@ -204,7 +204,7 @@ const Home = () => {
                         </div>
                         <div>
                             <div>
-                                <h2 className="text-center text-3xl mr-5 mb-10 font-bold text-[#00014f60]">Trending Categories</h2>
+                                <h2 className="text-center text-3xl mr-5 mb-10 font-bold text-[#00014f60] ">Trending Categories</h2>
                                 {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
                                     <div key={index}>
                                         <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
