@@ -110,7 +110,7 @@ const Home = () => {
 
     const popularQuizzes = quizzes.sort((a, b) => b.finishedCount - a.finishedCount).slice(0, 5);
 
-    const welcoming = `Hi there, ${userData?.username}.`;
+    const welcoming = `Hi there, ${userData?.firstName}.`;
 
     return (
         <>

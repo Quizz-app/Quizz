@@ -34,9 +34,9 @@ const QuestionResultsCard = ({ question, answers, userAnswers = [], correctAnswe
                                 className={`p-2 rounded-md mb-1 
                             ${correctAnswers.includes(index) ?
                                         "bg-green-500 text-white" :
-                                        (userAnswers.includes(index) ? "bg-red-500 text-white" : "bg-gray-200")} 
+                                        (userAnswers.includes(index) ? "bg-error text-white" : "bg-gray-200")} 
 
-                            ${userAnswers.includes(index) ? "border-2 border-black" : ""}`}
+                            ${userAnswers.includes(index) ? "border-2 border-custom-blue" : ""}`}
                             >
                                 {answer}
                             </li>
