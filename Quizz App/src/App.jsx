@@ -24,6 +24,7 @@ import CreateClass from "./views/CreateClass";
 import MyClassesView from "./views/MyClassesView";
 import { AuthenticationRequired } from "./components/Authentication";
 import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -51,7 +52,6 @@ const App = () => {
   const handleThemeChange = (event) => {
     setTheme(event.target.checked ? "synthwave" : "1");
   };
-
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
@@ -81,6 +81,7 @@ const App = () => {
                 <Route path="/profile" element={<AuthenticationRequired> <Profile /> </AuthenticationRequired>} />
                 <Route path="/admin" element={<AuthenticationRequired><Admin /></AuthenticationRequired>} />
                 <Route path="/dashboard" element={<AuthenticationRequired> <Dashboard /> </AuthenticationRequired>} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </>
           )}
