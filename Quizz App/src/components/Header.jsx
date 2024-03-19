@@ -127,16 +127,16 @@ const Header = ({ theme, onThemeChange }) => {
                 </div>
               </div>
             )}
-            {userData?.role === 'student' && quizInvites.length > 0 && (
+            {userData?.role === 'student' && (quizInvites.length > 0 || classInvites.length > 0) && (
               <div className="indicator">
                 <span className="indicator-item badge badge-secondary">
-                  {quizInvites.length}
+                  {quizInvites.length + classInvites.length}
                 </span>
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <div tabIndex={0} role="button" className="btn m-1">Notifications
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                       {quizInvites.map((invite, index) => (
-                        <li key={index}>
+                        <li key={'quiz'+index}>
                           <div className="flex flex-col">
                             <p>
                               You have an invitation from {invite.inviter} for quiz {invite.quizTitle}
@@ -148,21 +148,8 @@ const Header = ({ theme, onThemeChange }) => {
                           </div>
                         </li>
                       ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
-            {userData?.role === 'student' && classInvites.length > 0 && (
-              <div className="indicator">
-                <span className="indicator-item badge badge-secondary">
-                  {classInvites.length}
-                </span>
-                <div className="dropdown dropdown-bottom dropdown-end">
-                  <div tabIndex={0} role="button" className="btn m-1">Notifications
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                       {classInvites.map((invite, index) => (
-                        <li key={index}>
+                        <li key={'class'+index}>
                           <div className="flex flex-col">
                             <p>
                               You have an invitation from {invite.inviter} for class {invite.className}
