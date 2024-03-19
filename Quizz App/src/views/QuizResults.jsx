@@ -182,7 +182,7 @@ const QuizResults = () => {
 
                                     <div className="flex flex-col items-start justify-center mb-7 ">
                                         <h2 className="text-2xl  mb-4 ">Total questions: {totalQuestions}</h2>
-                                        <h2 className="text-2xl  mr-5 ">Answered: {userAnswers.filter(answer => answer !== 'null').length}</h2>
+                                        <h2 className="text-2xl  mr-5 ">Answered: {userAnswers.filter((answer, index) => answer[index] !== 'null').length}</h2>
                                     </div>
 
                                     <div className="flex items-start justify-start  ">
