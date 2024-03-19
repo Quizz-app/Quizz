@@ -31,13 +31,17 @@ const MyLibrary = () => {
     useEffect(() => {
         let unsubscribeQuizByCreator;
         if (userData && (userData.role === 'teacher' || userData.isAdmin === true)) {
-            unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => setTeacherQuizzes(quizzes));
+            unsubscribeQuizByCreator = getQuizByCreator(userData.username, quizzes => {
+                const reversedQuizzes = [...quizzes].reverse();
+                setTeacherQuizzes(reversedQuizzes);
+            });
         }
         const unsubscribeUserQuizzes = getUserQuizzes(userData?.username, async (quizzes) => {
             const quizzesArray = await Promise.all(Object.entries(quizzes).map(async ([id, quiz]) => {
                 const fullQuiz = await getQuizById(id);
                 return { ...fullQuiz, ...quiz };
             }));
+            quizzesArray.reverse();
             const completedQuizzes = quizzesArray.filter(quiz => quiz.isCompleted);
             const nonCompletedQuizzes = quizzesArray.filter(quiz => !quiz.isCompleted);
             setStudentQuizzes({ completed: completedQuizzes, nonCompleted: nonCompletedQuizzes });

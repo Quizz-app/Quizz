@@ -35,7 +35,6 @@ export const ThreeDCardDemo = ({ quiz, teamId }) => {
 
   areUsersInSameTeam(userData?.username, quiz?.creator, teamId).then(setInSameTeam);
 
-
   return (
     <CardContainer className=" w-64 h-64 flex-shrink-0 mr-5 p-0">
       <CardBody className="bg-blue-300 relative group/card shadow-custom-light dark:hover:shadow-custom-dark dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.1] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-4">
@@ -55,7 +54,7 @@ export const ThreeDCardDemo = ({ quiz, teamId }) => {
         {quiz?.isCompleted ? (<CardItem
           translateZ={20}
           as="button"
-          className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-black border text-xs font-bold"
+          className="px-4 py-2 rounded-xl bg-blue-600 dark:bg-white dark:text-black text-white text-xs font-bold"
           onClick={() => navigate(`/results/${quiz?.id}`)}
         >
           See quiz
