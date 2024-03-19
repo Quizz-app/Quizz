@@ -37,18 +37,18 @@ export const ThreeDCardDemo = ({ quiz, teamId }) => {
 
 
   return (
-    <CardContainer className="inter-var w-64 h-64 flex-shrink-0 mr-5">
-      <CardBody className="bg-gradient-to-r from-cyan-500 to-blue-500 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border transform:">
+    <CardContainer className=" w-64 h-64 flex-shrink-0 mr-5 p-0">
+      <CardBody className="bg-gradient-to-r from-blue-500 to-custom-blue relative group/card shadow-custom-light dark:hover:shadow-custom-dark dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.1] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-4">
         <CardItem
           translateZ="50"
-          className="text-xl font-bold text-neutral-600 dark:text-white"
+          className="text-xl font-bold text-[#90ee90]  dark:text-white"
         >
           {quiz?.title}
         </CardItem>
         <CardItem
           as="p"
-          translateZ="60"
-          className="text-dark-500 text-sm max-w-sm mt-2 dark:text-dark-300 text-left ml-5 truncate overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs h-20"
+          translateZ="100"
+          className="text-white text-sm max-w-sm mt-2 dark:text-dark-300 text-left font-bold truncate overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs h-20"
         >
           {quiz?.description}
         </CardItem>
@@ -64,7 +64,7 @@ export const ThreeDCardDemo = ({ quiz, teamId }) => {
           (<CardItem
             translateZ={20}
             as="button"
-            className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
+            className="px-4 py-2 rounded-xl bg-blue-600 dark:bg-white dark:text-black text-white text-xs font-bold"
             onClick={() => navigate(buttonClickPath)}
           >
             {buttonText}

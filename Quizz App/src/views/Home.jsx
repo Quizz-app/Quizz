@@ -13,12 +13,11 @@ import { getUserQuizzes } from "../services/users-service";
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { AnimatePresence } from "framer-motion";
-
-
 import { get } from "firebase/database";
 import QuizCardPaginated from "../components/QuizCardPaginated";
 import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { StickyScroll } from "../components/ui/sticky-scroll-reveal";
+import { TextGenerateEffect } from "../components/ui/text generate/text-generate-effect";
 
 const Home = () => {
     const { userData } = useContext(AppContext);
@@ -95,7 +94,7 @@ const Home = () => {
         },
         {
             text: "BrainBurst.",
-            className: "text-blue-500 dark:text-lime-500",
+            className: "text-[#00ff8c] ",
         },
     ];
 
@@ -231,18 +230,31 @@ const Home = () => {
         },
     ];
 
+    const welcoming = `Hi there, ${userData?.firstName}.`;
+
     return (
         <>
             {userData ?
                 <>
-                <div className="bg-base-200 w-full">
+                <div className=" w-full">
                     <div className=" mx-20 ">
                     <div className="flex flex-col mt-12 ">
-                        <div className="flex justify-start w-full mb-5 ml-10">
-                            <Input type="text" value={searchTerm} onChange={handleSearchChange}
+
+                        <div className="ml-10">
+                        <div className="flex justify-between w-full ">
+                       
+                            <TextGenerateEffect words={welcoming} />
+                          
+                            <Input 
+                                type="text" 
+                                value={searchTerm} 
+                                onChange={handleSearchChange}
                                 placeholder="Search content here..."
-                                className="text-start w-96" />
+                                className="text-start w-96 shadow-custom-light dark:shadow-custom-dark" 
+                            />
                         </div>
+                        </div>
+
                         <div className="flex justify-center mb-10">
                             {searchTerm.length > 2 &&
                                 <div className="flex flex-col bg-base border rounded-2xl mb-5">
@@ -269,7 +281,7 @@ const Home = () => {
                         <div className="flex flex-row w-full">
                             <div className=" flex flex-col w-full">
                                 <div id="recent" className="flex flex-col">
-                                    <h1 className=" text-2xl ml-10 my-10" style={{ margin: "0px 45px 30px 45px" }}>
+                                    <h1 className=" text-2xl ml-10 " >
                                         Your Recent Quizzes
                                     </h1>
                                     <div className="flex flex-row w-full justify-between">

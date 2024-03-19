@@ -27,6 +27,10 @@ module.exports = {
     extend: {
       boxShadow: {
         input: `0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`,
+        'drop-light': '0px 10px 15px 7px rgba(255, 255, 255, 0.09)',
+        'custom-light': '0 10px 14px 0 #A9A9B8',
+        // 'custom-dark': '0px  0px 0px 0px rgba(70, 85, 95, 0.02)',
+       
       },
       colors: {
         border: "hsl(var(--border))",
@@ -35,6 +39,7 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         'neon-green': '#39ff14',
+        'custom-blue': 'rgb(55, 0, 222)',
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -178,7 +183,7 @@ module.exports = {
             "primary": "#a3e635", 
             "secondary": "#4f46e5", 
             "accent": "#a3e635",  
-            "neutral": "#ffedd5",     
+            "neutral": "white",     
             "base-100": "#e0e7ff",     
             "info": "#4f46e5",     
             "success": "#bef264",     
