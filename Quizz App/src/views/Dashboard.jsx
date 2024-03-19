@@ -147,13 +147,13 @@ const Dashboard = () => {
                 exit={{ opacity: 0, x: 200 }} // Exits to the right
                 transition={{ duration: 0.9 }}
             >
-                <div className="flex flex-col h-full items-start justify-center mt-10 ml-20 pl-5">
-                    <h1 className="mb-5 text-3xl font-bold ">Dashboard</h1>
+                <div className="flex flex-col h-full items-start justify-center mt-10 ml-20 pl-5 ">
+                    <h1 className="mb-5 text-3xl font-bold ml-20 text-black  dark:text-neutral">Dashboard</h1>
                     {userData && (userData.role === 'teacher' || userData.isAdmin === true) ?
                         (<>
                             {/* teacher dashboard */}
-                            <div className="flex flex-row h-full items-center justify-between ">
-                                <div className="stats shadow-lg bg-white round-md">
+                            <div className="flex flex-row h-full ">
+                                <div className="stats shadow-lg bg-white drak:bg-transparent round-md w-96 h-40 ml-20">
                                     <div className="stat">
                                         <div className="stat-title">Quizzes created:</div>
                                         <div className="stat-value">{quizzesCreated}</div>
@@ -163,7 +163,7 @@ const Dashboard = () => {
 
 
                                 {/* last 20 solvings only for now */}
-                                <div className="stats shadow-lg bg-white  round-md">
+                                <div className="stats shadow-lg bg-white drak:bg-transparent round-md  w-96 h-40 ml-20">
                                     <div className="stat">
                                         <div className="stat-title">Average grade</div>
                                         <div className="stat-value">{mostOccuringGrad}</div>
@@ -312,7 +312,8 @@ const Dashboard = () => {
                         </div>
                     )}
                     {userData && (userData.role === 'teacher') &&
-                        (<Popover open={open} onOpenChange={setOpen}>
+                    <div className="flex flex-row h-full items-start justify-between ml-20 mt-10">
+                        <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>
                                 <Button
                                     variant="outline"
@@ -355,7 +356,8 @@ const Dashboard = () => {
                                 </Command>
                             </PopoverContent>
                         </Popover>
-                        )}
+                        
+                        </div>}
 
                     {/*             
                     <table>
@@ -369,7 +371,7 @@ const Dashboard = () => {
                             })}
                     </table> */}
 
-                    <ScrollArea className="flex flex-grow h-[430px] w-[1500px] rounded-xl border-[#00014f60] p-4 justify-center items-center">
+                    <ScrollArea className="flex flex-grow h-[430px] w-[1400px] rounded-xl border-[#00014f60] p-4 justify-center items-center ml-20">
                     <motion.table
                                             className="table bg-white"
                                             initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above its final position
