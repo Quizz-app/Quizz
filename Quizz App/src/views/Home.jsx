@@ -156,12 +156,13 @@ const Home = () => {
                                 </div>
                                 <div className="flex flex-row ">
                                     <div className=" flex flex-col ">
-                                        <div id="recent" className="flex flex-col">
+                                        <div id="recent" className="flex flex-col ">
                                             <h1 className="text-2xl ml-10 font-bold text-primary" >
                                                 Your Recent Quizzes
                                             </h1>
+                                            <div className="border-t-2 border-black-700  mb-5 w-96 ml-10"></div>
                                             <div className="flex flex-row ">
-                                                <div id="your-recent" className="ml-10 mr-10">
+                                                <div id="your-recent" className="ml-10 mr-10 ">
                                                     {userData.role === 'student' ? (
                                                         <div id="student" className="flex flex-row ">
                                                             {studentQuizzes && studentQuizzes.length > 0 ? (
@@ -187,9 +188,12 @@ const Home = () => {
                                         </div>
                                         <div id="popular" className="flex flex-col ml-10 mt-10">
                                             <div className="flex mt-15 font-bold" style={{ margin: '-30px 10px' }}>
-                                                <h1 className="text-2xl mb-5">
-                                                    Popular
-                                                </h1>
+                                                <div className="flex flex-col">
+                                                    <h1 className="text-2xl ">
+                                                        Popular
+                                                    </h1>
+                                                    <div className="border-t-2 border-black-700  mb-5 w-96 "></div>
+                                                </div>
                                             </div>
                                             <div className="flex flex-row">
                                                 <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={4} />
@@ -197,21 +201,28 @@ const Home = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <div className="mb-20 mt-10">
-                                        <h2 className="text-center text-3xl mr-5 mb-10 font-bold">Trending Categories</h2>
+
+                                <div className="mt-20 mx-10 ">
+                                    <div className="mb- mt-10 ">
+                                        <h2 className="text-center text-3xl  font-bold ">Trending Categories</h2>
+                                        <div className="border-t-2 border-black-700  mb-5 w-full  mb-10 mt-5"></div>
                                         {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
-                                            <div key={index} className="mt-10">
-                                                <h3 className="ml-10 text-2xl mb-5 font-bold">{categoryWithQuizzes.category}</h3>
-                                                <div className="flex flex-row w-full ml-10" style={{ margin: '-30px 30px' }}>
-                                                    {categoryWithQuizzes.quizzes.map((quiz, index) => (
-                                                        <ThreeDCardDemo key={index} quiz={quiz} />
-                                                    ))}
+                                            <div key={index} className="mb-20">
+                                                <div className="flex flex-col items-start justify-start ">
+                                                    <h3 className="ml-10 text-2xl mb-5 font-bold  ">{categoryWithQuizzes.category}</h3>
+                                                </div>
+                                                <div className="flex flex-row w-full  border-base rounded-md shadow-lg justify-start" >
+                                                    <div className=" flex flex-row mx-10">
+                                                        {categoryWithQuizzes.quizzes.map((quiz, index) => (
+                                                            <ThreeDCardDemo key={index} quiz={quiz} />
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

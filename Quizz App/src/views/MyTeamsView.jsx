@@ -69,17 +69,27 @@ const MyTeamsView = () => {
                 exit={{ opacity: 0, x: 200 }} // Exits to the right
                 transition={{ duration: 0.9 }}
             >
-                <div className="m-10 mx-20">
+                <div className="m-10 mx-20 mt-20">
                     <div className="flex flex-row h-full items-start justify-between ">
-                        <div className="">
-                            <h2 className="text-4xl font-bold mb-4">
-                                {teams?.length > 0 ? "My Teams" : "You haven't participated in any teams."}
-                            </h2>
+                        <div className="flex flex-row">
+                            <h2 className="text-4xl font-bold mb-4">My Teams</h2>
+                            <div className="ml-5">
+                                <p >Here you can manage your teams,</p>
+                                <p >create new ones and you will be directed to the teams panel.</p>
+                            </div>
                         </div>
                         <div>
                             <Dialog onClose={handleCloseDialog}>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline" onClick={handleButtonClick}> New Team +</Button>
+                                    <motion.button
+                                        onClick={handleButtonClick}
+                                        className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
+                                        initial={{ scale: 2 }}
+                                        animate={{ scale: [1, 1.05, 1] }}
+                                        transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                    >
+                                        New Team +
+                                    </motion.button>
                                 </DialogTrigger>
                                 <DialogContent className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
                                     <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 ">
@@ -111,12 +121,15 @@ const MyTeamsView = () => {
                                     <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
                                 </DialogContent>
                             </Dialog>
+
+
                         </div>
-                    </div>
+
+                    </div>   <div className="border-t-2 border-black-700 mt-5 mb-5"></div>
                     <div>
                         {teams?.length > 0 ? (
                             <div className="flex flex-col">
-                                <div className="grid grid-cols-5">
+                                <div className="grid grid-cols-5 ml-10 mt-10">
                                     {teams.map((team, index) => (
                                         <TeamCard key={index} team={team} handleClick={() => userLeaveTeam(userData.username, team.id)} type={'team'} path={'team'} />
                                     ))}

@@ -161,12 +161,12 @@ const QuizResults = () => {
                         exit={{ opacity: 0, x: 200 }} // Exits to the right
                         transition={{ duration: 0.9 }}
                     >
-                        <div className="flex flex-col mx-20 mt-10">
+                        <div className="flex flex-col mx-20 mt-20 mb-40">
                             {/* overview  */}
-                            <div className="flex flex-col " >
+                            <div className="flex flex-col" >
                                 <div className="flex flex-row justify-between mb-5">
-                                    <h1 className="text-4xl font-bold mb-4 text-[#0073ffa4]">Your performance overview</h1>
-                                    <h2 className="text-2xl font-bold text-[#0073ffa4] mt-2">Quiz: {quiz.title}</h2>
+                                    <h1 className="text-4xl font-bold mb-4 text-black">Your performance overview</h1>
+                                    <h2 className="text-2xl font-bold text-black mt-2 ml-10">Quiz: {quiz.title}</h2>
                                     <div>
 
                                         <motion.button
@@ -182,29 +182,29 @@ const QuizResults = () => {
 
                                 </div>
 
-
-                                <div className="flex flex-row items-start justify-between mb-10">
-                                    <div className="flex flex-col items-start justify-start">
-                                        <h2 className="text-2xl  mb-4 ">{userData.role === 'teacher' || userData.isAdmin === 'true' ? `{} score:` : `Your score:`} {score} </h2>
+                                <div className="border-t-2 border-black-700  w-full   mt-5"></div>
+                                <div className="flex flex-row items-start justify-between  my-5">
+                                    <div className="flex flex-col items-start justify-start ml-5">
+                                        <h2 className="text-2xl  mb-4 ">Your score:  {score} </h2>
                                         <h2 className="text-2xl  mb-4 ">Total score: {totalPoints}</h2>
-                                    </div>
-
-                                    <div className="flex flex-col items-start justify-center mb-7 ">
-                                        <h2 className="text-2xl  mb-4 ">Total questions: {totalQuestions}</h2>
-                                        <h2 className="text-2xl  mr-5 ">Answered: {userAnswers.filter((answer, index) => answer[index] !== 'null').length}</h2>
                                     </div>
 
                                     <div className="flex items-start justify-start  ">
                                         <h2 className="text-2xl  mb-4">Overall grade:
                                             <div className="ml-5">
                                                 {quiz &&
-                                                    score >= Number(grades.good) ? <div className="badge badge-primary bg-green-500 badge-outline">Good</div> :
-                                                    (score > Number(grades.bad) && score < Number(grades.good)) ? <div className="badge badge-primary bg-yellow-500 badge-outline">Satisfactory</div> :
-                                                        (score <= Number(grades.bad)) ? <div className="badge badge-error badge-outline bg-red-500 py-3 px-6">Poor</div> : ''
+                                                    score >= Number(grades.good) ? <div className="badge badge-black bg-green-100 badge-outline py-3 px-6">Good</div> :
+                                                    (score > Number(grades.bad) && score < Number(grades.good)) ? <div className="badge badge-black bg-yellow-100 badge-outline py-3 px-6">Satisfactory</div> :
+                                                        (score <= Number(grades.bad)) ? <div className="badge badge-error badge-black bg-red-100 py-3 px-6">Poor</div> : ''
                                                 }
                                             </div>
                                         </h2>
                                     </div>
+                                    <div className="flex flex-col items-start justify-center mb-7 ">
+                                        <h2 className="text-2xl  mb-4 ">Total questions: {totalQuestions}</h2>
+
+                                    </div>
+
 
                                     <div id="feedback" className="flex ">
                                         <textarea
@@ -216,7 +216,9 @@ const QuizResults = () => {
                                         {/* <button className="btn btn-primary" onClick={handleFeedback}>Save</button> */}
                                         <MdDownloadDone className="mr-5 ml-3" onClick={handleFeedback} size="2em" />
                                     </div>
+
                                 </div>
+                                <div className="border-t-2 border-black-700 mb-20"></div>
 
 
                             </div>

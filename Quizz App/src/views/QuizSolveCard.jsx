@@ -67,7 +67,7 @@ const QuizSolveCard = ({ question, quizId, }) => {
                             ))}
                         </div>
 
-                        {question && <p className="text-lg mb-4">Points: {question.points}</p>}
+                        {question && <p className="text-lg mb-4 font-bold">Points: {question.points}</p>}
                     </BackgroundGradient>
                 </div>
             </div>

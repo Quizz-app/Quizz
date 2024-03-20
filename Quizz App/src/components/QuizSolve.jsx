@@ -84,7 +84,7 @@ const QuizSolve = () => {
 
     return (
         <>
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-10">
                 {!isCountdownFinished ? (
                     questions[currentQuestionIndex] && (
                         <div className="mt-10">
