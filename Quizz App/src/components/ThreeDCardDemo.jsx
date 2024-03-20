@@ -25,15 +25,9 @@ import { areUsersInSameTeam } from "../services/teams-service";
 export const ThreeDCardDemo = ({ quiz, teamId }) => {
 
   const { userData } = useContext(AppContext);
-  const [inSameTeam, setInSameTeam] = useState(false);
-
   const navigate = useNavigate();
   const isTeacherOrCreator = (userData?.role === 'teacher' && quiz.creator === userData.username)
-  const isTeamMember = inSameTeam && userData?.username !== quiz?.creator;
-  const buttonText = isTeacherOrCreator || isTeamMember ? 'See quiz' : 'Start quiz';
-  const buttonClickPath = isTeacherOrCreator || isTeamMember ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
-
-  areUsersInSameTeam(userData?.username, quiz?.creator, teamId).then(setInSameTeam);
+  const buttonClickPath = isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
 
   return (
     <CardContainer className=" w-64 h-64 flex-shrink-0 mr-5 p-0">
@@ -51,23 +45,14 @@ export const ThreeDCardDemo = ({ quiz, teamId }) => {
         >
           {quiz?.description}
         </CardItem>
-        {quiz?.isCompleted ? (<CardItem
+        <CardItem
           translateZ={20}
           as="button"
           className="px-4 py-2 rounded-xl bg-blue-600 dark:bg-white dark:text-black text-white text-xs font-bold"
-          onClick={() => navigate(`/results/${quiz?.id}`)}
+          onClick={() => navigate(buttonClickPath)}
         >
           See quiz
-        </CardItem>)
-          :
-          (<CardItem
-            translateZ={20}
-            as="button"
-            className="px-4 py-2 rounded-xl bg-blue-600 dark:bg-white dark:text-black text-white text-xs font-bold"
-            onClick={() => navigate(buttonClickPath)}
-          >
-            {buttonText}
-          </CardItem>)}
+        </CardItem>
       </CardBody>
     </CardContainer>
   );
