@@ -118,16 +118,31 @@ const MyLibrary = () => {
                 >
                     {userData && (userData.role === 'teacher' || userData.isAdmin === true) ? (
                         <>
-                            <div className="mx-20">
+                            <div className="mx-20 mt-20">
                                 <div className="flex flex-row h-full  justify-between mt-10 ">
-                                    <div className="ml-3">
-                                        <p >Here you can view and manage your quizzes,</p>
-                                        <p >create new ones and you will be directed to the creation panel.</p>
+
+                                    <div className="flex flex-row">
+                                        <h1 className="text-4xl font-bold">My Library</h1>
+                                        <div className="ml-5">
+                                            <p >Here you can view and manage your quizzes,</p>
+                                            <p >create new ones and you will be directed to the creation panel.</p>
+                                        </div>
                                     </div>
+
                                     <div className="mr-7">
                                         <Dialog onClose={handleCloseDialog}>
                                             <DialogTrigger asChild>
-                                                <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button>
+                                                {/* <Button variant="outline" onClick={handleButtonClick}> New Quiz +</Button> */}
+                                                <motion.button
+                                                    onClick={handleButtonClick}
+                                                    className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
+                                                    initial={{ scale: 2 }}
+                                                    animate={{ scale: [1, 1.05, 1] }}
+                                                    transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                                >
+                                                    New Quiz +
+                                                </motion.button>
+
                                             </DialogTrigger>
                                             <DialogContent className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
                                                 <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 ">
@@ -248,7 +263,7 @@ const MyLibrary = () => {
                         </>
                     )}
                 </motion.div>
-            </AnimatePresence>
+            </AnimatePresence >
         </>
     );
 }

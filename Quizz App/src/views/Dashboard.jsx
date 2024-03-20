@@ -143,8 +143,10 @@ const Dashboard = () => {
                 exit={{ opacity: 0, x: 200 }} // Exits to the right
                 transition={{ duration: 0.9 }}
             >
-                <div className="flex flex-col h-full items-start justify-center mt-10 ml-20 pl-5 ">
-                    <h1 className="mb-5 text-3xl font-bold text-black  dark:text-neutral">Dashboard</h1>
+                <div className="flex flex-row h-full items-center justify-center mt-20">
+                <div className="flex flex-col h-full items-start justify-center  ">
+                    {userData && userData.role === 'teacher' &&  <h1 className="mb-5 text-3xl font-bold text-black  dark:text-neutral ml-20">Dashboard</h1>}
+                    {userData && userData.role === 'student' && <h1 className="mb-5 text-3xl font-bold text-black  dark:text-neutral">Dashboard</h1>}
                     {userData && (userData.role === 'teacher' || userData.isAdmin === true) ?
                         (<>
                             {/* teacher dashboard */}
@@ -394,6 +396,7 @@ const Dashboard = () => {
                             </ScrollArea>
                         </>
                     }
+                </div>
                 </div>
 
             </motion.div>
