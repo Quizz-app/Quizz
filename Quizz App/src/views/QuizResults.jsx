@@ -193,8 +193,8 @@ const QuizResults = () => {
                                         <h2 className="text-2xl  mb-4">Overall grade:
                                             <div className="ml-5">
                                                 {quiz &&
-                                                    score >= Number(grades.good) ? <div className="badge badge-black bg-green-100 badge-outline">Good</div> :
-                                                    (score > Number(grades.bad) && score < Number(grades.good)) ? <div className="badge badge-black bg-yellow-100 badge-outline ">Satisfactory</div> :
+                                                    score >= Number(grades.good) ? <div className="badge badge-black bg-green-100 badge-outline py-3 px-6">Good</div> :
+                                                    (score > Number(grades.bad) && score < Number(grades.good)) ? <div className="badge badge-black bg-yellow-100 badge-outline py-3 px-6">Satisfactory</div> :
                                                         (score <= Number(grades.bad)) ? <div className="badge badge-error badge-black bg-red-100 py-3 px-6">Poor</div> : ''
                                                 }
                                             </div>
