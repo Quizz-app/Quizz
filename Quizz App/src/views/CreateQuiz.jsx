@@ -517,7 +517,7 @@ const CreateQuiz = () => {
                         )}
                     </div>
                     <div className="flex flex-col justify-between">
-                        <div className="flex flex-row ">
+                        <div className="flex flex-row mb-10">
                             <div id='questions-cards' className="grid grid-cols-3 w-800px mr-5">
                                 {questions ? (
                                     questions.map((question, index) => (
@@ -545,14 +545,14 @@ const CreateQuiz = () => {
                                     <h1>No questions yet</h1>
                                 )}
                             </div>
-                            {createMode && (
+                            <div style={{ minHeight: '200px' }}>
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.8 }} // Starts smaller and invisible
-                                    animate={{ opacity: 1, scale: 1 }} // Scales up to its original size and becomes visible
-                                    exit={{ opacity: 0, scale: 0.8 }} // Scales down and becomes invisible
+                                    animate={{ opacity: createMode ? 1 : 0, scale: createMode ? 1 : 0.8 }} // Scales up to its original size and becomes visible
                                     transition={{ duration: 0.5 }} // The duration of the transition
+                                    style={{ visibility: createMode ? 'visible' : 'hidden' }} // Makes the div invisible but keeps its space in the DOM
                                 >
-                                    <div id="create-question-card" className="mr-10 mt-10 ">
+                                    <div id="create-question-card" className="mr-10 mt-10 " >
                                         <div className='card w-80 bg-gradient-to-br from-white to-gray-100 shadow-xl'>
                                             <div className="card-body">
                                                 <Label htmlFor="question">Question</Label>
@@ -576,7 +576,7 @@ const CreateQuiz = () => {
                                         </div>
                                     </div>
                                 </motion.div>
-                            )}
+                            </div>
 
                             <div id="quiz-management" className="flex flex-col mb-5 mt-7 ml-10">
                                 <div className="mb-10">
@@ -592,7 +592,7 @@ const CreateQuiz = () => {
                                         <div className="border-t-2 border-gray-400  mb-2"></div>
                                         <Popover open={open} onOpenChange={setOpen}>
                                             <PopoverTrigger asChild>
-                                                <Button variant="outline" role="combobox" className="w-[200px] justify-between">
+                                                <Button variant="outline" role="combobox" className="w-[200px] justify-between border border-gray">
                                                     {timeLimit ? timeRanges.find((framework) => Number(framework.value) === timeLimit)?.label : "Set Time Limit"}
                                                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                 </Button>
@@ -625,6 +625,7 @@ const CreateQuiz = () => {
                                             <DatePickerDemo
                                                 selected={date}
                                                 onSelect={setDate}
+                                                pickedDate={quiz?.endsOn}
                                             />
                                         </div>
                                         <div className="">
@@ -640,8 +641,6 @@ const CreateQuiz = () => {
                                     <div >
                                         <div className="flex justify-between ">
                                             <h1 className="text-xl mb-2 mt-3">Grading System </h1>
-
-                                            {/* <FaArrowRight className="mt-5"/> */}
                                         </div>
                                         <div className="border-t-2 border-gray-400  mb-2 " ></div>
                                         <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />

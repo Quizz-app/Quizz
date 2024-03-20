@@ -11,7 +11,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function DatePickerDemo({ selected, onSelect }) {
+export function DatePickerDemo({ selected, onSelect, pickedDate }) {
     const [date, setDate] = useState(new Date().toLocaleString("en-US", { timeZone: "Europe/Sofia" }));
 
     useEffect(() => {
@@ -27,17 +27,17 @@ export function DatePickerDemo({ selected, onSelect }) {
         <Popover>
             <PopoverTrigger>
                 <Button
-                    variant={"outline"}
+                    variant={"outlined"}
                     className={cn(
-                        "w-[240px] justify-start text-left font-normal",
+                        "w-[240px] justify-start text-left font-normal border",
                         !date && "text-muted-foreground"
                     )}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    {pickedDate ? pickedDate : date ? format(new Date(date), "dd/MM/yyyy") : "Select date"}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-black text-white" align="start">
+            <PopoverContent className="w-auto p-0 bg-base-100 text-dark" align="start">
                 <Calendar
                     mode="single"
                     selected={date}
