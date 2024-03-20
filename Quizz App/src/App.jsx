@@ -53,7 +53,6 @@ const App = () => {
     setTheme(event.target.checked ? "aqua" : "1");
   };
 
-  console.log(context);
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ ...context, setContext }}>
