@@ -47,7 +47,7 @@ export const ThreeDCardDemo = ({ quiz, teamId }) => {
         <CardItem
           as="p"
           translateZ="100"
-          className="text-black text-sm max-w-sm mt-2 dark:text-dark-300 text-left font-bold truncate overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs h-20"
+          className="text-black text-sm max-w-sm mt-2 dark:text-dark-300 text-left truncate overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs h-20"
         >
           {quiz?.description}
         </CardItem>
