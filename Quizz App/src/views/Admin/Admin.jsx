@@ -8,6 +8,7 @@ import {
 import { deleteQuizById, getAllQuizzes } from "../../services/quiz-service";
 import UserView from "./UserView";
 import { Input } from "../../components/ui/input";
+import { motion } from 'framer-motion';
 
 const Admin = () => {
   const [page, setPage] = useState(1);
@@ -232,9 +233,15 @@ const Admin = () => {
                       <td>{quiz.creator}</td>
                       <td>{new Date(quiz.createdOn).toLocaleDateString()}</td>
                       <td>
-                        <button className="btn btn-primary" onClick={() => handleDeleteQuiz(quiz.id)}>
-                          Delete
-                        </button>
+                        <motion.button
+                          onClick={() => handleDeleteQuiz(quiz.id)}
+                          className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-red-600 px-8 py-2 bg-red-500 rounded-md text-white font-bold transition duration-200 ease-linear "
+                          initial={{ scale: 2 }}
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                        >
+                          Delete quiz
+                        </motion.button>
                       </td>
                     </tr>
                   ))}
