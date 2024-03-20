@@ -94,21 +94,21 @@ const Dashboard = () => {
                     setWeeklyScoreData([data]);
                 });
         }
-    }, [userData]); // Add userData to the dependency array
+    }, [userData]);
 
     useEffect(() => {
         const fetchData = async () => {
             if (userData && userData.username && userData.role === 'student') {
                 const data = await scheduleUserQuizzesScoreAveragePerWeek(userData.username);
 
-                // If the array length is 4, reset the array
+                
                 if (weeklyScoreData.length === 4) {
                     setWeeklyScoreData([data]);
                 } else {
                     setWeeklyScoreData((prevData) => [...prevData, data]);
                 }
 
-                // Store the time of the last fetch in localStorage
+               
                 localStorage.setItem('lastFetchTime', Date.now().toString());
             }
         };

@@ -27,7 +27,8 @@ export const ThreeDCardDemo = ({ quiz }) => {
 
   const isTeacherOrCreator = (userData?.role === 'teacher')
   const isQuizCompleted = userData?.quizzes?.[quiz.id]?.isCompleted;
-  const buttonClickPath = isQuizCompleted ? `/results/${quiz.id}` : isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
+  
+  const buttonClickPath = isQuizCompleted ? `/results/${quiz?.id}` : isTeacherOrCreator ? `/quiz/${quiz?.id}` : `/quiz-preview/${quiz?.id}`;
   
   return (
     <CardContainer className=" w-64 h-64 flex-shrink-0 mr-5 p-0">

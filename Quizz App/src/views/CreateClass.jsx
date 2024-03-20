@@ -75,7 +75,7 @@ const CreateClass = () => {
                     <div className="hero min-h-screen flex flex-col bg-base rounded-lg">
                         <div className="hero-content text-center flex flex-col w-full">
                             <div className="flex flex-row mt-10 justify-between w-full">
-                                <div className="flex w-3/4">
+                                {userData?.role === 'teacher' && (<div className="flex w-3/4">
                                     <Input className="input input-bordered" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
                                     <label className="btn btn-circle swap swap-rotate ml-3">
                                         {/* this hidden checkbox controls the state */}
@@ -88,7 +88,7 @@ const CreateClass = () => {
                                         <svg className="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" /></svg>
 
                                     </label>
-                                </div>
+                                </div>)}
                                 <div>
                                     {userData && currentClass.creator && (userData.isAdmin || userData.username === currentClass.creator.username) &&
                                         <motion.button

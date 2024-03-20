@@ -110,8 +110,8 @@ const Header = ({ theme, onThemeChange }) => {
                   <div tabIndex={0} role="button" className="btn m-1">Notifications
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                       {teamInvites.map((invite, index) => (
-                        <li key={index}>
-                          <div className="flex flex-col">
+                        
+                          <div key={index} className="flex flex-col">
                             <p>
                               You have an invitation from {invite.inviter} for team {invite.teamName}
                             </p>
@@ -120,7 +120,7 @@ const Header = ({ theme, onThemeChange }) => {
                               <button className="btn btn-xs ml-3" onClick={() => handleInviteResponse(invite.teamId, false)}>Decline</button>
                             </div>
                           </div>
-                        </li>
+                        
                       ))}
                     </ul>
                   </div>
