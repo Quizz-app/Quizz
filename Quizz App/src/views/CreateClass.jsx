@@ -4,7 +4,6 @@ import { getAllStudents } from "../services/users-service";
 import { onClassMembersChange, getClassById, removeMemberFromClass, inviteUserToClass, deleteClass, getAllClassQuizzes } from "../services/class-service.js";
 import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
-
 import { Input } from ".././components/ui/input";
 import QuizCardPaginated from "../components/QuizCardPaginated.jsx";
 import TableWithPagination from "../components/TableWithPagination.jsx";
@@ -75,19 +74,34 @@ const CreateClass = () => {
                 >
                     <div className="hero min-h-screen flex flex-col bg-base rounded-lg">
                         <div className="hero-content text-center flex flex-col w-full">
-                            <div className="flex mt-5">
-                                <Input className="input input-bordered w-full max-w-xs" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
-                                <label className="btn btn-circle swap swap-rotate ml-3">
-                                    {/* this hidden checkbox controls the state */}
-                                    <input type="checkbox" onChange={() => setShowResults(!showResults)} />
+                            <div className="flex flex-row mt-10 justify-between w-full">
+                                <div className="flex w-3/4">
+                                    <Input className="input input-bordered" type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search for teacher" />
+                                    <label className="btn btn-circle swap swap-rotate ml-3">
+                                        {/* this hidden checkbox controls the state */}
+                                        <input type="checkbox" onChange={() => setShowResults(!showResults)} />
 
-                                    {/* hamburger icon */}
-                                    <svg className="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" /></svg>
+                                        {/* hamburger icon */}
+                                        <svg className="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" /></svg>
 
-                                    {/* close icon */}
-                                    <svg className="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" /></svg>
+                                        {/* close icon */}
+                                        <svg className="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" /></svg>
 
-                                </label>
+                                    </label>
+                                </div>
+                                <div>
+                                    {userData && currentClass.creator && (userData.isAdmin || userData.username === currentClass.creator.username) &&
+                                        <motion.button
+                                            onClick={() => handleDeleteClass()}
+                                            className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-red-600 px-8 py-2 bg-red-500 rounded-md text-white font-bold transition duration-200 ease-linear "
+                                            initial={{ scale: 2 }}
+                                            animate={{ scale: [1, 1.05, 1] }}
+                                            transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                        >
+                                            Delete team
+                                        </motion.button>
+                                    }
+                                </div>
                             </div>
                             <div className="w-full">
                                 <div className="ml-10 mr-10">
@@ -124,12 +138,6 @@ const CreateClass = () => {
                                     </table>
                                 </div>
                             </div>
-                            <div>
-                                {userData && currentClass.creator && (userData.isAdmin || userData.username === currentClass.creator.username) &&
-                                    <button className="btn btn-secondary" onClick={() => handleDeleteClass()}>Delete class</button>
-                                }
-                            </div>
-                            <div className="divider"></div>
                             <div className="">
                                 <QuizCardPaginated currentQuiz={classQuizzes} quizzesPerPage={itemsPerPage} />
                             </div>
