@@ -341,7 +341,7 @@ const CreateQuiz = () => {
 
     return (
 
-        <div className="m-10">
+        <div className="mt-10 ml-20 mr-20">
             <AnimatePresence mode='wait'>
                 <motion.div
                     initial={{ opacity: 0, x: -200 }} // Starts from the left
@@ -581,7 +581,7 @@ const CreateQuiz = () => {
                             <div id="quiz-management" className="flex flex-col mb-5 mt-7 ml-10">
                                 <div className="mb-10">
                                     <h1 className="text-xl mb-2 mt-3">Quiz Description</h1>
-                                    <div className="border-t-2 border-gray-200 mt-2 mb-2"></div>
+                                    <div className="border-t-2 border-gray-400 mt-2 mb-2"></div>
                                     <div className="w-96">
                                         <Input type="text" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={handleSetDescription} placeholder="Enter the description" />
                                     </div>
@@ -589,7 +589,7 @@ const CreateQuiz = () => {
                                 <div className="flex flex-row justify-between mb-5">
                                     <div className="flex flex-col">
                                         <h1 className="text-xl mb-2 mt-3">Time Limit</h1>
-                                        <div className="border-t-2 border-gray-200  mb-2"></div>
+                                        <div className="border-t-2 border-gray-400  mb-2"></div>
                                         <Popover open={open} onOpenChange={setOpen}>
                                             <PopoverTrigger asChild>
                                                 <Button variant="outline" role="combobox" className="w-[200px] justify-between">
@@ -620,7 +620,7 @@ const CreateQuiz = () => {
                                     </div>
                                     <div className="ml-11 ">
                                         <h1 className="text-xl mb-2 mt-3">Quiz Deadline</h1>
-                                        <div className="border-t-2 border-gray-200  mb-2"></div>
+                                        <div className="border-t-2 border-gray-400  mb-2"></div>
                                         <div className="flex flex-row mt-2 mb-5">
                                             <DatePickerDemo
                                                 selected={date}
@@ -643,7 +643,7 @@ const CreateQuiz = () => {
 
                                             {/* <FaArrowRight className="mt-5"/> */}
                                         </div>
-                                        <div className="border-t-2 border-gray-200  mb-2 " ></div>
+                                        <div className="border-t-2 border-gray-400  mb-2 " ></div>
                                         <Input type="number" value={grades.good} onChange={(e) => setGrades({ ...grades, good: e.target.value })} placeholder="Satisfactory/Good border" />
                                         <Input type="number" value={grades.bad} onChange={(e) => setGrades({ ...grades, bad: e.target.value })} placeholder="Satisfactory/Bad border" />
                                     </div>
@@ -666,7 +666,7 @@ const CreateQuiz = () => {
                                     </motion.button>
                                     <motion.button
                                         onClick={handleDeleteQuiz}
-                                        className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-red-600 px-8 py-2 bg-red-500 rounded-md text-black font-bold transition duration-200 ease-linear "
+                                        className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-red-600 px-8 py-2 bg-red-500 rounded-md text-white font-bold transition duration-200 ease-linear "
                                         initial={{ scale: 2 }}
                                         animate={{ scale: [1, 1.05, 1] }}
                                         transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}

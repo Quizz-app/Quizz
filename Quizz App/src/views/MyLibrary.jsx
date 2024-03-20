@@ -221,11 +221,11 @@ const MyLibrary = () => {
                                 <p >which are assigned to you, you can see the results of your quiz</p>
                             </div>
                             <div>
-                                <div className="flex flex-col h-full justify-between mx-20">
+                                <div className="flex flex-col h-full justify-between mx-20 mb-10">
                                     <div>
                                         <div className="w-full mb-5">
                                             <h2 className="text-4xl font-bold mb-4 ">Completed</h2>
-                                            <div className="border-t-2 border-neon-green mb-5"></div>
+                                            <div className="border-t-2 border-base-400 mb-5"></div>
                                         </div>
                                         {studentQuizzes?.completed?.length > 0 ? (
                                             <QuizCardPaginated currentQuiz={studentQuizzes?.completed} quizzesPerPage={quizzesPerPageStudent} />
@@ -236,7 +236,7 @@ const MyLibrary = () => {
                                     <div>
                                         <div className="w-full mb-10">
                                             <h2 className="text-4xl font-bold mb-4 mt-5">Todo</h2>
-                                            <div className="border-t-2 border-neon-green mb-5"></div>
+                                            <div className="border-t-2 border-base-400 mb-5"></div>
                                         </div>
                                         {studentQuizzes?.nonCompleted?.length > 0 ? (
                                             <QuizCardPaginated currentQuiz={studentQuizzes?.nonCompleted} quizzesPerPage={quizzesPerPageStudent} />

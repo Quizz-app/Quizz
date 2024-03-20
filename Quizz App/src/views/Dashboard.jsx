@@ -14,7 +14,6 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command"
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import RankingTable from "../components/RankingTable";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area"
 
@@ -35,9 +34,6 @@ const Dashboard = () => {
     const [quizId, setQuizId] = useState('');
     const [quizS, setQuiz] = useState('');
     const [rankedQuizSolvers, setRankedQuizSolvers] = useState([]);
-
-
-    const experimentalData = [36, 78, 56, 78];
 
     useEffect(() => {
         (async () => {
@@ -137,7 +133,7 @@ const Dashboard = () => {
         return { label: clasz.name, value: clasz.id };
     });
 
-    // console.log(rankedQuizSolvers);
+
     return (
 
         <AnimatePresence mode='wait'>
@@ -259,21 +255,14 @@ const Dashboard = () => {
                                     </Popover>
                                 </div>
 
-                                {/* <table className="ml-10">
-                                    {rankedMembers.length > 0 &&
-                                        rankedMembers.map((member, index) => {
-                                            return <RankingTable key={index} student={member} index={index + 1} />
-                                        })}
-                                </table> */}
-
                                 <div className="">
                                     <ScrollArea className="flex flex-grow h-[380px] w-[500px] rounded-xl  p-4 justify-center items-center">
                                         <motion.table
                                             className="table bg-white"
-                                            initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above its final position
-                                            animate={{ opacity: 1, y: 0 }} // Moves to its final position and becomes visible
-                                            exit={{ opacity: 0, y: -50 }} // Moves up and becomes invisible
-                                            transition={{ duration: 0.5 }} // The duration of the transition
+                                            initial={{ opacity: 0, y: -50 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -50 }}
+                                            transition={{ duration: 0.5 }}
                                         >
                                             <table className="table bg-white">
                                                 <thead>
@@ -297,7 +286,7 @@ const Dashboard = () => {
                                                             <td>{student?.username}</td>
                                                             <td>{`${student?.firstName} ${student?.lastName}`}</td>
                                                             <th>
-                                                                {index + 1} 
+                                                                {index + 1}
                                                                 {index === 0 && <span className="text-2xl">👑</span>}
                                                                 {index === 1 && <span className="text-2xl">🏆</span>}
                                                                 {index === 2 && <span className="text-2xl">🥉</span>}
@@ -313,138 +302,98 @@ const Dashboard = () => {
                         </div>
                     )}
                     {userData && (userData.role === 'teacher') &&
-                    <div className="flex flex-row h-full items-start justify-between ml-20 mt-10">
-                        <Popover open={open} onOpenChange={setOpen}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    aria-expanded={open}
-                                    className="w-[200px] justify-between"
-                                >
-                                    {quizS
-                                        ? quizOptions.find((framework) => framework.value === quizS)?.label
-                                        : "Choose a quizz"}
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                    {/* <CommandInput placeholder="Search framework..." /> */}
-                                    <CommandEmpty>No class selected</CommandEmpty>
-                                    <CommandGroup>
-                                        {quizOptions.map((quiz, index) => (
-                                            <CommandItem
-                                                key={index}
-                                                value={quiz.value}
-                                                onSelect={async (currentValue) => {
-                                                    // console.log(currentValue);
-                                                    // console.log(clas.value);
-                                                    setQuiz(quiz.value);
-                                                    setQuizId(quiz.value);
-                                                    setOpen(false);
-                                                }}
-                                            >
-                                                <Check
-                                                    className={cn(
-                                                        "mr-2 h-5 w-4",
-                                                        quizS === quiz.value ? "opacity-100" : "opacity-0"
-                                                    )} />
-                                                {quiz.label}
-                                            </CommandItem>
-                                        ))}
-                                    </CommandGroup>
-                                </Command>
-                            </PopoverContent>
-                        </Popover>
-                        
-                        </div>}
-
-                    {/*             
-                    <table>
-                        {rankedQuizSolvers.length > 0 &&
-                            rankedQuizSolvers.map((member, index) => {
-                                if (member.quizzes[quizId]) {
-                                    return <RankingTable key={index} student={member} score={member.quizzes[quizId].score} />;
-                                } else {
-                                    return null;
-                                }
-                            })}
-                    </table> */}
-
-                    <ScrollArea className="flex flex-grow h-[430px] w-[1400px] rounded-xl border-[#00014f60] p-4 justify-center items-center ml-20">
-                    <motion.table
-                                            className="table bg-white"
-                                            initial={{ opacity: 0, y: -50 }} // Starts invisible and slightly above its final position
-                                            animate={{ opacity: 1, y: 0 }} // Moves to its final position and becomes visible
-                                            exit={{ opacity: 0, y: -50 }} // Moves up and becomes invisible
-                                            transition={{ duration: 0.5 }} // The duration of the transition
+                        <>
+                            <div className="flex flex-row h-full items-start justify-between ml-20 mt-10">
+                                <Popover open={open} onOpenChange={setOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            aria-expanded={open}
+                                            className="w-[200px] justify-between"
                                         >
-                        <table className="table bg-white">
-                            
-                            <thead>
-                                <tr>
-                                    <th>Avatar</th>
-                                    <th>Student</th>
-                                    <th>Full Name</th>
-                                    <th>Score on quiz</th>
-                                    <th>Grade on quiz</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rankedQuizSolvers.length > 0 && rankedQuizSolvers.map((student, index) => (
-                                    <tr key={index}>
-                                        <td>
-                                            <div className="avatar">
-                                                <div className="mask mask-squircle w-12 h-12">
-                                                    <img src={student.avatar} />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>{student.username}</td>
-                                        <td>{`${student.firstName} ${student.lastName}`}</td>
-                                        <td>
-                                            {student.quizzes[quizId]?.score}
-                                            {index === 0 && <span className="text-2xl">👑</span>}
-                                            {index === 1 && <span className="text-2xl">🏆</span>}
-                                            {index === 2 && <span className="text-2xl">🥉</span>}
-                                        </td>
-                                        <td>{student.quizzes[quizId]?.grade}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </motion.table>
-                    </ScrollArea>
+                                            {quizS
+                                                ? quizOptions.find((framework) => framework.value === quizS)?.label
+                                                : "Choose a quizz"}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[200px] p-0">
+                                        <Command>
+                                            {/* <CommandInput placeholder="Search framework..." /> */}
+                                            <CommandEmpty>No class selected</CommandEmpty>
+                                            <CommandGroup>
+                                                {quizOptions.map((quiz, index) => (
+                                                    <CommandItem
+                                                        key={index}
+                                                        value={quiz.value}
+                                                        onSelect={async (currentValue) => {
+                                                            setQuiz(quiz.value);
+                                                            setQuizId(quiz.value);
+                                                            setOpen(false);
+                                                        }}
+                                                    >
+                                                        <Check
+                                                            className={cn(
+                                                                "mr-2 h-5 w-4",
+                                                                quizS === quiz.value ? "opacity-100" : "opacity-0"
+                                                            )} />
+                                                        {quiz.label}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
 
-                    {/* 
-            <div>
-                <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900"> */}
-                    {/* <Image
-                        src={`/jordans.webp`}
-                        alt="jordans"
-                        height="400"
-                        width="400"
-                        className="object-contain"
-                    /> */}
-                    {/* <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200">
-                        Air Jordan 4 Retro Reimagined
-                    </p>
+                            </div>
 
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                        The Air Jordan 4 Retro Reimagined Bred will release on Saturday,
-                        February 17, 2024. Your best opportunity to get these right now is by
-                        entering raffles and waiting for the official releases.
-                    </p>
-                    <button className="rounded-full pl-4 pr-1 py-1 text-white flex items-center space-x-1 bg-black mt-4 text-xs font-bold dark:bg-zinc-800">
-                        <span>Buy now </span>
-                        <span className="bg-zinc-700 rounded-full text-[0.6rem] px-2 py-0 text-white">
-                            $100
-                        </span>
-                    </button>
-                </BackgroundGradient>
-            </div> */}
+                            <ScrollArea className="flex flex-grow h-[430px] w-[1400px] rounded-xl border-[#00014f60] p-4 justify-center items-center ml-20">
+                                <motion.table
+                                    className="table bg-white"
+                                    initial={{ opacity: 0, y: -50 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -50 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <table className="table bg-white">
 
+                                        <thead>
+                                            <tr>
+                                                <th>Avatar</th>
+                                                <th>Student</th>
+                                                <th>Full Name</th>
+                                                <th>Score on quiz</th>
+                                                <th>Grade on quiz</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {rankedQuizSolvers.length > 0 && rankedQuizSolvers.map((student, index) => (
+                                                <tr key={index}>
+                                                    <td>
+                                                        <div className="avatar">
+                                                            <div className="mask mask-squircle w-12 h-12">
+                                                                <img src={student.avatar} />
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{student.username}</td>
+                                                    <td>{`${student.firstName} ${student.lastName}`}</td>
+                                                    <td>
+                                                        {student.quizzes[quizId]?.score}
+                                                        {index === 0 && <span className="text-2xl">👑</span>}
+                                                        {index === 1 && <span className="text-2xl">🏆</span>}
+                                                        {index === 2 && <span className="text-2xl">🥉</span>}
+                                                    </td>
+                                                    <td>{student.quizzes[quizId]?.grade}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </motion.table>
+                            </ScrollArea>
+                        </>
+                    }
                 </div>
 
             </motion.div>
