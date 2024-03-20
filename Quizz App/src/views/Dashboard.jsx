@@ -201,7 +201,7 @@ const Dashboard = () => {
                                     <div className="stats shadow-lg bg-white round-md ml-20 w-96 h-40">
                                         <div className="stat">
                                             <div className="stat-title">Place</div>
-                                            <div className="stat-value">{currentUserPosition ? `${currentUserPosition}th` : 'Not ranked'}</div>
+                                            <div className="stat-value">{currentUserPosition ? `${currentUserPosition}` : 'Not ranked'}</div>
                                             <div className="stat-title">in class </div>
                                         </div>
                                     </div>
