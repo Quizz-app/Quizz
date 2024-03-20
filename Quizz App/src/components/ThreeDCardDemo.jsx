@@ -26,7 +26,7 @@ export const ThreeDCardDemo = ({ quiz, teamId }) => {
 
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
-  const isTeacherOrCreator = (userData?.role === 'teacher' && quiz.creator === userData.username)
+  const isTeacherOrCreator = (userData?.role === 'teacher')
   const buttonClickPath = isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
 
   return (
