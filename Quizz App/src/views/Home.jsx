@@ -230,9 +230,7 @@ const Home = () => {
                             exit={{ opacity: 0, x: 200 }} // Exits to the right
                             transition={{ duration: 0.99 }}
                         >
-
                             <div>
-
                                 <div className="flex flex-col items-center justify-center mt-40  ">
                                     <p className="text-neutral-600 dark:text-neutral-200 text-xs sm:text-base  ">
                                         The road to quality education stats here
