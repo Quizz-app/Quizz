@@ -36,9 +36,9 @@ const backgroundColors = [
     "transparent",
 ];
     const linearGradients = [
-        "linear-gradient(to bottom right, var(--cyan-500), var(--emerald-500))",
-        "linear-gradient(to bottom right, var(--pink-500), var(--indigo-500))",
-        "linear-gradient(to bottom right, var(--orange-500), var(--yellow-500))",
+        "transparent",
+        "transparent",
+        "transparent",
     ];
     return (
         <motion.div
@@ -48,7 +48,7 @@ const backgroundColors = [
             className="h-[30rem] overflow-y-auto flex justify-center relative space-x-10 rounded-md p-10"
             ref={ref}
         >
-            <div className="div relative flex items-start px-4 w-2/4">
+            <div className="div relative flex items-start px-4 w-[500px]">
                 <div className="max-w-2xl">
                     {content.map((item, index) => (
                         <div key={item.title + index} >
@@ -84,7 +84,7 @@ const backgroundColors = [
                     background: linearGradients[activeCard % linearGradients.length],
                 }}
                 className={cn(
-                    "hidden lg:block h-60 w-80 rounded-md bg-white sticky top-10 overflow-hidden",
+                    " h-[450px] w-[750px] rounded-md bg-white sticky shadow-lg top-10",
                     contentClassName
                 )}
             >
