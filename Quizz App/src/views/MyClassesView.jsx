@@ -124,7 +124,7 @@ const MyClassesView = () => {
                     </div>
                     <div className="border-t-2 border-black-700 mt-5 mb-5"></div>
                     <div className="ml-10 mt-10">
-                        {classes.length > 0 && (
+                        {classes.length > 0 ? (
                             <div className="flex flex-col">
                                 <div className="grid grid-cols-5">
                                     {classes.map((claz, index) => (
@@ -132,7 +132,7 @@ const MyClassesView = () => {
                                     ))}
                                 </div>
                             </div>
-                        )}
+                        ) : null}
                     </div>
                 </div>
             </motion.div>

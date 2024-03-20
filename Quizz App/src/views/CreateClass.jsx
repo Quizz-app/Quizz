@@ -4,7 +4,7 @@ import { getAllStudents } from "../services/users-service";
 import { onClassMembersChange, getClassById, removeMemberFromClass, inviteUserToClass, deleteClass, getAllClassQuizzes } from "../services/class-service.js";
 import TableRow from "../components/TableRow";
 import { AppContext } from "../context/AppContext";
-import { removeQuizFromTeam } from "../services/teams-service.js";
+
 import { Input } from ".././components/ui/input";
 import QuizCardPaginated from "../components/QuizCardPaginated.jsx";
 import TableWithPagination from "../components/TableWithPagination.jsx";
@@ -57,14 +57,11 @@ const CreateClass = () => {
         removeMemberFromClass(id, member);
     };
 
-    const handleRemoveQuiz = (quizId) => {
-        removeQuizFromTeam(id, quizId);
-    };
-
     const handleDeleteClass = () => {
-        deleteClass(id);
-        navigate('/my-classes');
-
+        if (window.confirm('Are you sure you want to delete this class?')) {
+            deleteClass(id);
+            navigate('/my-classes');
+        }
     };
 
     return (
