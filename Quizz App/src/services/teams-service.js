@@ -249,6 +249,7 @@ export const deleteTeam = async (teamId) => {
 
 export const getAllTeamQuizzes = (teamId, callback) => {
     const teamRef = ref(db, `teams/${teamId}/quizzes`);
+    
     const unsubscribe = onValue(teamRef, (snapshot) => {
         const quizzesObject = snapshot.val();
         const quizzesArray = Object.keys(quizzesObject || {}).map(key => quizzesObject[key]);
@@ -259,14 +260,20 @@ export const getAllTeamQuizzes = (teamId, callback) => {
 }
 
 
-export const areUsersInSameTeam = async (username1, username2, teamId) => {
-    const teamSnapshot = await get(ref(db, `teams/${teamId}`));
-    const teamData = teamSnapshot.val();
+export const areUsersInSameTeam = async (username1, username2) => {
+    const user1Snapshot = await get(ref(db, `users/${username1}`));
+    const user1Data = user1Snapshot.val();
+    const user1Teams = Object.keys(user1Data.teams || {});
 
-    if (!teamData.members) {
-        return false;
+    const user2Snapshot = await get(ref(db, `users/${username2}`));
+    const user2Data = user2Snapshot.val();
+    const user2Teams = Object.keys(user2Data.teams || {});
+
+    for (const teamId of user1Teams) {
+        if (user2Teams.includes(teamId)) {
+            return true;
+        }
     }
 
-    const members = Object.keys(teamData.members);
-    return members.includes(username1) && members.includes(username2);
+    return false;
 }
