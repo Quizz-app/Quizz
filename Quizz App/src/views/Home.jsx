@@ -263,7 +263,7 @@ const Home = () => {
                                         <div className="stats shadow  w-3/4 h-48">
 
 
-                                            <div className="stat place-items-center">
+                                            <div className="stat place-items-center bg-white shadow-lg">
                                                 <div className="stat-title text-3xl">Users</div>
                                                 <div className="stat-value text-secondary">
                                                     <h1 className="text-7xl text-center font-bold">
@@ -271,8 +271,7 @@ const Home = () => {
                                                     </h1>
                                                 </div>
                                             </div>
-
-                                            <div className="stat place-items-center">
+                                            <div className="stat place-items-center shadow-lg bg-white">
                                                 <div className="stat-title text-3xl">Educators</div>
                                                 <div className="stat-value">
                                                     <h1 className="text-7xl text-center font-bold">
@@ -280,10 +279,6 @@ const Home = () => {
                                                     </h1>
                                                 </div>
                                             </div>
-
-
-
-
                                         </div>
                                     </div>
                                 </div>
