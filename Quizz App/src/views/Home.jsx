@@ -19,6 +19,7 @@ import { TextGenerateEffect } from "../components/ui/text generate/text-generate
 import { words, testimonials, content } from "../services/words.jsx";
 
 const Home = () => {
+    
     const { userData } = useContext(AppContext);
     const [educatorCount, setEducatorCount] = useState(0);
     const navigate = useNavigate();

@@ -22,11 +22,11 @@ import { areUsersInSameTeam } from "../services/teams-service";
 * time: number 
 * }, isCompleted: boolean, onButtonClick: function }} param0 - Props that are passed to the QuizCard component.
 */
-export const ThreeDCardDemo = ({ quiz, teamId }) => {
+export const ThreeDCardDemo = ({ quiz }) => {
 
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
-  const isTeacherOrCreator = (userData?.role === 'teacher')
+  const isTeacherOrCreator = (userData?.role === 'teacher');
   const buttonClickPath = isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
 
   return (
