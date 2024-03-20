@@ -161,7 +161,7 @@ const Home = () => {
                                 <div className="flex flex-row ">
                                     <div className=" flex flex-col ">
                                         <div id="recent" className="flex flex-col">
-                                            <h1 className="text-2xl ml-10 font-bold" >
+                                            <h1 className="text-2xl ml-10 font-bold text-primary" >
                                                 Your Recent Quizzes
                                             </h1>
                                             <div className="flex flex-row ">
