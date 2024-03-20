@@ -72,7 +72,9 @@ const MyClassesView = () => {
                 <div className="m-10 mx-20">
                     <div className="flex flex-row h-full items-start justify-between ml-5">
                         <div className="">
-                            <h2 className="text-4xl font-bold mb-4">My Classes</h2>
+                            <h2 className="text-4xl font-bold mb-4">
+                                {classes?.length > 0 ? "My Classes" : "You haven't participated in any classes."}
+                            </h2>
                         </div>
                         <div>
 
@@ -111,7 +113,7 @@ const MyClassesView = () => {
                         </div>
                     </div>
                     <div>
-                        {classes.length > 0 && (
+                        {classes?.length > 0 ? (
                             <div className="flex flex-col">
                                 <div className="grid grid-cols-5">
                                     {classes.map((claz, index) => (
@@ -119,7 +121,7 @@ const MyClassesView = () => {
                                     ))}
                                 </div>
                             </div>
-                        )}
+                        ) : null}
                     </div>
                 </div>
             </motion.div>

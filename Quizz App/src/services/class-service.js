@@ -149,18 +149,17 @@ export const inviteUserToClass = async (classId, user, inviter) => {
 }
 
 export const deleteClass = async (classId) => {
-    // Create a reference to the class and delete it
+    
     const classRef = ref(db, `classes/${classId}`);
     await remove(classRef);
 
-    // Create a reference to the users and get all user data
+    
     const usersRef = ref(db, 'users');
     const snapshot = await get(usersRef);
     const usersData = snapshot.val();
 
-    // Loop over all users
+   
     for (const userId in usersData) {
-        // If the user is a member of the class, remove the class from the user's classes
         if (usersData[userId].classes && usersData[userId].classes[classId]) {
             const userClassRef = ref(db, `users/${userId}/classes/${classId}`);
             await remove(userClassRef);

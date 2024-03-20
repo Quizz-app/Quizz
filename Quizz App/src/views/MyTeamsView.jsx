@@ -63,16 +63,18 @@ const MyTeamsView = () => {
 
     return (
         <AnimatePresence mode='wait'>
-                <motion.div
-                    initial={{ opacity: 0, x: -200 }} // Starts from the left
-                    animate={{ opacity: 1, x: 0 }} // Moves to the center
-                    exit={{ opacity: 0, x: 200 }} // Exits to the right
-                    transition={{ duration: 0.9 }}
-                >
+            <motion.div
+                initial={{ opacity: 0, x: -200 }} // Starts from the left
+                animate={{ opacity: 1, x: 0 }} // Moves to the center
+                exit={{ opacity: 0, x: 200 }} // Exits to the right
+                transition={{ duration: 0.9 }}
+            >
                 <div className="m-10 mx-20">
                     <div className="flex flex-row h-full items-start justify-between ">
                         <div className="">
-                            <h2 className="text-4xl font-bold mb-4">My Teams</h2>
+                            <h2 className="text-4xl font-bold mb-4">
+                                {teams?.length > 0 ? "My Teams" : "You haven't participated in any teams."}
+                            </h2>
                         </div>
                         <div>
                             <Dialog onClose={handleCloseDialog}>
@@ -112,7 +114,7 @@ const MyTeamsView = () => {
                         </div>
                     </div>
                     <div>
-                        {teams.length > 0 && (
+                        {teams?.length > 0 ? (
                             <div className="flex flex-col">
                                 <div className="grid grid-cols-5">
                                     {teams.map((team, index) => (
@@ -120,9 +122,8 @@ const MyTeamsView = () => {
                                     ))}
                                 </div>
                             </div>
-                        )}
+                        ) : null}
                     </div>
-
                 </div>
             </motion.div>
         </AnimatePresence>
