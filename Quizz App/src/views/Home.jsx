@@ -119,12 +119,9 @@ const Home = () => {
                     <div className=" w-full">
                         <div className=" mx-20 ">
                             <div className="flex flex-col mt-12 ">
-
                                 <div className="ml-10">
                                     <div className="flex justify-between w-full ">
-
                                         <TextGenerateEffect words={welcoming} />
-
                                         <Input
                                             type="text"
                                             value={searchTerm}
@@ -134,7 +131,6 @@ const Home = () => {
                                         />
                                     </div>
                                 </div>
-
                                 <div className="flex justify-center mb-10">
                                     {searchTerm.length > 2 &&
                                         <div className="flex flex-col bg-base border rounded-2xl mb-5">
@@ -189,24 +185,24 @@ const Home = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="popular" className="flex flex-col ml-10">
+                                        <div id="popular" className="flex flex-col ml-10 mt-10">
                                             <div className="flex mt-15 font-bold" style={{ margin: '-30px 10px' }}>
-                                                <h1 className="text-2xl">
+                                                <h1 className="text-2xl mb-5">
                                                     Popular
                                                 </h1>
                                             </div>
                                             <div className="flex flex-row">
-                                                <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={5} />
+                                                <QuizCardPaginated currentQuiz={popularQuizzes} quizzesPerPage={4} />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div>
+                                    <div className="mb-20 mt-10">
                                         <h2 className="text-center text-3xl mr-5 mb-10 font-bold">Trending Categories</h2>
                                         {categoriesWithQuizzes.map((categoryWithQuizzes, index) => (
-                                            <div key={index}>
-                                                <h3 className="ml-10 text-2xl">{categoryWithQuizzes.category}</h3>
+                                            <div key={index} className="mt-10">
+                                                <h3 className="ml-10 text-2xl mb-5 font-bold">{categoryWithQuizzes.category}</h3>
                                                 <div className="flex flex-row w-full ml-10" style={{ margin: '-30px 30px' }}>
                                                     {categoryWithQuizzes.quizzes.map((quiz, index) => (
                                                         <ThreeDCardDemo key={index} quiz={quiz} />
@@ -222,7 +218,6 @@ const Home = () => {
                 </>
                 :
                 <>
-
                     <AnimatePresence mode='wait'>
                         <motion.div
                             initial={{ opacity: 0, x: -200 }} // Starts from the left
