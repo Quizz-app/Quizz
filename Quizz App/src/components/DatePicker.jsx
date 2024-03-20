@@ -37,7 +37,7 @@ export function DatePickerDemo({ selected, onSelect, pickedDate }) {
                     {pickedDate ? pickedDate : date ? format(new Date(date), "dd/MM/yyyy") : "Select date"}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-base-100 text-dark" align="start">
+            <PopoverContent className="w-auto p-0 bg-base-100 text-dark border-dark" align="start">
                 <Calendar
                     mode="single"
                     selected={date}
