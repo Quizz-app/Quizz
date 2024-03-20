@@ -168,16 +168,16 @@ const QuizResults = () => {
                                     <h1 className="text-4xl font-bold mb-4 text-[#0073ffa4]">Your performance overview</h1>
                                     <h2 className="text-2xl font-bold text-[#0073ffa4] mt-2">Quiz: {quiz.title}</h2>
                                     <div>
-                                        
+
                                         <motion.button
-                                        onClick={() => navigate('/my-library')}
-                                        className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
-                                        initial={{ scale: 2 }}
-                                        animate={{ scale: [1, 1.05, 1] }}
-                                        transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
-                                    >
-                                        Finish
-                                    </motion.button>
+                                            onClick={() => navigate('/my-library')}
+                                            className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(144,238,144,0.9)] px-8 py-2 bg-[#90ee90] rounded-md text-white font-bold transition duration-200 ease-linear "
+                                            initial={{ scale: 2 }}
+                                            animate={{ scale: [1, 1.05, 1] }}
+                                            transition={{ duration: 0.5, times: [1, 0.5, 1], loop: 2, delay: 3 }}
+                                        >
+                                            Finish
+                                        </motion.button>
                                     </div>
 
                                 </div>
@@ -237,8 +237,8 @@ const QuizResults = () => {
                     </motion.div>
                 </AnimatePresence>
             )}
-                    </>
-                    );
+        </>
+    );
 };
 
-                    export default QuizResults;
+export default QuizResults;
