@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { get } from "firebase/database";
 import { getQuestionsByQuizId } from "../services/questions-service";
 import { getQuizById, incrementFinishedCount } from "../services/quiz-service";
 import QuizSolveCard from "../views/QuizSolveCard";
@@ -34,7 +33,6 @@ const QuizSolve = () => {
     const [isCountdownFinished, setIsCountdownFinished] = useState(false);
     const [endTime, setEndTime] = useState(null);
 
-
     const navigate = useNavigate();
 
     //THINGS TO BE ADDED TO THE USER'S QUIZZ OBJ: score, time for solving, grade, feedback
@@ -66,7 +64,6 @@ const QuizSolve = () => {
         fetchData();
     }, [id]); // Removed countdownTime from the dependency array
 
-
     const handleCountdownEnd = async () => {
         setIsCountdownFinished(true);
         await updateQuizCompletion(userData.username, id, true);
@@ -75,7 +72,6 @@ const QuizSolve = () => {
 
         navigate(`/results/${id}`);
     };
-
 
     const variants = {
         hidden: { opacity: 0, scale: 0.9 },
@@ -99,8 +95,6 @@ const QuizSolve = () => {
                                     <QuizSolveCard question={questions[currentQuestionIndex]} quizId={id} />
                                 </motion.div>
                             </AnimatePresence>
-
-
                             <div className="flex justify-between mt-10">
                                 <motion.button
                                     onClick={() => setCurrentQuestionIndex((prevIndex) => prevIndex > 0 ? prevIndex - 1 : 0)}

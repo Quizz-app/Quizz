@@ -1,10 +1,8 @@
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
-import { useContext, useState } from "react";
+import { useContext} from "react";
 import { AppContext } from "../context/AppContext";
-import { areUsersInSameTeam } from "../services/teams-service";
-
 
 /**
  * QuizCard component displays a card with quiz details.
@@ -22,13 +20,15 @@ import { areUsersInSameTeam } from "../services/teams-service";
 * time: number 
 * }, isCompleted: boolean, onButtonClick: function }} param0 - Props that are passed to the QuizCard component.
 */
-export const ThreeDCardDemo = ({ quiz, teamId }) => {
+export const ThreeDCardDemo = ({ quiz }) => {
 
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
-  const isTeacherOrCreator = (userData?.role === 'teacher')
-  const buttonClickPath = isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
 
+  const isTeacherOrCreator = (userData?.role === 'teacher')
+  const isQuizCompleted = userData?.quizzes?.[quiz.id]?.isCompleted;
+  const buttonClickPath = isQuizCompleted ? `/results/${quiz.id}` : isTeacherOrCreator ? `/quiz/${quiz.id}` : `/quiz-preview/${quiz.id}`;
+  
   return (
     <CardContainer className=" w-64 h-64 flex-shrink-0 mr-5 p-0">
       <CardBody className="bg-blue-300 relative group/card shadow-custom-light dark:hover:shadow-custom-dark dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.1] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-4">
@@ -62,6 +62,4 @@ export default ThreeDCardDemo;
 
 ThreeDCardDemo.propTypes = {
   quiz: PropTypes.object,
-  teamId: PropTypes.string,
-
 }
