@@ -25,6 +25,7 @@ import MyClassesView from "./views/MyClassesView";
 import { AuthenticationRequired } from "./components/Authentication";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
+import Blocked from "./components/Blocked";
 
 const App = () => {
   const [context, setContext] = useState({
@@ -58,7 +59,9 @@ const App = () => {
       <AppContext.Provider value={{ ...context, setContext }}>
         <div className='min-h-screen min-w-screen flex flex-col bg-base w-full'>
           {context?.userData?.isBlocked ? (
-            <h1>You are blocked!</h1>
+
+            <Blocked />
+
           ) : (
             <>
               <Header theme={theme} onThemeChange={handleThemeChange} />
