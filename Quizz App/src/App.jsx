@@ -10,8 +10,6 @@ import Login from "./views/Login";
 import Header from "./components/Header";
 import CreateQuiz from "./views/CreateQuiz";
 import CreateTeam from "./views/CreateTeam";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup, } from "@/components/ui/resizable";
-import { Link } from "react-router-dom";
 import Profile from "./views/Profile";
 import MyLibrary from "./views/MyLibrary";
 import QuizSolve from "./components/QuizSolve";
