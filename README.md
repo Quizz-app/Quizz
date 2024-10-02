@@ -1,6 +1,6 @@
-<img src="./Quizz App/src/images/BrainBurst.png" alt="logo" width="300px" style="margin-top: -100px; margin-bottom: -100px; margin-left:-35px;"/> - https://quizz-kappa-one.vercel.app/
+<img src="./Quizz App/src/images/BrainBurst.png" alt="logo" width="300px" style="margin-top: -100px; margin-bottom: -100px; margin-left:-35px;"/>
 
-# BrainBurst: Crafting Quizzes Your Way
+# BrainBurst: Crafting Quizzes Your Way - https://quizz-kappa-one.vercel.app/
 
 ## Introduction
 
